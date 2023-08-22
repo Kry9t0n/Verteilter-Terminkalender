@@ -10,8 +10,8 @@ Projekt Repository der Gruppe Zuse im Sommersemester 2023
 ![](https://github.com/Kry9t0n/Verteilter-Terminkalender/blob/b79365d660a4d4f97cbd12b10acfa16ef702ba69/res/pictures/UserZuTerminHinzufuegen.png)
 
 ### Datenbankabläufe (bzgl. des Hinzufügens eines anderen Users)
-Lädt ein Client (C1) einen anderen Client (C2) zu einem seiner Termine ein, so wird in einer DB-Table von C1 erfasst, wer eingeladen wurde.
-**TODO**
+Lädt ein Client (C1) einen anderen Client (C2) zu einem seiner Termine ein, so muss er 
+beim erstellen von einem Termin engeben welche User hinzugefügt werden (Benutzername). TerminID und BenutzerID's werden in eigener DB-Table abgespeichert (In dieser Table werden alle Einladungen erfasst).
 
 ## Benutzerauthentifikation
 Übermittlung von Benutzernahme und Passwort. Der Server gleich dies mit den Einträgen in eigener DB-Table ab. 
