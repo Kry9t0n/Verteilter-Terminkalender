@@ -34,4 +34,7 @@ public class LoginClient {
 	
 	//TODO: Response des Servers auswerten
 	
+	
+	//Hallo Yannik
+	
 }
