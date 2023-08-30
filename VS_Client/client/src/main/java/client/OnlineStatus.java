@@ -5,8 +5,10 @@ import org.json.JSONObject;
 
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.Invocation;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
 
 public class OnlineStatus {
     private final String oURL = ""; //has to be set
@@ -40,7 +42,19 @@ public class OnlineStatus {
  * wird der Client automatisch aus der Tabelle gelöscht (nicht mehr online)
  * -> zum abmelden DELETE-Request
  */
+    public Response onlineDelete(Client client){
+        boolean nochaktiv = getOnline();
+        if(nochaktiv = false){
+            System.out.println("Client ist bereits abgemeldet!\n");
+        }else{
+            status = new JSONObject();
+            status.put("Onlinestatus", nochaktiv);
 
+            WebTarget target = client.target(oURL);
+            target.request().accept(MediaType.APPLICATION_JSON).method("DELETE", status); //korrekt?
+        }
+    }
+    
 /**
  * 10 Minuten Intervall an Server um dessen Status abzufragen -> Bist du noch da?
  * Server antwortet mit Value 1 -> muss ausgewertet werden
@@ -50,6 +64,6 @@ public class OnlineStatus {
 
 
     public boolean getOnline(){
-        return online;
+        return this.online;
     }
 }
