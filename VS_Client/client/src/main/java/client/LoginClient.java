@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.Invocation;
 import jakarta.ws.rs.client.WebTarget;
@@ -18,23 +19,19 @@ import jakarta.ws.rs.core.Response;
 
 
 public class LoginClient {
-	private final String SERVER_URL = "http://localhost:8080"; //TODO
-	private final String LOGIN_URL = "/login"; //TODO
+	private final String TARGET_URL = "http:/localhost:8080/resttest/webapi/users"; //TODO: echte URL einfügen!!!
 	
 	private String username;
 	private String passwd;
 	private ObjectNode auth;
 	private Client client;
-	private WebTarget postTarget;
 	
 	public LoginClient(String username, String passwd) {
 		this.username = username;
 		this.passwd = passwd;
 		
-		client = JerseyClientBuilder.newClient().register(JacksonFeature.class);
-		postTarget = client.target(SERVER_URL).path(LOGIN_URL);
+		client = ClientBuilder.newClient();
 		
-		//auth = new JSONObject().put("Username", this.username).put("Password", this.passwd);
 		
 		ObjectMapper objMapper = new ObjectMapper();
 		auth = objMapper.createObjectNode();
@@ -105,7 +102,10 @@ public class LoginClient {
 	
 	
 	
-	
+	public static void main(String[] args) {
+		LoginClient l = new LoginClient("Alejandro", "k12d64fai45lf");
+		l.postLoginCredentials();
+	}
 	
 	
 }
