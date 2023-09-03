@@ -1,3 +1,6 @@
 ### Beschreibung 
 NUR FÜR CLIENT GRUPPE!!!!
 REST Server der für testzwecke Aufgesetzt wurde.
+
+Um den Server auszuführen, muss man EclipseEE installiert haben https://www.eclipse.org/downloads/packages/release/kepler/sr2/eclipse-ide-java-ee-developers
+Dort muss man den Apache Tomcat Server Version 10 installieren.
