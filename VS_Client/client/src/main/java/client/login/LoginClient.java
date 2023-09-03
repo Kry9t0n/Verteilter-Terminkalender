@@ -1,42 +1,31 @@
-package client;
-
-import org.glassfish.jersey.client.JerseyClientBuilder;
+package client.login;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.util.JacksonFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import client.Benutzer;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.client.Invocation;
-import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 
 public class LoginClient {
 	private final String TARGET_URL = "http:/localhost:8080/resttest/webapi/users"; //TODO: echte URL einfügen!!!
+	private final int SERVER_STATUS_OK = 200;
 	
-	private String username;
-	private String passwd;
+	private Benutzer loginBenutzer;
 	private ObjectNode auth;
 	private Client client;
 	
 	public LoginClient(String username, String passwd) {
-		this.username = username;
-		this.passwd = passwd;
+		this.loginBenutzer = new Benutzer(passwd, username);
 		
 		client = ClientBuilder.newClient();
-		
-		
-		ObjectMapper objMapper = new ObjectMapper();
-		auth = objMapper.createObjectNode();
-		auth.put("Username", this.username).put("Password", this.passwd);
-		
 	}
 	
 	
@@ -45,10 +34,10 @@ public class LoginClient {
 	 * @return Gibt ein Response Objekt zurück, das die Antwort des Servers enthält
 	 */
 	public Response postLoginCredentials() {
-		Invocation.Builder invocation = postTarget.request(MediaType.APPLICATION_JSON);
-		Response res = invocation.post(Entity.entity(auth, MediaType.APPLICATION_JSON));
-		//System.out.println(String.format("Status: %i \n Response %s \n", res.getStatus(), res.readEntity(String.class)));
-		return res;
+		return client
+				.target(TARGET_URL)
+				.request(MediaType.APPLICATION_JSON)
+				.post(Entity.entity(loginBenutzer, MediaType.APPLICATION_JSON));
 	}
 	
 	/**
@@ -87,7 +76,7 @@ public class LoginClient {
 	private boolean serverStatusOk(Response res) {
 		boolean isStatusOk = true;
 		int serverStatus = res.getStatus();
-		if(serverStatus != 200) { //Server-Code 200 = alles ok!!!
+		if(serverStatus != SERVER_STATUS_OK) { //Server-Code 200 = alles ok!!!
 			isStatusOk = false;
 		}
 		
