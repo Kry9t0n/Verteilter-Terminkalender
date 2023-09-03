@@ -28,6 +28,12 @@ public class Termin {
 			this.benutzerEingeladen = benutzerEingeladen;
 		}
 	
+
+	public void benutzerEinladen(String benutzername){
+		this.benutzerEingeladen = this.benutzerEingeladen+","+benutzername;
+
+	}
+	
 	public int getTerminId() {
 		return terminId;
 	}
