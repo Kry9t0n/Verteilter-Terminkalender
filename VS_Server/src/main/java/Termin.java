@@ -31,7 +31,7 @@ public class Termin {
 		return terminId;
 	}
 	
-	public String gettitel() {
+	public String getTitel() {
 		return titel;
 	}
 	
