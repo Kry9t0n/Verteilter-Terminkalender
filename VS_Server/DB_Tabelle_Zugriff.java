@@ -15,14 +15,12 @@ public class DB_Tabelle_Zugriff {
 		this.password = password;
 	}
 	
-	/*TO DO
+	/*TO D
+	 * 
 	 * Benutzer:
 	 * -ändern anhand ID
-	 * -Mit BName und PWort, ID + isAdmin ausgeben (Login)
-	 * -Benutzer löschen anhand ID
 	 * 
 	 * Termin:
-	 * -Termin erstellen
 	 * -Termin anhand ID finden, alles ausgeben
 	 * -Termin anhand BenutzerID finden, alle mit allem ausgeben
 	 * -Termin ändern anhand ID
@@ -67,11 +65,25 @@ public class DB_Tabelle_Zugriff {
 		}
 	}
 	
-	//Funktionen
+	//Benutzer Funktionen
+	
+	public String erstelleBenutzer(Benutzer benutzer) {
+		String benutzername = erstelleBenutzernamen(benutzer); //Erstellt aus Name + Vorname einen Benutzernamen
+		
+		String sql = "INSERT INTO BENUTZER (BENUTZERNAME, PASSWORT, NAME ,VORNAME, ISADMIN) "+ 
+				"VALUES('"+ benutzername + "','" + benutzer.getPasswort() + "','"+ 
+				benutzer.getName() +"','"+ benutzer.getVorname() +"',"+ benutzer.getIsAdmin()+ ");";
+		try {
+			stmtSQL.executeUpdate(sql);
+		} catch(SQLException err) {
+			System.err.println(err);
+		}
+		return benutzername;
+	}
 	
 	public ResultSet sucheBenutzerIdMitName(String name) {
 		try {
-			rs = stmtSQL.executeQuery("SELECT BenutzerID, Benutzername FROM Benutzer WHERE Name = '" + name + "';");
+			rs = stmtSQL.executeQuery("SELECT BENUTZERID, BENUTZERNAME FROM BENUTZER WHERE NAME = '" + name + "';");
 			return rs;
 		} catch(SQLException err) {
 			System.err.println(err);
@@ -79,13 +91,19 @@ public class DB_Tabelle_Zugriff {
 		}
 	}
 	
-	public void insertBenutzer(Benutzer benutzer) {
-		String benutzername = erstelleBenutzernamen(benutzer);
-		String sql = "INSERT INTO Benutzer (BenutzerName, Passwort, Name ,Vorname, IsAdmin) "+ 
-				"VALUES('"+ benutzername + "','" + benutzer.getPasswort() + "','"+ 
-				benutzer.getName() +"','"+ benutzer.getVorname() +"',"+ benutzer.getIsAdmin()+ ");";
+	public ResultSet benutzerAuthentifkation(String benutzerName, String passwort) {
 		try {
-			stmtSQL.executeQuery(sql);
+			rs = stmtSQL.executeQuery("SELECT BENUTZERID, ISADMIN FROM BENUTZER WHERE BENUTZERNAME = '" + benutzerName + "' AND PASSWORT = '" + passwort + "';");
+			return rs;
+		} catch(SQLException err) {
+			System.err.println(err);
+			return null;
+		}
+	}
+	
+	public void löscheBenutzer(int benutzerId) {
+		try {
+			stmtSQL.executeUpdate("DELETE FROM BENUTZER WHERE BENUTZERID = '" + benutzerId + "';");
 		} catch(SQLException err) {
 			System.err.println(err);
 		}
@@ -96,4 +114,19 @@ public class DB_Tabelle_Zugriff {
 		benutzername = benutzername.toLowerCase();
 		return benutzername;
 	}
+	
+	//Termin Funktionen
+	
+	public void erstelleTermin(Termin termin) {
+		
+		String sql = "INSERT INTO TERMIN (TITEL, DATUM, DAUER, IDERSTELLER, BENUTZEREINGELADEN) "+ 
+				"VALUES('"+ termin.getTitel() + "','" + termin.getDatum() + "','"+ 
+				termin.getDauer() +"','"+ termin.getIdErsteller() +"',"+ termin.getBenutzerEingeladen()+ ");";
+		try {
+			stmtSQL.executeUpdate(sql);
+		} catch(SQLException err) {
+			System.err.println(err);
+		}
+	}
+	
 }
