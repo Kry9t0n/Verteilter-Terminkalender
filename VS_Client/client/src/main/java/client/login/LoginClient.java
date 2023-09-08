@@ -29,8 +29,8 @@ public class LoginClient {
 	}
 
 	/**
-	 * Sendet Benutzername und Passwort als JSON-Daten per POST-Request an den
-	 * Server.
+	 * Nimmt das Benutzerobjekt, auf das die Referenzvariable loginBenutzer verweißt und sendet als serialisierte JSON-Daten
+	 * an den Server. Zuvor wurden im Konstruktor die Attrubute Benutzername und Passwort gesetzt. 
 	 * 
 	 * @return Gibt ein Response Objekt zurück, das die Antwort des Servers enthält
 	 */
@@ -40,10 +40,11 @@ public class LoginClient {
 	}
 
 	/**
+	 * Überprüft, ob der Loginvorgang erfolgreich war. Falls der Login fehlerhaft war, wird vom Server ein Benutzerobjekt 
+	 * zurückgegeben, das alle Attribute auf -1 (bei int) oder "-1" (bei String) gesetzt hat.
 	 * 
-	 * @param res Response Objekt das die Serverantwort enthält
-	 * @return true falls der Server das Paar <Benutzername, Passwort> in seiner DB
-	 *         gefunden hat, sonst false
+	 * @param user Benutzerobjekt das überprüft werden soll.
+	 * @return false falls alle Attribute auf -1 (int) oder "-1" (String) gesetzt sind, sonst true 
 	 */
 	private boolean loginErfolgreich(Benutzer user) { // alle Attribute gleich -1 => login fehlgeschlagen
 		boolean loginErfolgreich = false;
@@ -57,7 +58,16 @@ public class LoginClient {
 		return loginErfolgreich;
 
 	}
-
+	
+	/**
+	 * Von außen zugängliche Methode, die den gesamten Ablauf des LoginClients steuert. 
+	 * Führt den Login sowie Onlinestatus POST-Request durch und wertet die Serverrückgabe bei 
+	 * erfolgreichen Login aus. Dabei werden die Attributwerte des vom Server zurückgeschickten 
+	 * Benutzerobjektes übernommen. 
+	 * @throws JsonMappingException
+	 * @throws JsonProcessingException
+	 * @throws Exception
+	 */
 	public void login() throws JsonMappingException, JsonProcessingException, Exception {
 		Response serverResponse = postLoginCredentials();
 		// TODO: Onlinestatus
