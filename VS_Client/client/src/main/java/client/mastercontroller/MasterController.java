@@ -3,6 +3,15 @@ package client.mastercontroller;
 import client.Benutzer;
 import client.login.LoginDialog;
 
+/**
+ * Der MasterController ist dazu da, den gesamten clientseitigen
+ * Programmablauf zu steuern sowie das Benutzerobjekt zu verwalten.
+ * Das heißt der MasterController stellt den Eintrittspunkt in das 
+ * Programm dar und startet IMMER als erste Aktion den Login. 
+ * Danach entscheidet er, ob der Benutzerclient oder der Admin-Client
+ * gestartet aus. 
+ *
+ */
 public class MasterController {
 	private Benutzer masterUser;
 	
@@ -26,8 +35,8 @@ public class MasterController {
 		}else if(masterUser.getIsAdmin() == 0) { // führe normalen Benutzerclient aus
 			fuehreNormalenClientAus();
 		}else {
-			System.err.println("Fehler! Programm wird beendet...");
-			return;
+			System.err.println("Fehler!");
+			programmBeenden();
 		}
 	}
 	

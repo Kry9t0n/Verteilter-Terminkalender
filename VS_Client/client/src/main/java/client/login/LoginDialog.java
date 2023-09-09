@@ -1,6 +1,5 @@
 package client.login;
 
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -11,7 +10,6 @@ import client.mastercontroller.MasterController;
 
 public class LoginDialog {
 	private Benutzer masterUser;
-	private LoginClient login;
 	private Scanner scanner;
 
 	public LoginDialog(Benutzer masterUser) {
@@ -34,12 +32,6 @@ public class LoginDialog {
 				e.printStackTrace();
 			} catch (JsonProcessingException e) {
 				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				System.out.println(e.getMessage());
-				loginSuccess = false;
-			} catch (InputMismatchException e) {
-				System.out.println("Fehler! Achtung: NUR Zahlen eingeben!");
-				loginSuccess = false;
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 				loginSuccess = false;
@@ -57,24 +49,16 @@ public class LoginDialog {
 	}
 
 	private int eingabeLesen() {
-		int choice = 0;
-		boolean input_accepted = true;
-
-		do {
+		while(true) {
 			System.out.println("Bitte Optionsauswahl eingeben: ");
-			if (!scanner.hasNextInt()) {
-
-				input_accepted = false;
-				System.out.println("Es werden nur Zahlen akzeptiert. Eingabe bitte wiederholen!");
-
-				throw new InputMismatchException();
-
-			} else {
-				choice = scanner.nextInt();
+			String rawInput = scanner.next();
+			try {
+				int inputToInt = Integer.valueOf(rawInput);
+				return inputToInt;
+			} catch (Exception e) {
+				System.err.println("Fehler bei der Eingabe!");
 			}
-		} while (!input_accepted);
-
-		return choice;
+		}
 	}
 
 	private void optionAusfuehren(LoginDialogOptions option)
