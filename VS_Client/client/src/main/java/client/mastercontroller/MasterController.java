@@ -1,6 +1,7 @@
 package client.mastercontroller;
 
 import client.Benutzer;
+import client.Client.BenutzerClient;
 import client.login.LoginDialog;
 
 /**
@@ -32,7 +33,7 @@ public class MasterController {
 	private void selectAndRunClient() {
 		if(masterUser.getIsAdmin() == 1) { // führe Admin Client aus
 			fuehreAdminClientAus();
-		}else if(masterUser.getIsAdmin() == 0) { // führe normalen Benutzerclient aus
+		}else if(masterUser.getIsAdmin() == -1) { // führe normalen Benutzerclient aus
 			fuehreNormalenClientAus();
 		}else {
 			System.err.println("Fehler!");
@@ -41,7 +42,7 @@ public class MasterController {
 	}
 	
 	private void fuehreNormalenClientAus() {
-		
+		BenutzerClient benutzerClient = new BenutzerClient(masterUser);
 	}
 	
 	private void fuehreAdminClientAus() {
