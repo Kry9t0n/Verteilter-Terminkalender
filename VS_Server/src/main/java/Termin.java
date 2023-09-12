@@ -3,13 +3,13 @@ import java.util.Date;
 public class Termin {
 	private int terminId;
 	private String titel;
-	private Date datum; //(int year, int month, int date, int hrs, int min)
+	private String datum; //(int year, int month, int date, int hrs, int min)
 	private int dauer;
 	private int idErsteller;
 	private String benutzerEingeladen;
 	
 	//Konstruktor mit allen Parametern
-	public Termin(int terminId, String titel, Date datum, int dauer, int idErsteller, String benutzerEingeladen) {
+	public Termin(int terminId, String titel, String datum, int dauer, int idErsteller, String benutzerEingeladen) {
 		this.terminId = terminId;
 		this.titel = titel;
 		this.datum = datum;
@@ -19,7 +19,7 @@ public class Termin {
 	}
 	
 	//Konstruktor ohne terminId für neu erstellte Termine
-		public Termin(String titel, Date datum, int dauer, int idErsteller, String benutzerEingeladen) {
+		public Termin(String titel, String datum, int dauer, int idErsteller, String benutzerEingeladen) {
 			this.titel = titel;
 			this.datum = datum;
 			this.dauer = dauer;
@@ -35,7 +35,7 @@ public class Termin {
 		return titel;
 	}
 	
-	public Date getDatum() {
+	public String getDatum() {
 		return datum;
 	}
 	

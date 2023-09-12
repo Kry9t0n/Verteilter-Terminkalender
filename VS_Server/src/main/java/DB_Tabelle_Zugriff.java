@@ -91,6 +91,16 @@ public class DB_Tabelle_Zugriff {
 		}
 	}
 	
+	public ResultSet sucheBenutzerIdMitBenutzername(String benutzername) {
+		try {
+			rs = stmtSQL.executeQuery("SELECT BENUTZERID, BENUTZERNAME FROM BENUTZER WHERE BENUTZERNAME = '" + benutzername + "';");
+			return rs;
+		} catch(SQLException err) {
+			System.err.println(err);
+			return null;
+		}
+	}
+	
 	public ResultSet benutzerAuthentifkation(String benutzerName, String passwort) {
 		try {
 			rs = stmtSQL.executeQuery("SELECT BENUTZERID, ISADMIN FROM BENUTZER WHERE BENUTZERNAME = '" + benutzerName + "' AND PASSWORT = '" + passwort + "';");
@@ -117,15 +127,102 @@ public class DB_Tabelle_Zugriff {
 	
 	//Termin Funktionen
 	
-	public void erstelleTermin(Termin termin) {
+	public void erstelleTerminUndEintragEingeladenAnhandBenutzerID(Termin termin) {
 		
-		String sql = "INSERT INTO TERMIN (TITEL, DATUM, DAUER, IDERSTELLER, BENUTZEREINGELADEN) "+ 
+		String sql = "INSERT INTO TERMIN (TITEL, DATUM, DAUER, IDERSTELLER) "+ 
 				"VALUES('"+ termin.getTitel() + "','" + termin.getDatum() + "','"+ 
-				termin.getDauer() +"','"+ termin.getIdErsteller() +"',"+ termin.getBenutzerEingeladen()+ ");";
+				termin.getDauer() +"','"+ termin.getIdErsteller() + "');";
 		try {
 			stmtSQL.executeUpdate(sql);
 		} catch(SQLException err) {
 			System.err.println(err);
+		}
+		
+		
+		String sql2 = "SELECT TERMINID FROM TERMIN WHERE TITEL = '" + termin.getTitel() + "' AND DATUM = '" + termin.getDatum() + "' AND DAUER = " + termin.getDauer() + " AND IDERSTELLER = " + termin.getIdErsteller() + ";";
+		try {
+			rs = stmtSQL.executeQuery(sql2);
+		} catch(SQLException err) {
+			System.err.println(err);
+		}
+		
+		int terminid = -1;
+		try {
+			terminid = rs.getInt(1);
+		} catch(SQLException err) {
+			System.err.println(err);
+		}
+		
+		//Splitet die eingeladenen Benutzer beim , und schreibt sie in ein String-Array
+		String array[] = termin.getBenutzerEingeladen().split(",");
+		
+		if(terminid != -1) {	
+			String sql3 = "";
+			for(String s : array) {
+				sql3 = "INSERT INTO Eingeladen (BENUTZERID, TERMINID) "+ 
+					"VALUES("+ s + "," + terminid + ");";
+				try {
+					stmtSQL.executeUpdate(sql3);
+				} catch(SQLException err) {
+					System.err.println(err);
+				} 
+			}
+		}
+	}
+	
+	public void erstelleTerminUndEintragEingeladenAnhandBenutzername(Termin termin) {
+		
+		String sql = "INSERT INTO TERMIN (TITEL, DATUM, DAUER, IDERSTELLER) "+ 
+				"VALUES('"+ termin.getTitel() + "','" + termin.getDatum() + "','"+ 
+				termin.getDauer() +"','"+ termin.getIdErsteller() + "');";
+		try {
+			stmtSQL.executeUpdate(sql);
+		} catch(SQLException err) {
+			System.err.println(err);
+		}
+		
+		
+		String sql2 = "SELECT TERMINID FROM TERMIN WHERE TITEL = '" + termin.getTitel() + "' AND DATUM = '" + termin.getDatum() + "' AND DAUER = " + termin.getDauer() + " AND IDERSTELLER = " + termin.getIdErsteller() + ";";
+		try {
+			rs = stmtSQL.executeQuery(sql2);
+		} catch(SQLException err) {
+			System.err.println(err);
+		}
+		
+		int terminid = -1;
+		try {
+			terminid = rs.getInt(1);
+		} catch(SQLException err) {
+			System.err.println(err);
+		}
+		
+		//Splitet die eingeladenen Benutzer beim , und schreibt sie in ein String-Array
+		String arrayBenutzername[] = termin.getBenutzerEingeladen().split(",");
+		int anz = arrayBenutzername.length;
+		int[] arrayID = new int[anz];
+		
+		int i = 0;
+		for(String s : arrayBenutzername) {
+			try {
+				rs = sucheBenutzerIdMitBenutzername(s);
+				arrayID[i] = rs.getInt(1);
+				i++;
+			} catch(SQLException err) {
+				System.err.println(err);
+			}
+		}
+		
+		if(terminid != -1) {	
+			String sql3 = "";
+			for(int benutzerid : arrayID) {
+				sql3 = "INSERT INTO Eingeladen (BENUTZERID, TERMINID) "+ 
+					"VALUES("+ benutzerid + "," + terminid + ");";
+				try {
+					stmtSQL.executeUpdate(sql3);
+				} catch(SQLException err) {
+					System.err.println(err);
+				} 
+			}
 		}
 	}
 	
