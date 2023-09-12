@@ -9,13 +9,9 @@ public class Benutzer {
 	private String vorname;
 	private int isAdmin;
 	
-	//Konstruktor der von LoginClient verwendet wird. 
-	//die restlichen Attribute können von Server ausgefüllt werden
-	public Benutzer(String passwort, String benutzerName) {
-		this.passwort = passwort;
-		this.benutzerName = benutzerName;
-	}
-	
+	//Standard-Konstruktor
+	// alle Attribute werden auf Null gesetzt
+	public Benutzer() {}
 	
 	// Konstruktor ohne BenutzerId und Benutzername wird bei neu erstellten personen
 	// benötigt
@@ -35,6 +31,36 @@ public class Benutzer {
 		this.vorname = vorname;
 		this.isAdmin = isAdmin;
 	}
+	
+	public void setBenutzerId(int benutzerId) {
+		this.benutzerId = benutzerId;
+	}
+
+
+	public void setBenutzerName(String benutzerName) {
+		this.benutzerName = benutzerName;
+	}
+
+
+	public void setPasswort(String passwort) {
+		this.passwort = passwort;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public void setVorname(String vorname) {
+		this.vorname = vorname;
+	}
+
+
+	public void setIsAdmin(int isAdmin) {
+		this.isAdmin = isAdmin;
+	}
+
 
 	public int getBenutzerId() {
 		return benutzerId;
@@ -60,4 +86,11 @@ public class Benutzer {
 		return isAdmin;
 	}
 
+	@Override
+	public String toString() {
+		return "Benutzer [benutzerId=" + benutzerId + ", benutzerName=" + benutzerName + ", passwort=" + passwort
+				+ ", name=" + name + ", vorname=" + vorname + ", isAdmin=" + isAdmin + "]";
+	}
+	
+	
 }
