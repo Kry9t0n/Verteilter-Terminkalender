@@ -19,7 +19,7 @@ import jakarta.ws.rs.core.Response;
  */
 public class BenutzerClient {
 	private final int ANZAHL_TERMIN_DARSTELLUNG = 7; // d.h. 7 Tage
-	private final String TERMIN_BASE_URL = "http://localhost:8080/resttest/webapi/1234/Termine/"; // TODO
+	private final String TERMIN_BASE_URL = "http://localhost:8080/resttest/webapi/Termine/"; // TODO
 
 	private Benutzer benutzer;
 	private ArrayList<ArrayList<Termin>> terminSpeicher; // ArrayList die die ArrayListen der einzelnen Tage speichert
