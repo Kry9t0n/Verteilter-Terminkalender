@@ -13,6 +13,8 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.Timer;
+
 public class LoginClient {
 	private final String TARGET_URL = "http://localhost:8080/resttest/webapi/benutzer"; // TODO: echte URL einfügen!!!
 	private final String ONLINE_URL = " "; //TODO: echte URL für OnlineStatus
@@ -99,6 +101,7 @@ public class LoginClient {
 			this.loginBenutzer.setName(benutzerObjectFromServerResponse.getName());
 			this.loginBenutzer.setVorname(benutzerObjectFromServerResponse.getVorname());
 			this.loginBenutzer.setIsAdmin(benutzerObjectFromServerResponse.getIsAdmin());
+			onlineMelden();
 		}
 	}
 
@@ -108,23 +111,38 @@ public class LoginClient {
 	 * @throws JsonProcessingException
 	 * @throws Exception
 	 */
-	public void online() throws JsonMappingException, JsonProcessingException, Exception {
+	public void onlineMelden() throws JsonMappingException, JsonProcessingException, Exception {
 		Response onlineStatus = postOnlineStatus(); //integer Value (>0 oder -1)
 		JsonNode node = new ObjectMapper().readTree(onlineStatus.readEntity(String.class));
-		if(node.get(ONLINE_STAT).asInt() < 0){
+		if(node.get(ONLINE_STAT).asInt() < 0){ //ONLINE_STAT ist antwort von Server 
 			throw new Exception(
 				"Sie sind offline!"
 			);
-		}else if(node.get(ONLINE_STAT).asInt() == -1){
+			this.online = false;
+		}else if(node.get(ONLINE_STAT).asInt() == 1){
 			System.out.println("Sie sind online!");
+			this.online = true;
+			Statuskontrolle(); //beginn des 10min Intervalls für kontrolle des Status
 		}else{
 			throw new Exception(
 				"Error!"
 			);
 		}
-
+		
 	}
 
+	/**
+	 * Funktion ruft alle 10 Minuten eine seperate Klasse StatusINtervall auf, welche den OnlineStatus überprüft
+	 */
+	private void Statuskontrolle(){ // wird beim ersten mal angestoßen in Online() damit der Timer startet und immer wieder abläuft (zumindest in der Theorie)
+		Timer timer = new Timer();
+		timer.schedule(new StatusIntervall(), 0, 600); //600Sekunden = 10Minuten
+	}
+
+	/**
+	 * get() für Online Status
+	 * @return
+	 */
 	public boolean getOnline(){
         return online;
     }

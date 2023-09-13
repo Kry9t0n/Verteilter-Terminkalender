@@ -59,4 +59,17 @@ public class Termin {
 	public String getBenutzerEingeladen() {
 		return benutzerEingeladen;
 	}
+
+	public void setTitel(String titel) {
+		this.titel = titel;
+	}
+
+	public void setDatum(Date datum) {
+		this.datum = datum;
+	}
+
+	public void setDauer(int dauer) {
+		this.dauer = dauer;
+	}
+
 }
