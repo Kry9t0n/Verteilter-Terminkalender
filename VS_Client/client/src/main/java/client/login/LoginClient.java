@@ -28,7 +28,8 @@ public class LoginClient {
 		this.loginBenutzer = masterUser;
 		this.loginBenutzer.setBenutzerName(username);
 		this.loginBenutzer.setPasswort(passwd);
-
+		
+		
 		client = ClientBuilder.newClient();
 	}
 
