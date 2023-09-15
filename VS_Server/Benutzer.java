@@ -1,6 +1,12 @@
-
+/**
+ * @Autor Niklas Baldauf, Maik Gierlinger
+ * @version 1.0
+ * @see DB_Funktionen
+ */
 public class Benutzer {
-	//Attribute
+	/**
+	 * Atribute
+	 */
 	private int benutzerId;
 	private String benutzerName;
 	private String passwort;
@@ -8,7 +14,15 @@ public class Benutzer {
 	private String vorname;
 	private int isAdmin;
 	
-	//Konstruktor mit allen Parametern
+	/**
+	 * Konstruktor mit allen Atributen
+	 * @param benutzerId
+	 * @param benutzerName
+	 * @param passwort
+	 * @param name
+	 * @param vorname
+	 * @param isAdmin
+	 */
 	public Benutzer(int benutzerId, String benutzerName, String passwort, String name, String vorname, int isAdmin) {
 		this.benutzerId = benutzerId;
 		this.benutzerName = benutzerName;
@@ -18,13 +32,23 @@ public class Benutzer {
 		this.isAdmin = isAdmin;
 	}
 	
-	//Konstruktor ohne BenutzerId und Benutzername wird bei neu erstellten personen benötigt
-		public Benutzer(String passwort, String name, String vorname, int isAdmin) {
-			this.passwort = passwort;
-			this.name = name;
-			this.vorname = vorname;
-			this.isAdmin = isAdmin;
-		}
+	/**
+	 * Konstruktor ohne BenutzerID
+	 * @param passwort
+	 * @param name
+	 * @param vorname
+	 * @param isAdmin
+	 */
+	public Benutzer(String passwort, String name, String vorname, int isAdmin) {
+		this.passwort = passwort;
+		this.name = name;
+		this.vorname = vorname;
+		this.isAdmin = isAdmin;
+	}
+	
+	/**
+	 * Get Methoden
+	 */
 	
 	public int getBenutzerId() {
 		return benutzerId;
@@ -50,5 +74,35 @@ public class Benutzer {
 	public int getIsAdmin() {
 		return isAdmin;
 	}
+	
+	/**
+	 * Set Methoden
+	 */
+	
+	public void setBenutzerId(int eingabe) {
+		benutzerId = eingabe;
+	}
+	
+	public void setBenutzerName(String eingabe) {
+		benutzerName = eingabe;
+	}
+	
+	public void setPasswort(String eingabe) {
+		passwort = eingabe;
+	}
+	
+	public void setName(String eingabe) {
+		name = eingabe;
+	}
+	
+	public void setVorname(String eingabe) {
+		vorname = eingabe;
+	}
+	
+	public void setIsAdmin(int eingabe) {
+		isAdmin = eingabe;
+	}
+	
+	
 
 }
