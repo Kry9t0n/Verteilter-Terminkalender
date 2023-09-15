@@ -1,11 +1,24 @@
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Termin {
+	@JsonProperty("terminId")
 	private int terminId;
+	
+	@JsonProperty("titel")
 	private String titel;
+	
+	@JsonProperty("datum")
 	private String datum; //(int year, int month, int date, int hrs, int min)
+	
+	@JsonProperty("dauer")
 	private int dauer;
+	
+	@JsonProperty("idErsteller")
 	private int idErsteller;
+	
+	@JsonProperty("benutzerEingeladen")
 	private String benutzerEingeladen;
 	
 	//Konstruktor mit allen Parametern
