@@ -654,7 +654,7 @@ public class DB_Funktionen {
 	*/
 	public Benutzer benutzerAuthentifkationAlleAttribute(String benutzerName, String passwort) {
 	    try {
-	        rs = stmtSQL.executeQuery("SELECT BENUTZERID, ISADMIN FROM BENUTZER WHERE BENUTZERNAME = '" + benutzerName + "' AND PASSWORT = '" + passwort + "';");
+	        rs = stmtSQL.executeQuery("SELECT BENUTZERID, BENUTZERNAME, PASSWORT, NAME, VORNAME, ISADMIN FROM BENUTZER WHERE BENUTZERNAME = '" + benutzerName + "' AND PASSWORT = '" + passwort + "';");
 	        Benutzer benutzer = ResultSetToBenutzer(rs);
 	        return benutzer;
 	    } catch(SQLException err) {
