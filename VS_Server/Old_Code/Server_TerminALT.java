@@ -18,13 +18,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Path("/termin")
-public class Server_Termin2
+public class Server_Termin
 {
+	private final ObjectMapper objectMapper = new ObjectMapper();
+	
 	@POST
     @Path("/erstellen")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void erstellen(Termin termindaten) 
+    public void erstellen(String jsonDaten) 
 	{
+		Termin termindaten = jsonZuTermin(jsonDaten);
+		
 		DB_Tabelle_Zugriff db = new DB_Tabelle_Zugriff("SA","");
 		
 		db.oeffneDB();
@@ -34,35 +38,34 @@ public class Server_Termin2
 		db.schliesseDB();
 	}
 	
-	@POST
-    @Path("/loeschen/{terminId}/{benutzerId}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void loeschen(@PathParam("TerminId") int terminId, @PathParam("benutzerId") int benutzerId) 
+	@GET
+    @Path("/abfragen/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Termin abfragen(@PathParam("id") int id, String jsonDaten) 
 	{
-		DB_Tabelle_Zugriff db = new DB_Tabelle_Zugriff("SA","");
-		
-		db.oeffneDB();
-
-		db.loescheEintragEingeladenAnhandBenutzerIdTerminId(benutzerId, terminId);
-
-		db.schliesseDB();
+		db.getTermin(id); //NUR BEISPIEL
+		Termin termin = null;
+		return termin;
 	}
 	
-	@GET
-    @Path("/abfragen/{benutzerId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Termin abfragen(@PathParam("BenutzerId") int id) 
+	private Termin jsonZuTermin(String jsonDaten)
 	{
-		Termin termin = null;
-		
-		DB_Tabelle_Zugriff db = new DB_Tabelle_Zugriff("SA","");
-		
-		db.oeffneDB();
-
-		ResultSet rs = db.ausgabenEintragAnhandBenutzerId(id);
-
-		db.schliesseDB();
-		
-		return termin;
+		Termin termindaten = null;
+		try
+		{
+			termindaten = objectMapper.readValue(jsonDaten, Termin.class);
+		} 
+		catch (JsonMappingException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		catch (JsonProcessingException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        return termindaten;
 	}
 }

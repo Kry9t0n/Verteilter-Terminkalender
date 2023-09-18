@@ -11,6 +11,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -20,52 +21,111 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Path("/termin")
 public class Server_Termin
 {
-	private final ObjectMapper objectMapper = new ObjectMapper();
-	
 	@POST
     @Path("/erstellen")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void erstellen(String jsonDaten) 
+    public Response erstellen(Termin termindaten) 
 	{
-		Termin termindaten = jsonZuTermin(jsonDaten);
-		
-		DB_Tabelle_Zugriff db = new DB_Tabelle_Zugriff("SA","");
-		
-		db.oeffneDB();
-
-		db.erstelleTerminUndEintragEingeladenAnhandBenutzername(termindaten);
-
-		db.schliesseDB();
+		try
+		{
+			DB_Funktionen db = new DB_Funktionen("SA","");
+			db.oeffneDB();
+			db.erstelleTerminUndEintragEingeladenAnhandBenutzerName(termindaten);
+			db.schliesseDB();
+			String nachricht = "Eintrag in Termin und Eingelanden wurde erstellt";
+            return Response.ok(nachricht, MediaType.TEXT_PLAIN).build();
+			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+            String nachricht = "Fehler beim Erstellen des Eintrags";
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(nachricht).build();
+		}	
+	}
+	
+	@POST
+    @Path("/einladen/{terminId}/{benutzerId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response einladen(@PathParam("terminId") int terminId, @PathParam("benutzerId") int benutzerId) 
+	{
+		try
+		{
+			DB_Funktionen db = new DB_Funktionen("SA","");
+			db.oeffneDB();
+			db.erstelleEintragEingeladen(benutzerId, terminId, "??TEST??"); //Warum Info??
+			db.schliesseDB();
+			String nachricht = "Eintrag in Termin und Eingelanden wurde erstellt";
+            return Response.ok(nachricht, MediaType.TEXT_PLAIN).build();
+			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+            String nachricht = "Fehler beim Erstellen des Eintrags";
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(nachricht).build();
+		}	
+	}
+	
+	@DELETE
+    @Path("/loeschen/{terminId}/{benutzerId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+	public Response loeschen(@PathParam("terminId") int terminId, @PathParam("benutzerId") int benutzerId) 
+	{
+        try 
+        {
+        	DB_Funktionen db = new DB_Funktionen("SA", "");
+            db.oeffneDB();
+            db.loescheEintragEingeladenAnhandBenutzerIdTerminId(benutzerId, terminId);
+            db.schliesseDB();
+            String nachricht = "Eintrag wurde gelöscht";
+            return Response.ok(nachricht, MediaType.TEXT_PLAIN).build();
+            
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+            String nachricht = "Fehler beim Löschen des Eintrags";
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(nachricht).build();
+        } 
 	}
 	
 	@GET
-    @Path("/abfragen/{id}")
+    @Path("/abfragen/{benutzerId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Termin abfragen(@PathParam("id") int id, String jsonDaten) 
+    public ArrayList<Termin> abfragen(@PathParam("benutzerId") int benutzerId) 
 	{
-		db.getTermin(id); //NUR BEISPIEL
-		Termin termin = null;
-		return termin;
+		try 
+        {
+        	DB_Funktionen db = new DB_Funktionen("SA", "");
+            db.oeffneDB();
+            ArrayList<Termin> terminList = db.abfrageEingeladenetermine(benutzerId);
+            return terminList;
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+            return null;
+        } 
 	}
 	
-	private Termin jsonZuTermin(String jsonDaten)
+	@GET
+    @Path("/abfragenAlleTermine")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<Termin> abfragenAlleTermine() 
 	{
-		Termin termindaten = null;
-		try
-		{
-			termindaten = objectMapper.readValue(jsonDaten, Termin.class);
-		} 
-		catch (JsonMappingException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		catch (JsonProcessingException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-        return termindaten;
+		try 
+        {
+        	DB_Funktionen db = new DB_Funktionen("SA", "");
+            db.oeffneDB();
+            ArrayList<Termin> terminList = db.sucheAlleTermine();
+            return terminList;
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+            return null;
+        } 
 	}
+	
 }

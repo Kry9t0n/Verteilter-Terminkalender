@@ -452,30 +452,48 @@ public class DB_Funktionen {
 	 * @param id
 	 */
 	public void erstelleOnlineEintrag(int benutzerId) {
-			int zeit = aktuelleZeit();
-			String sql = "INSERT INTO ONLINE (BENUTZERID, ZEIT) "+ 
-					"VALUES("+ benutzerId + "," + zeit + ");";
-			try {
-				stmtSQL.executeUpdate(sql);
-			} catch(SQLException err) {
-				System.err.println(err);
-			}
-	}
-	
-	/**
-	 * Gibt alle Einträge aus der Tabelle ONLINE zurück
-	 * @return ein Result Set 
-	 */
-	public ResultSet prueffeOnlineEintraege() {
+		int zeit = aktuelleZeit();
+		String sql = "INSERT INTO ONLINE (BENUTZERID, ZEIT) "+ 
+				"VALUES("+ benutzerId + "," + zeit + ");";
 		try {
-			rs = stmtSQL.executeQuery("SELECT * FROM ONLINE;");
-			return rs;
+			stmtSQL.executeUpdate(sql);
 		} catch(SQLException err) {
 			System.err.println(err);
-			return null;
 		}
 	}
 	
+	/**
+	 * Aktualisiert einen Eintrag in der ONLINE Tabelle
+	 * @param id
+	 */
+	public void aktualisiereOnlineEintrag(int benutzerId) {
+		int zeit = aktuelleZeit();
+		String sql = "UPDATE Online SET DATUM = " + zeit + " WHERE BENUTZERID = " + benutzerId + ";";
+		try {
+			stmtSQL.executeUpdate(sql);
+		} catch(SQLException err) {
+			System.err.println(err);
+		}
+	}
+	
+	/**
+     * Gibt alle Einträge aus der Tabelle ONLINE zurück
+     * @return eine ArrayList mit Benutzernamen
+     */
+    public ArrayList<String> abfrageOnlineBenutzerName() {
+        try {
+            rs = stmtSQL.executeQuery("SELECT BENUTZERNAME FROM ONLINE NATURAL JOIN BENUTZER;");
+            ArrayList<String> benutzernamelist = new ArrayList<String>();
+            while(rs.next()) {
+                benutzernamelist.add(rs.getString(1));
+            }
+            return benutzernamelist;
+        } catch(SQLException err) {
+            System.err.println(err);
+            return null;
+        }
+    }
+    
 	/**
 	 * Lösch einen Eintrag anhand der BenutzerId
 	 * @param benutzerId
@@ -585,7 +603,23 @@ public class DB_Funktionen {
 			System.err.println(err);
 			return null;
 		}
-	}		
+	}	
+	
+	/**
+    
+	Sucht die Termine anhand der BenutzerID
+	@param benutzerId
+	@return eine Liste mit den Termin Objekten*/
+	public ArrayList<Termin> sucheAlleTermine() {
+	    try {
+	        rs = stmtSQL.executeQuery("SELECT * FROM TERMIN;");
+	        ArrayList<Termin> list = ResultSetToTermine(rs);
+	        return list;
+	    } catch(SQLException err) {
+	        System.err.println(err);
+	        return null;
+	    }
+    }
 	
 	/**
 	 * Gibt eine Liste mit den Terminen zu der die übergebene BenutzerId eingeladen ist zurück
@@ -609,6 +643,24 @@ public class DB_Funktionen {
 			listTermin.add(sucheTerminMitTerminId(listInt.get(i)));
 		}
 		return listTermin;
+	}
+	
+	/**
+    
+	Authentifiziert einen Benutzer anhand seines Benutzernamen und des Passwortes
+	@param benutzerName
+	@param passwort
+	@return ein Benutzer Objekt mit allen Attributen
+	*/
+	public Benutzer benutzerAuthentifkationAlleAttribute(String benutzerName, String passwort) {
+	    try {
+	        rs = stmtSQL.executeQuery("SELECT BENUTZERID, ISADMIN FROM BENUTZER WHERE BENUTZERNAME = '" + benutzerName + "' AND PASSWORT = '" + passwort + "';");
+	        Benutzer benutzer = ResultSetToBenutzer(rs);
+	        return benutzer;
+	    } catch(SQLException err) {
+	        System.err.println(err);
+	        return null;
+	    }
 	}
 		
 		

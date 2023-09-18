@@ -20,61 +20,33 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Path("/login")
 public class Server_Login 
 {
-	private final ObjectMapper objectMapper = new ObjectMapper();
-	
 	@POST
     @Path("/benutzer")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response anmelden(String jsonDaten) 
-	{
-		Benutzer benutzerdaten = jsonZuBenutzer(jsonDaten);
+	@Produces(MediaType.APPLICATION_JSON) //??
+    public Response anmelden(Benutzer benutzerdaten) 
+	{	
         return Response.ok(checkAuthentication(benutzerdaten), MediaType.APPLICATION_JSON).build();
     }
-	
-	private Benutzer jsonZuBenutzer(String jsonDaten)
-	{
-		Benutzer benutzerdaten = null;
-		try 
-		{
-			benutzerdaten = objectMapper.readValue(jsonDaten, Benutzer.class);
-		} 
-		catch (JsonMappingException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		catch (JsonProcessingException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-        return benutzerdaten;
-	}
 
     private Benutzer checkAuthentication(Benutzer benutzerdaten) 
     {
+		Benutzer benutzerdatenTemp = null;
 
-		Benutzer benutzerdatenTemp = new Benutzer(-1, "-1", "-1", "-1","-1", -1);
-
-    	DB_Tabelle_Zugriff db = new DB_Tabelle_Zugriff("SA","");
+    	DB_Funktionen db = new DB_Funktionen("SA","");
 		db.oeffneDB();
 
-		ResultSet rs = db.benutzerAuthentifkation(benutzerdaten.getBenutzerName(), benutzerdaten.getPasswort());
-		
-		if(rs != null) 
+	    benutzerdatenTemp = db.benutzerAuthentifkationAlleAttribute(benutzerdaten.getBenutzerName(), benutzerdaten.getPasswort());
+	    
+		if (benutzerdatenTemp == null)
 		{
-			try 
-			{
-				benutzerdatenTemp.setBenutzerId(rs.getInt(1));
-				benutzerdatenTemp.setIsAdmin(rs.getInt(2));
-			} 
-			catch (SQLException e) 
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} 
+			benutzerdatenTemp = new Benutzer(-1, "-1", "-1", "-1","-1", -1);
+		}
+		else
+		{
+			//Wenn Einloggen erfolgreich, wird Online Eintrag erstellt
+			db.erstelleOnlineEintrag(benutzerdatenTemp.getBenutzerId());
+		}
 		
 		db.schliesseDB();
 

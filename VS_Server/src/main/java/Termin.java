@@ -1,27 +1,25 @@
-import java.util.Date;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+/**
+ * @Autor Niklas Baldauf, Maik Gierlinger
+ * @version 1.0
+ * @see DB_Funktionen
+ */
 public class Termin {
-	@JsonProperty("terminId")
 	private int terminId;
-	
-	@JsonProperty("titel")
 	private String titel;
-	
-	@JsonProperty("datum")
-	private String datum; //(int year, int month, int date, int hrs, int min)
-	
-	@JsonProperty("dauer")
+	private String datum; //Format wird von Client Team festgelegt
 	private int dauer;
-	
-	@JsonProperty("idErsteller")
 	private int idErsteller;
-	
-	@JsonProperty("benutzerEingeladen")
 	private String benutzerEingeladen;
 	
-	//Konstruktor mit allen Parametern
+	/**
+	 * Konstruktor mit allen Atributen
+	 * @param terminId
+	 * @param titel
+	 * @param datum
+	 * @param dauer
+	 * @param idErsteller
+	 * @param benutzerEingeladen
+	 */
 	public Termin(int terminId, String titel, String datum, int dauer, int idErsteller, String benutzerEingeladen) {
 		this.terminId = terminId;
 		this.titel = titel;
@@ -31,7 +29,14 @@ public class Termin {
 		this.benutzerEingeladen = benutzerEingeladen;
 	}
 	
-	//Konstruktor ohne terminId für neu erstellte Termine
+	/**
+	 * Konstruktor ohne TerminID
+	 * @param titel
+	 * @param datum
+	 * @param dauer
+	 * @param idErsteller
+	 * @param benutzerEingeladen
+	 */
 		public Termin(String titel, String datum, int dauer, int idErsteller, String benutzerEingeladen) {
 			this.titel = titel;
 			this.datum = datum;
@@ -39,6 +44,10 @@ public class Termin {
 			this.idErsteller = idErsteller;
 			this.benutzerEingeladen = benutzerEingeladen;
 		}
+	
+	/**	
+	 * Get Methoden
+	 */
 	
 	public int getTerminId() {
 		return terminId;
@@ -60,8 +69,35 @@ public class Termin {
 		return idErsteller;
 	}
 	
-	
 	public String getBenutzerEingeladen() {
 		return benutzerEingeladen;
+	}
+	
+	/**
+	 * Set Methoden
+	 */
+	
+	public void setTerminId(int eingabe) {
+		terminId = eingabe;
+	}
+	
+	public void setTitel(String eingabe) {
+		titel = eingabe;
+	}
+	
+	public void setDatum(String eingabe) {
+		datum = eingabe;
+	}
+	
+	public void setDauer(int eingabe) {
+		dauer = eingabe;
+	}
+	
+	public void setIdErsteller(int eingabe) {
+		idErsteller = eingabe;
+	}
+	
+	public void setBenutzerEingeladen(String eingabe) {
+		benutzerEingeladen = eingabe;
 	}
 }

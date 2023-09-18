@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 /**
- * @Autor Niklas Baldauf, Maik Gierlinger
+ * @Autor Niklas Baldauf, Maik Girlinger
  * @version 1.0
  * @see DB_Funktionen
  */

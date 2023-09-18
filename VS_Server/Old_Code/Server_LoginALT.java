@@ -18,15 +18,39 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Path("/login")
-public class Server_Login3 
+public class Server_Login 
 {
+	private final ObjectMapper objectMapper = new ObjectMapper();
+	
 	@POST
     @Path("/benutzer")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response anmelden(Benutzer benutzerdaten) 
+    public Response anmelden(String jsonDaten) 
 	{
+		Benutzer benutzerdaten = jsonZuBenutzer(jsonDaten);
         return Response.ok(checkAuthentication(benutzerdaten), MediaType.APPLICATION_JSON).build();
     }
+	
+	private Benutzer jsonZuBenutzer(String jsonDaten)
+	{
+		Benutzer benutzerdaten = null;
+		try 
+		{
+			benutzerdaten = objectMapper.readValue(jsonDaten, Benutzer.class);
+		} 
+		catch (JsonMappingException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		catch (JsonProcessingException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        return benutzerdaten;
+	}
 
     private Benutzer checkAuthentication(Benutzer benutzerdaten) 
     {
