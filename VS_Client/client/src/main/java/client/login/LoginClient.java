@@ -2,9 +2,9 @@ package client.login;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
+//import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+//import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import client.Benutzer;
 import jakarta.ws.rs.client.Client;
@@ -15,14 +15,20 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.Timer;
 
+/**
+ * Message an Alejandro:
+ * Da das Online melden unserer Seits nicht mehr gebraucht wird, werde ich den Code erstmal auskommentieren, wenn
+ * du wieder daran arbeitest kannst du den Code löschen. Ich bringe dann nur dieses 10min Intervall zum laufen
+ */
+
 public class LoginClient {
 	private final String TARGET_URL = "http://localhost:8080/resttest/webapi/benutzer"; // TODO: echte URL einfügen!!!
-	private final String ONLINE_URL = " "; //TODO: echte URL für OnlineStatus
+	//private final String ONLINE_URL = " "; //TODO: echte URL für OnlineStatus
 
 	private Benutzer loginBenutzer;
-	private ObjectNode auth;
+	//private ObjectNode auth;
 	private Client client;
-	private boolean online = true;
+	//private boolean online = true;
 
 	public LoginClient(String username, String passwd, Benutzer masterUser) {
 		this.loginBenutzer = masterUser;
@@ -44,15 +50,15 @@ public class LoginClient {
 				.post(Entity.entity(loginBenutzer, MediaType.APPLICATION_JSON));
 	}
 
-	/**
+	/**---Legacy---
  	* Beim Login soll der Client sich beim Server als Online melden (aufruf der Methode bei Login), dadurch
  	* wird der Client automatisch in die Table geschrieben mit allen online Clients
  	* -> zum Einloggen ein Post-Request an das Verzeichnis
  	*/
-	private Response postOnlineStatus(){
+	/*private Response postOnlineStatus(){
 		return client.target(ONLINE_URL).request(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(loginBenutzer, MediaType.APPLICATION_JSON));
-	}
+	}*/
 
 
 
@@ -89,7 +95,6 @@ public class LoginClient {
 	public void login() throws JsonMappingException, JsonProcessingException, Exception {
 		Response serverResponse = postLoginCredentials();
 		
-		
 		Benutzer benutzerObjectFromServerResponse = new ObjectMapper()
 				.readValue(serverResponse.readEntity(String.class), Benutzer.class);
 		// JsonNode node = new
@@ -102,17 +107,18 @@ public class LoginClient {
 			this.loginBenutzer.setName(benutzerObjectFromServerResponse.getName());
 			this.loginBenutzer.setVorname(benutzerObjectFromServerResponse.getVorname());
 			this.loginBenutzer.setIsAdmin(benutzerObjectFromServerResponse.getIsAdmin());
-			onlineMelden();
+			//onlineMelden();
+			Statuskontrolle(); //Start des Intervalls, welches den OnlineStatus alle 10 min überprüft
 		}
 	}
 
-	/**
+	/**---Legacy---
 	 * OnlineStatus wird überprüft und die entsprechenden Exceptions geworfen
 	 * @throws JsonMappingException
 	 * @throws JsonProcessingException
 	 * @throws Exception
 	 */
-	public void onlineMelden() throws JsonMappingException, JsonProcessingException, Exception {
+	/*public void onlineMelden() throws JsonMappingException, JsonProcessingException, Exception {
 		Response onlineStatus = postOnlineStatus(); //integer Value (>0 oder -1)
 		JsonNode node = new ObjectMapper().readTree(onlineStatus.readEntity(String.class));
 		if(node.get(ONLINE_STAT).asInt() < 0){ //ONLINE_STAT ist antwort von Server 
@@ -130,7 +136,7 @@ public class LoginClient {
 			);
 		}
 		
-	}
+	}*/
 
 	/**
 	 * Funktion ruft alle 10 Minuten eine seperate Klasse StatusINtervall auf, welche den OnlineStatus überprüft
@@ -140,13 +146,13 @@ public class LoginClient {
 		timer.schedule(new StatusIntervall(), 0, 600); //600Sekunden = 10Minuten
 	}
 
-	/**
+	/**---Legacy---
 	 * get() für Online Status
 	 * @return
 	 */
-	public boolean getOnline(){
+	/*public boolean getOnline(){
         return online;
-    }
+    }*/
 
 	
 	//Nur zum Testen!!!!
