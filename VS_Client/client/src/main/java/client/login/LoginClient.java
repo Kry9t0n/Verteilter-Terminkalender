@@ -40,6 +40,13 @@ public class LoginClient {
 	}
 
 	/**
+	 * Standardkonstruktor??? Wir evtl benötigt für Intervall, da ausgelagert
+	 */
+	public LoginClient(){
+
+	};
+
+	/**
 	 * Nimmt das Benutzerobjekt, auf das die Referenzvariable loginBenutzer verweißt und sendet als serialisierte JSON-Daten
 	 * an den Server. Zuvor wurden im Konstruktor die Attrubute Benutzername und Passwort gesetzt. 
 	 * 
@@ -111,6 +118,15 @@ public class LoginClient {
 			Statuskontrolle(); //Start des Intervalls, welches den OnlineStatus alle 10 min überprüft
 		}
 	}
+
+	public Benutzer getLoginBenutzer(){
+		return loginBenutzer;
+	}
+
+	public Client getClient(){
+		return client;
+	}
+	
 
 	/**---Legacy---
 	 * OnlineStatus wird überprüft und die entsprechenden Exceptions geworfen

@@ -2,15 +2,21 @@ package client.login;
 
 
 import java.util.TimerTask;
-
+import client.Benutzer;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
 
 public class StatusIntervall extends TimerTask {
 
     private final String oURL = "xxx"; //ToDo: echte einfügen
-    
+    private Client oclient;
+    private LoginClient login = new LoginClient();
     /**
-     * Sozusagen die Main-Methode, welche von Timer.schedule() aufgerufen wird
+     * Sozusagen die Main-Methode, welche von Timer.schedule() alle 10 min aufgerufen wird
      */
     @Override
     public void run() {
@@ -25,8 +31,10 @@ public class StatusIntervall extends TimerTask {
      * @return 
      */
     private Response onlineRequest(){
+        oclient = ClientBuilder.newClient();
 
-        return 
+        return oclient.target(oURL).request(MediaType.APPLICATION_JSON)
+                .put(Entity.entity(login.getLoginBenutzer(), MediaType.APPLICATION_JSON));
     }
 
     /**
