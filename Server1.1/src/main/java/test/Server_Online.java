@@ -29,6 +29,7 @@ public class Server_Online {
         	DB_Funktionen db = new DB_Funktionen("SA", "");
             db.oeffneDB();
             ArrayList<String> benuzterNameList = db.abfrageOnlineBenutzerName();
+            db.schliesseDB();
             return benuzterNameList;
         } 
         catch (Exception e) 
@@ -47,7 +48,7 @@ public class Server_Online {
         {
         	DB_Funktionen db = new DB_Funktionen("SA", "");
             db.oeffneDB();
-            db.aktualisiereOnlineEintrag(benutzerId);
+            db.erstelleOnlineEintrag(benutzerId); 
             db.schliesseDB();
             return Response.ok(MediaType.TEXT_PLAIN).build();
             

@@ -31,8 +31,7 @@ public class DB_Funktionen {
 	 * @param password
 	 */
 	public DB_Funktionen(String user, String password) {
-		//"jdbc:sqlite:/Users/niklasbaldauf/eclipse-workspace/VS_Server/Datenbank.db";
-		String url = "jdbc:sqlite:"+ System.getProperty("user.home") +  "/eclipse-workspace/VS_Server/Datenbank.db";
+		String url = "jdbc:sqlite:"+ System.getProperty("user.home") +  "/eclipse-workspace/Server1.1/Datenbank.db";
 		this.url = url;
 		this.user = user;
 		this.password = password;
@@ -128,6 +127,43 @@ public class DB_Funktionen {
 			return null;
 		}
 	}
+	
+	/**
+	 * Sucht einen Benutzer anhand der BenutzerId in der Tabelle BENUTZER
+	 * @param benutzerId
+	 * @return Benutzer-Objekt
+	 */
+	public ArrayList<Benutzer> sucheAlleBenutzerMitTerminIdAusEingeladen(int terminId) {
+		ArrayList<Benutzer> list = new ArrayList<Benutzer>();
+		try {
+			rs = stmtSQL.executeQuery("SELECT BENUTZERID, BENUTZERNAME, PASSWORT, NAME, VORNAME, ISADMIN FROM BENUTZER NATURAL JOIN EINGELADEN WHERE TERMINID = " + terminId + ";");
+			while(rs.next()) {
+				list.add(ResultSetToBenutzer(rs));
+			}
+			return list;
+		} catch(SQLException err) {
+			System.err.println(err);
+			return null;
+		}
+	}
+	
+	/**
+     * Gibt alle Benutzer mit allen Daten in der Tabelle BENUTZER
+     * @return ArrayList<Benutzer> aller Benutzer
+     */
+    public ArrayList<Benutzer> gibAlleBenutzer() {
+        try {
+            rs = stmtSQL.executeQuery("SELECT BENUTZERID, BENUTZERNAME, PASSWORT, NAME, VORNAME, ISADMIN FROM BENUTZER;");
+            ArrayList<Benutzer> list = new ArrayList<Benutzer>();
+            while(rs.next()) {
+                list.add(ResultSetToBenutzer(rs));
+            }
+            return list;
+        } catch(SQLException err) {
+            System.err.println(err);
+            return null;
+        }
+    }
 	
 	/**
 	 * Authentifiziert einen Benutzer anhand seines Benutzernamen und des Passwortes
@@ -659,7 +695,6 @@ public class DB_Funktionen {
 	}
 	
 	/**
-    
 	Authentifiziert einen Benutzer anhand seines Benutzernamen und des Passwortes
 	@param benutzerName
 	@param passwort
