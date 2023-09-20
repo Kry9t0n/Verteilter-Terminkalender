@@ -5,6 +5,7 @@ import client.Client.BenutzerClient;
 import client.login.LoginDialog;
 
 /**
+ * @author Alejandro Freyermuth
  * Der MasterController ist dazu da, den gesamten clientseitigen
  * Programmablauf zu steuern sowie das Benutzerobjekt zu verwalten.
  * Das heißt der MasterController stellt den Eintrittspunkt in das 

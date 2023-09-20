@@ -16,6 +16,12 @@ public class Benutzer {
 	private String vorname;
 	private int isAdmin;
 	
+	
+	/**
+	 * Standard-Konstruktor alle Attribute werden auf Null gesetzt
+	 */
+	public Benutzer() {}
+	
 	/**
 	 * Konstruktor mit allen Atributen
 	 * @param benutzerId

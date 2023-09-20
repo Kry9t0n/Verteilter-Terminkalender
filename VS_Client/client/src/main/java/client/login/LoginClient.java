@@ -21,8 +21,14 @@ import java.util.Timer;
  * du wieder daran arbeitest kannst du den Code löschen. Ich bringe dann nur dieses 10min Intervall zum laufen
  */
 
+/**
+ * 
+ * @author Alejandro Freyermuth, Yannik Geber
+ *
+ */
+
 public class LoginClient {
-	private final String TARGET_URL = "http://localhost:8080/resttest/webapi/benutzer"; // TODO: echte URL einfügen!!!
+	private final String TARGET_URL = "http://localhost:8080/VS_Server/webapi/login/benutzer"; 
 	//private final String ONLINE_URL = " "; //TODO: echte URL für OnlineStatus
 
 	private Benutzer loginBenutzer;
@@ -44,7 +50,7 @@ public class LoginClient {
 	 */
 	public LoginClient(){
 
-	};
+	}
 
 	/**
 	 * Nimmt das Benutzerobjekt, auf das die Referenzvariable loginBenutzer verweißt und sendet als serialisierte JSON-Daten
@@ -53,6 +59,7 @@ public class LoginClient {
 	 * @return Gibt ein Response Objekt zurück, das die Antwort des Servers enthält
 	 */
 	private Response postLoginCredentials() {
+		System.out.println(Entity.entity(loginBenutzer, MediaType.APPLICATION_JSON));
 		return client.target(TARGET_URL).request(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(loginBenutzer, MediaType.APPLICATION_JSON));
 	}
@@ -115,7 +122,7 @@ public class LoginClient {
 			this.loginBenutzer.setVorname(benutzerObjectFromServerResponse.getVorname());
 			this.loginBenutzer.setIsAdmin(benutzerObjectFromServerResponse.getIsAdmin());
 			//onlineMelden();
-			Statuskontrolle(); //Start des Intervalls, welches den OnlineStatus alle 10 min überprüft
+			//Statuskontrolle(); //Start des Intervalls, welches den OnlineStatus alle 10 min überprüft
 		}
 	}
 

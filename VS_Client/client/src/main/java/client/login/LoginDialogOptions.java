@@ -1,5 +1,9 @@
 package client.login;
 
+/**
+ * @author Alejandro Freyermuth
+ *
+ */
 public enum LoginDialogOptions {
 	
 	LOGIN("Systemlogin: Benutzername und Passwort benötigt."),

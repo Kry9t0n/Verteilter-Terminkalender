@@ -8,6 +8,10 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import client.Benutzer;
 import client.mastercontroller.MasterController;
 
+/**
+ * @author Alejandro Freyermuth
+ *
+ */
 public class LoginDialog {
 	private Benutzer masterUser;
 	private Scanner scanner;
