@@ -31,8 +31,7 @@ public class DB_Funktionen {
 	 * @param password
 	 */
 	public DB_Funktionen(String user, String password) {
-		String url = "jdbc:sqlite:"+ System.getProperty("user.home") +  "/eclipse-workspace/Verteilter_Terminkalender/Server1.1/Datenbank.db";
-		//String url = "jdbc:sqlite:/Users/niklasbalke/eclipse-workspace/Verteilter-Terminkalender/VS_Server/Datenbank.db";
+		String url = "jdbc:sqlite:"+ System.getProperty("user.home") +  "/eclipse-workspace/Server1.1/Datenbank.db";
 		this.url = url;
 		this.user = user;
 		this.password = password;
@@ -123,6 +122,25 @@ public class DB_Funktionen {
 		try {
 			rs = stmtSQL.executeQuery("SELECT BENUTZERID, BENUTZERNAME FROM BENUTZER WHERE BENUTZERNAME = '" + benutzername + "';");
 			return rs;
+		} catch(SQLException err) {
+			System.err.println(err);
+			return null;
+		}
+	}
+	
+	/**
+	 * Sucht einen Benutzer anhand der BenutzerId in der Tabelle BENUTZER
+	 * @param benutzerId
+	 * @return Benutzer-Objekt
+	 */
+	public ArrayList<Benutzer> sucheAlleBenutzerMitTerminIdAusEingeladen(int terminId) {
+		ArrayList<Benutzer> list = new ArrayList<Benutzer>();
+		try {
+			rs = stmtSQL.executeQuery("SELECT BENUTZERID, BENUTZERNAME, PASSWORT, NAME, VORNAME, ISADMIN FROM BENUTZER NATURAL JOIN EINGELADEN WHERE TERMINID = " + terminId + ";");
+			while(rs.next()) {
+				list.add(ResultSetToBenutzer(rs));
+			}
+			return list;
 		} catch(SQLException err) {
 			System.err.println(err);
 			return null;
@@ -677,7 +695,6 @@ public class DB_Funktionen {
 	}
 	
 	/**
-    
 	Authentifiziert einen Benutzer anhand seines Benutzernamen und des Passwortes
 	@param benutzerName
 	@param passwort

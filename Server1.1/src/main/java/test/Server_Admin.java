@@ -61,7 +61,7 @@ public class Server_Admin
 	}  
 	
 	@DELETE
-    @Path("/loeschen/{benutzerId}")
+    @Path("/loeschenBenutzer/{benutzerId}")
     @Consumes(MediaType.APPLICATION_JSON)
 	public Response loeschen(@PathParam("benutzerId") int benutzerId) 
 	{
@@ -103,5 +103,47 @@ public class Server_Admin
         } 
 	}
 	
+	@DELETE
+    @Path("/loeschenTermin/{terminId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+	public Response loeschenTermin(@PathParam("terminId") int terminId) 
+	{
+        try 
+        {
+        	DB_Funktionen db = new DB_Funktionen("SA", "");
+            db.oeffneDB();
+            db.loescheTermin(terminId);
+            db.schliesseDB();
+            String nachricht = "Termin wurde gelöscht";
+            return Response.ok(nachricht, MediaType.TEXT_PLAIN).build();
+            
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+            String nachricht = "Fehler beim Löschen des Termins";
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(nachricht).build();
+        } 
+	}
 	
+	@GET
+    @Path("/abfragenAllerEingeladenen/{terminId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<Benutzer> abfragenAllerEingeladenen(@PathParam("terminId") int terminId) 
+	{
+		ArrayList<Benutzer> benutzerList = new ArrayList<Benutzer>();
+		try 
+        {
+        	DB_Funktionen db = new DB_Funktionen("SA", "");
+            db.oeffneDB();
+            benutzerList = db.sucheAlleBenutzerMitTerminIdAusEingeladen(terminId);
+            db.schliesseDB();
+            return benutzerList;
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+            return null;
+        } 
+	}
 }
