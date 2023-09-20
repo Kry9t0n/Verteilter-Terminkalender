@@ -27,7 +27,7 @@ public class Server_Termin
 			db.oeffneDB();
 			db.erstelleTerminUndEintragEingeladenAnhandBenutzerName(termindaten);
 			db.schliesseDB();
-			String nachricht = "Eintrag in Termin und Eingelanden wurde erstellt";
+			String nachricht = "Eintrag in Termin und Eingeladen wurde erstellt";
             return Response.ok(nachricht, MediaType.TEXT_PLAIN).build();
 		}
 		catch(Exception e)
