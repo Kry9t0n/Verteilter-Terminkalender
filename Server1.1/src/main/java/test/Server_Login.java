@@ -7,19 +7,13 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-/*
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-*/
-
 @Path("/login")
 public class Server_Login 
 {
 	@POST
     @Path("/benutzer")
     @Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON) //??
+	@Produces(MediaType.APPLICATION_JSON)
     public Response anmelden(Benutzer benutzerdaten) 
 	{	
         return Response.ok(checkAuthentication(benutzerdaten), MediaType.APPLICATION_JSON).build();

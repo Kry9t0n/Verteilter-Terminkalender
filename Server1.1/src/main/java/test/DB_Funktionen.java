@@ -31,8 +31,8 @@ public class DB_Funktionen {
 	 * @param password
 	 */
 	public DB_Funktionen(String user, String password) {
-		//"jdbc:sqlite:/Users/niklasbaldauf/eclipse-workspace/VS_Server/Datenbank.db";
-		String url = "jdbc:sqlite:"+ System.getProperty("user.home") +  "/eclipse-workspace/VS_Server/Datenbank.db";
+		String url = "jdbc:sqlite:"+ System.getProperty("user.home") +  "/eclipse-workspace/Verteilter_Terminkalender/Server1.1/Datenbank.db";
+		//String url = "jdbc:sqlite:/Users/niklasbalke/eclipse-workspace/Verteilter-Terminkalender/VS_Server/Datenbank.db";
 		this.url = url;
 		this.user = user;
 		this.password = password;
@@ -128,6 +128,24 @@ public class DB_Funktionen {
 			return null;
 		}
 	}
+	
+	/**
+     * Gibt alle Benutzer mit allen Daten in der Tabelle BENUTZER
+     * @return ArrayList<Benutzer> aller Benutzer
+     */
+    public ArrayList<Benutzer> gibAlleBenutzer() {
+        try {
+            rs = stmtSQL.executeQuery("SELECT BENUTZERID, BENUTZERNAME, PASSWORT, NAME, VORNAME, ISADMIN FROM BENUTZER;");
+            ArrayList<Benutzer> list = new ArrayList<Benutzer>();
+            while(rs.next()) {
+                list.add(ResultSetToBenutzer(rs));
+            }
+            return list;
+        } catch(SQLException err) {
+            System.err.println(err);
+            return null;
+        }
+    }
 	
 	/**
 	 * Authentifiziert einen Benutzer anhand seines Benutzernamen und des Passwortes

@@ -5,17 +5,13 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-/*
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-*/
 
 @Path("/termin")
 public class Server_Termin
@@ -33,7 +29,6 @@ public class Server_Termin
 			db.schliesseDB();
 			String nachricht = "Eintrag in Termin und Eingelanden wurde erstellt";
             return Response.ok(nachricht, MediaType.TEXT_PLAIN).build();
-			
 		}
 		catch(Exception e)
 		{
@@ -90,15 +85,16 @@ public class Server_Termin
 	}
 	
 	@GET
-    @Path("/abfragen/{benutzerId}")
+    @Path("/abfrageEingeladenetermine/{benutzerId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<Termin> abfragen(@PathParam("benutzerId") int benutzerId) 
+    public ArrayList<Termin> abfrageEingeladenetermine(@PathParam("benutzerId") int benutzerId) 
 	{
 		try 
         {
         	DB_Funktionen db = new DB_Funktionen("SA", "");
             db.oeffneDB();
             ArrayList<Termin> terminList = db.abfrageEingeladenetermine(benutzerId);
+            db.schliesseDB();
             return terminList;
         } 
         catch (Exception e) 
@@ -108,7 +104,25 @@ public class Server_Termin
         } 
 	}
 	
-	//Terminabfrage für eigene Termine (sucheTerminMitBenutzerId)
+	@GET
+    @Path("/abfragenEigeneTermine/{benutzerId}/{datum}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<Termin> abfragenEigeneTermine(@PathParam("benutzerId") int benutzerId, @PathParam("datum") String datum) 
+	{
+		try 
+        {
+        	DB_Funktionen db = new DB_Funktionen("SA", "");
+            db.oeffneDB();
+            ArrayList<Termin> terminList = db.sucheTerminMitBenutzerId(benutzerId, datum);
+            db.schliesseDB();
+            return terminList;
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+            return null;
+        } 
+	}
 	
 	@GET
     @Path("/abfragenAlleTermine")
@@ -129,5 +143,49 @@ public class Server_Termin
             return null;
         } 
 	}
+	
+	@GET
+    @Path("/abfrageEinzelTermin/{terminId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Termin abfrageEinzelTermin(@PathParam("terminId") int terminId) 
+	{
+		try 
+        {
+        	DB_Funktionen db = new DB_Funktionen("SA", "");
+            db.oeffneDB();
+            Termin termin = db.sucheTerminMitTerminId(terminId);
+            db.schliesseDB();
+            return termin;
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+            return null;
+        } 
+	}
+	
+	@PUT
+	@Path("/terminAendern")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response terminAendern(Termin termindaten) 
+	{
+		try 
+        {
+        	DB_Funktionen db = new DB_Funktionen("SA", "");
+            db.oeffneDB();
+            db.aendereTermin(termindaten);
+            db.schliesseDB();
+            String nachricht = "Termin wurde geändert";
+            return Response.ok(nachricht, MediaType.TEXT_PLAIN).build();
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+            String nachricht = "Fehler beim Ändern des Termins";
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(nachricht).build();
+        } 
+	}
+	
+	
 	
 }
