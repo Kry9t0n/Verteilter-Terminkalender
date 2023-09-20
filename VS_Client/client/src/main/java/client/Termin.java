@@ -10,6 +10,9 @@ public class Termin {
 	private int idErsteller;
 	private String benutzerEingeladen;
 	
+	//default 
+		public Termin() {}
+	
 	//Konstruktor mit allen Parametern
 	public Termin(int terminId, String titel, LocalDateTime datum, int dauer, int idErsteller, String benutzerEingeladen) {
 		this.terminId = terminId;
@@ -60,16 +63,26 @@ public class Termin {
 		return benutzerEingeladen;
 	}
 
+	public void setTerminId(int terminId) {
+		this.terminId = terminId;
+	}	
+	
 	public void setTitel(String titel) {
 		this.titel = titel;
 	}
 
-	public void setDatum(Date datum) {
+	public void setDatum(LocalDateTime datum) {
 		this.datum = datum;
 	}
 
 	public void setDauer(int dauer) {
 		this.dauer = dauer;
 	}
-
+	
+	@Override
+	public String toString() {
+		return "Termin [terminId=" + terminId + ", titel=" + titel + ", datum=" + datum + ", dauer=" + dauer
+				+ ", idErsteller=" + idErsteller + ", benutzerEingeladen=" + benutzerEingeladen + "]";
+	}
+	
 }

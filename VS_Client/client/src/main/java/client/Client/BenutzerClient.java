@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import client.Benutzer;
 import client.Termin;
+import client.TerminRessoucen;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
