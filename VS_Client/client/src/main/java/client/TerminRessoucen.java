@@ -14,6 +14,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.GenericType;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * Die Klasse TerminRessourcen kümmert sich um das Abfragen,das Ändern und das Löschen von Ressourcen 
  * durch Http Requests an der Server, wo diese danach auch an der TerminTabelle ausgeführt wird.
@@ -42,7 +44,8 @@ public class TerminRessoucen {
                 .get(Termin.class); 	
 	     	
 	    if (response.getStatus() == STATUS_OK) {
-                Termin EinTermin = response.readEntity(Termin.class);
+                //Termin EinTermin = response.readEntity(Termin.class);
+		Termin EinTermin = new ObjectMapper.readValue(response.readEntity(String.class), Termin.class);
 		return EinTermin;    
             } else {
                 System.out.println("Fehler beim Abrufen des einzelnen Termins: " + response.getStatusInfo().getReasonPhrase());
@@ -69,7 +72,8 @@ public class TerminRessoucen {
 		
 	    if (response.getStatus() == STATUS_OK) {
                 // Die Antwortdaten in eine Liste von Termin-Objekten deserialisieren
-                List<Termin> termineListe = response.readEntity(new GenericType<List<Termin>>() {});
+                //List<Termin> termineListe = response.readEntity(new GenericType<List<Termin>>() {});
+		List<Termin> termineListe = new ObjectMapper.readValue(response.readEntity(String.class), List.class);
 		return termineListe;    
             } else {
                 // Fehlermeldung ausgeben, wenn die Anfrage nicht erfolgreich war
