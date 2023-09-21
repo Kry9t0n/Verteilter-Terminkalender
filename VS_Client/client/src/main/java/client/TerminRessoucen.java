@@ -25,7 +25,7 @@ public class TerminRessoucen {
     private static final int STATUS_CREATED = 201;
     private static final int STATUS_NO_CONTENT = 204; 
 	
-    private static final String BASE_URL = "http://localhost:8080/VS_Server/webapi/Termin"; //angepasste Url Server
+    private static final String BASE_URL = "http://localhost:8080/VS_Server/webapi/termin"; //angepasste Url Server
     	
     /** 
      * Anfrage Zum Erhalten eines bestimmten Termins mittels TerminId
