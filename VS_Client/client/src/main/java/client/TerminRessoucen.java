@@ -23,7 +23,7 @@ public class TerminRessoucen {
     //Konstanten
     private static final int STATUS_OK = 200;	
     private static final int STATUS_CREATED = 201;
-    private static final int STATUS_NO_CONTENT = 204;
+    private static final int STATUS_NO_CONTENT = 204; 
 	
     private static final String BASE_URL = "http://localhost:8080/VS_Server/webapi/Termin"; //angepasste Url Server
     	
