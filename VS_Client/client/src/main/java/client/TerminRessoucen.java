@@ -112,7 +112,6 @@ public class TerminRessoucen {
 
     /**
      * Veränderung eines Termins:
-     * 
      * @param client
      * @param terminID
      * @param terminToUpdate
