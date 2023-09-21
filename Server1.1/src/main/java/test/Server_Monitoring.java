@@ -11,7 +11,7 @@ import jakarta.ws.rs.core.MediaType;
 public class Server_Monitoring 
 {
 	@GET
-    @Path("/abfragen")
+    @Path("")
     @Produces(MediaType.APPLICATION_JSON)
 	public Monitoring_Data abfragen()
 	{

@@ -11,16 +11,12 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-/*import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-*/
 
 @Path("/online")
 public class Server_Online {
 
 	@GET
-    @Path("/abfragen")
+    @Path("")
     @Produces(MediaType.APPLICATION_JSON)
 	public ArrayList<String> abfragen()
 	{
@@ -40,7 +36,7 @@ public class Server_Online {
 	}
 	
 	@PUT
-    @Path("/aktualisieren/{benutzerId}")
+    @Path("/{benutzerId}")
     @Consumes(MediaType.APPLICATION_JSON)
 	public Response aktualisieren(@PathParam("benutzerId") int benutzerId)
 	{
@@ -62,7 +58,7 @@ public class Server_Online {
 	}
 	
 	@DELETE
-    @Path("/ausloggen/{benutzerId}")
+    @Path("/{benutzerId}")
     @Consumes(MediaType.APPLICATION_JSON)
 	public Response ausloggen(@PathParam("benutzerId") int benutzerId)
 	{

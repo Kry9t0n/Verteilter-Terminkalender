@@ -3,10 +3,18 @@ package test;
 import java.lang.management.ManagementFactory;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
+import java.lang.management.MemoryUsage;
+
 
 public class Monitoring {
     public Monitoring() {}
 
+    /**
+     * Fragt folgende Werte beim Server ab:
+     * 	-> requestCount,errorCount,bytesReceived, bytesSent, processingTime
+     * 
+     * @return Monitoring_Data Objekt mit oben genannten Werten
+     */
     public static Monitoring_Data serverInfos() {
         try {
             // Verbindung zur MBean-Server-Plattform herstellen
@@ -14,33 +22,15 @@ public class Monitoring {
 
             // ObjectName für den Tomcat-GlobalRequestProcessor erstellen
             ObjectName requestProcessorName = new ObjectName("Catalina:type=GlobalRequestProcessor,name=\"http-nio-8080\"");
-            //ObjectName name = new ObjectName("Catalina:type=Memory");
-
-         // Metriken auslesen
+            
+            // Metriken auslesen
             int requestCount = (int) mBeanServer.getAttribute(requestProcessorName, "requestCount");
             int errorCount = (int) mBeanServer.getAttribute(requestProcessorName, "errorCount");
             long bytesReceived = (long) mBeanServer.getAttribute(requestProcessorName, "bytesReceived");
             long bytesSent = (long) mBeanServer.getAttribute(requestProcessorName, "bytesSent");
             long processingTime = (long) mBeanServer.getAttribute(requestProcessorName, "processingTime");
             
-            
-            System.out.println("--------TEST____01------------");
-            /*
-            
-            long maxMemory = (long) mBeanServer.getAttribute(name, "maxMemory");
-            long totalMemory = (long) mBeanServer.getAttribute(name, "totalMemory");
-            long freeMemory = (long) mBeanServer.getAttribute(name, "freeMemory");
-
-            // Ausgabe der Speicherstatistiken
-            System.out.println("Max Memory: " + maxMemory / (1024 * 1024) + " MB");
-            System.out.println("Total Memory: " + totalMemory / (1024 * 1024) + " MB");
-            System.out.println("Free Memory: " + freeMemory / (1024 * 1024) + " MB");
-            
-            System.out.println("--------TEST____02------------");
-            */
-            
-            
-
+            //Daten in Monitoring_Data Objekt speichern
             Monitoring_Data data = new Monitoring_Data(
                 requestCount,
                 errorCount,
@@ -48,6 +38,26 @@ public class Monitoring {
                 bytesSent,
                 processingTime
             );
+            
+            System.out.println("---- Monitoring Daten vom Server abgefragt -----");
+            
+            
+            /*
+              NICHT FUNKTIONSFÄHIG:
+	            //ObjectName name = new ObjectName("Catalina:type=Memory");
+	            ObjectName memoryPoolName = new ObjectName("java.lang:type=MemoryPool,name=PS Old Gen");
+	    
+	            // Metrik "Usage" abrufen (Speichernutzung)
+	            MemoryUsage memoryUsage = (MemoryUsage) mBeanServer.getAttribute(memoryPoolName, "Usage");
+	
+	            // Metriken auslesen
+	            long usedMemory = memoryUsage.getUsed();
+	            long maxMemory = memoryUsage.getMax();
+	            
+	            //Ausgabe der Werte
+	            System.out.println("Genutzter Speicher: " + usedMemory + " Bytes");
+	            System.out.println("Maximaler Speicher: " + maxMemory + " Bytes");
+            */
 
             return data;
         } catch (Exception e) {

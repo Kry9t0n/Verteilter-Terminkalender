@@ -13,11 +13,11 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("/admin")
-public class Server_Admin 
+@Path("/benutzer")
+public class Server_Benutzer 
 {
 	@POST
-    @Path("/benutzerErstellen")
+    @Path("")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response benutzerErstellen(Benutzer benutzerdaten) 
 	{	
@@ -39,7 +39,7 @@ public class Server_Admin
     }
 	
 	@PUT
-	@Path("/benutzerAendern")
+	@Path("")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response benutzerAendern(Benutzer benutzer) 
 	{
@@ -49,42 +49,19 @@ public class Server_Admin
             db.oeffneDB();
             db.aendereBenutzer(benutzer);
             db.schliesseDB();
-            String nachricht = "Termin wurde geändert";
+            String nachricht = "Benutzer wurde geändert";
             return Response.ok(nachricht, MediaType.TEXT_PLAIN).build();
         } 
         catch (Exception e) 
         {
             e.printStackTrace();
-            String nachricht = "Fehler beim Ändern des Termins";
+            String nachricht = "Fehler beim Ändern des Benutzers";
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(nachricht).build();
         } 
 	}  
 	
-	@DELETE
-    @Path("/loeschenBenutzer/{benutzerId}")
-    @Consumes(MediaType.APPLICATION_JSON)
-	public Response loeschen(@PathParam("benutzerId") int benutzerId) 
-	{
-        try 
-        {
-        	DB_Funktionen db = new DB_Funktionen("SA", "");
-            db.oeffneDB();
-            db.loescheBenutzer(benutzerId);
-            db.schliesseDB();
-            String nachricht = "Benutzer wurde gelöscht";
-            return Response.ok(nachricht, MediaType.TEXT_PLAIN).build();
-            
-        } 
-        catch (Exception e) 
-        {
-            e.printStackTrace();
-            String nachricht = "Fehler beim Löschen des Benutzers";
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(nachricht).build();
-        } 
-	}
-	
 	@GET
-    @Path("/abfragenAlleBenutzer")
+    @Path("")
     @Produces(MediaType.APPLICATION_JSON)
     public ArrayList<Benutzer> abfragenAlleBenutzer() 
 	{
@@ -103,40 +80,16 @@ public class Server_Admin
         } 
 	}
 	
-	@DELETE
-    @Path("/loeschenTermin/{terminId}")
-    @Consumes(MediaType.APPLICATION_JSON)
-	public Response loeschenTermin(@PathParam("terminId") int terminId) 
-	{
-        try 
-        {
-        	DB_Funktionen db = new DB_Funktionen("SA", "");
-            db.oeffneDB();
-            db.loescheTermin(terminId);
-            db.schliesseDB();
-            String nachricht = "Termin wurde gelöscht";
-            return Response.ok(nachricht, MediaType.TEXT_PLAIN).build();
-            
-        } 
-        catch (Exception e) 
-        {
-            e.printStackTrace();
-            String nachricht = "Fehler beim Löschen des Termins";
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(nachricht).build();
-        } 
-	}
-	
 	@GET
-    @Path("/abfragenAllerEingeladenen/{terminId}")
+    @Path("/{benutzerId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<Benutzer> abfragenAllerEingeladenen(@PathParam("terminId") int terminId) 
+    public ArrayList<Benutzer> abfragenEinesBenutzers() 
 	{
-		ArrayList<Benutzer> benutzerList = new ArrayList<Benutzer>();
 		try 
         {
         	DB_Funktionen db = new DB_Funktionen("SA", "");
             db.oeffneDB();
-            benutzerList = db.sucheAlleBenutzerMitTerminIdAusEingeladen(terminId);
+            ArrayList<Benutzer> benutzerList = db.gibAlleBenutzer();
             db.schliesseDB();
             return benutzerList;
         } 
@@ -144,6 +97,29 @@ public class Server_Admin
         {
             e.printStackTrace();
             return null;
+        } 
+	}
+	
+	@DELETE
+    @Path("/{benutzerId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+	public Response loeschen(@PathParam("benutzerId") int benutzerId) 
+	{
+        try 
+        {
+        	DB_Funktionen db = new DB_Funktionen("SA", "");
+            db.oeffneDB();
+            db.loescheBenutzer(benutzerId);
+            db.schliesseDB();
+            String nachricht = "Benutzer wurde gelöscht";
+            return Response.ok(nachricht, MediaType.TEXT_PLAIN).build();
+            
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+            String nachricht = "Fehler beim Löschen des Benutzers";
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(nachricht).build();
         } 
 	}
 }

@@ -11,7 +11,7 @@ import jakarta.ws.rs.core.Response;
 public class Server_Login 
 {
 	@POST
-    @Path("/benutzer")
+    @Path("")
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
     public Response anmelden(Benutzer benutzerdaten) 

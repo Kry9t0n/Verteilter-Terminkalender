@@ -1,4 +1,5 @@
 package test;
+
 import java.util.ArrayList;
 
 import jakarta.ws.rs.Consumes;
@@ -11,23 +12,23 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-
-@Path("/termin")
-public class Server_Termin
+@Path("/eingeladen")
+public class Server_Eingeladen 
 {
 	@POST
-    @Path("")
+    @Path("/{terminId}/{benutzerId}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response erstellen(Termin termindaten) 
+    public Response einladen(@PathParam("terminId") int terminId, @PathParam("benutzerId") int benutzerId) 
 	{
 		try
 		{
 			DB_Funktionen db = new DB_Funktionen("SA","");
 			db.oeffneDB();
-			db.erstelleTerminUndEintragEingeladenAnhandBenutzerName(termindaten);
+			db.erstelleEintragEingeladen(benutzerId, terminId, "??TEST??"); //Warum Info??
 			db.schliesseDB();
-			String nachricht = "Eintrag in Termin und Eingeladen wurde erstellt";
+			String nachricht = "Eintrag in Termin und Eingelanden wurde erstellt";
             return Response.ok(nachricht, MediaType.TEXT_PLAIN).build();
+			
 		}
 		catch(Exception e)
 		{
@@ -37,61 +38,41 @@ public class Server_Termin
 		}	
 	}
 	
-	@GET
-    @Path("")
-    @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<Termin> abfragenAlleTermine() 
-	{
-		try 
-        {
-        	DB_Funktionen db = new DB_Funktionen("SA", "");
-            db.oeffneDB();
-            ArrayList<Termin> terminList = db.sucheAlleTermine();
-            db.schliesseDB();
-            return terminList;
-        } 
-        catch (Exception e) 
-        {
-            e.printStackTrace();
-            return null;
-        } 
-	}
-	
 	@DELETE
-    @Path("/{terminId}")
+    @Path("/{terminId}/{benutzerId}")
     @Consumes(MediaType.APPLICATION_JSON)
-	public Response loeschenTermin(@PathParam("terminId") int terminId) 
+	public Response loeschen(@PathParam("terminId") int terminId, @PathParam("benutzerId") int benutzerId) 
 	{
         try 
         {
         	DB_Funktionen db = new DB_Funktionen("SA", "");
             db.oeffneDB();
-            db.loescheTermin(terminId);
+            db.loescheEintragEingeladenAnhandBenutzerIdTerminId(benutzerId, terminId);
             db.schliesseDB();
-            String nachricht = "Termin wurde gelöscht";
+            String nachricht = "Eintrag wurde gelöscht";
             return Response.ok(nachricht, MediaType.TEXT_PLAIN).build();
             
         } 
         catch (Exception e) 
         {
             e.printStackTrace();
-            String nachricht = "Fehler beim Löschen des Termins";
+            String nachricht = "Fehler beim Löschen des Eintrags";
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(nachricht).build();
         } 
 	}
 	
 	@GET
-    @Path("{terminId}")
+    @Path("/benutzer/{benutzerId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Termin abfrageEinzelTermin(@PathParam("terminId") int terminId) 
+    public ArrayList<Termin> abfrageEingeladenetermine(@PathParam("benutzerId") int benutzerId) 
 	{
 		try 
         {
         	DB_Funktionen db = new DB_Funktionen("SA", "");
             db.oeffneDB();
-            Termin termin = db.sucheTerminMitTerminId(terminId);
+            ArrayList<Termin> terminList = db.abfrageEingeladenetermine(benutzerId);
             db.schliesseDB();
-            return termin;
+            return terminList;
         } 
         catch (Exception e) 
         {
@@ -101,17 +82,18 @@ public class Server_Termin
 	}
 	
 	@GET
-    @Path("/{benutzerId}/{datum}")
+    @Path("/termin/{terminId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<Termin> abfragenEigeneTermine(@PathParam("benutzerId") int benutzerId, @PathParam("datum") String datum) 
+    public ArrayList<Benutzer> abfragenAllerEingeladenen(@PathParam("terminId") int terminId) 
 	{
+		ArrayList<Benutzer> benutzerList = new ArrayList<Benutzer>();
 		try 
         {
         	DB_Funktionen db = new DB_Funktionen("SA", "");
             db.oeffneDB();
-            ArrayList<Termin> terminList = db.sucheTerminMitBenutzerId(benutzerId, datum);
+            benutzerList = db.sucheAlleBenutzerMitTerminIdAusEingeladen(terminId);
             db.schliesseDB();
-            return terminList;
+            return benutzerList;
         } 
         catch (Exception e) 
         {

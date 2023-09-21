@@ -129,6 +129,22 @@ public class DB_Funktionen {
 	}
 	
 	/**
+	 * Sucht einen Benutzer anhand des Benutzernamen in der Tabelle BENUTZER
+	 * @param benutzername
+	 * @return ein Result Set
+	 */
+	public Benutzer sucheBenutzerIdMitBenutzerId(int benutzerId) {
+		try {
+			rs = stmtSQL.executeQuery("SELECT BENUTZERID, BENUTZERNAME FROM BENUTZER WHERE BENUTZERID = " + benutzerId + ";");
+			Benutzer benutzer = ResultSetToBenutzer(rs);
+			return benutzer;
+		} catch(SQLException err) {
+			System.err.println(err);
+			return null;
+		}
+	}
+	
+	/**
 	 * Sucht einen Benutzer anhand der BenutzerId in der Tabelle BENUTZER
 	 * @param benutzerId
 	 * @return Benutzer-Objekt
@@ -187,9 +203,7 @@ public class DB_Funktionen {
 	 * @param benutzer
 	 */
 	public void aendereBenutzer(Benutzer benutzer) {
-		String sql = "INSERT INTO BENUTZER (BENUTZERID, BENUTZERNAME, PASSWORT, NAME ,VORNAME, ISADMIN) "+ 
-				"VALUES(" + benutzer.getBenutzerId() + ",'" + benutzer.getBenutzerName() + "','" + benutzer.getPasswort() + "','"+ 
-				benutzer.getName() +"','"+ benutzer.getVorname() +"',"+ benutzer.getIsAdmin()+ ");";
+		String sql = "UPDATE BENUTZER SET BENUTZERNAME = '" + benutzer.getBenutzerName() + "' ,PASSWORT = '" + benutzer.getPasswort() + "' ,NAME = '" + benutzer.getName() + "' ,Vorname = '" + benutzer.getVorname() + "' ,ISADMIN = " + benutzer.getIsAdmin() + " WHERE BENUTZERID = " + benutzer.getBenutzerId() + ";";
 		try {
 			stmtSQL.executeUpdate(sql);
 		} catch(SQLException err) {
