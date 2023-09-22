@@ -2,6 +2,7 @@ package client.mastercontroller;
 
 import client.Benutzer;
 import client.Client.BenutzerClient;
+import client.Client.ClientDialog;
 import client.login.LoginDialog;
 
 /**
@@ -43,7 +44,7 @@ public class MasterController {
 	}
 	
 	private void fuehreNormalenClientAus() {
-		BenutzerClient benutzerClient = new BenutzerClient(masterUser);
+		new ClientDialog(new BenutzerClient(masterUser)).StartClientDialog();
 	}
 	
 	private void fuehreAdminClientAus() {

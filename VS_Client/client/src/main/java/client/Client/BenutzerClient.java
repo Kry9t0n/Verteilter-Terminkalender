@@ -97,4 +97,14 @@ public class BenutzerClient {
 		return tagesListe;
 
 	}
+
+	public ArrayList<ArrayList<Termin>> getTerminSpeicher() {
+		return terminSpeicher;
+	}
+
+	public Client getClient() {
+		return client;
+	}
+	
+	
 }
