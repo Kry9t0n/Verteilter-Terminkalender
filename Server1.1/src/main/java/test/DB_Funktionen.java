@@ -25,6 +25,8 @@ public class DB_Funktionen {
 	Statement stmtSQL = null;
 	ResultSet rs = null;
 	
+	private final Benutzer failedBenutzer = new Benutzer(-1, "-1", "-1", "-1","-1", -1);
+	
 	/**
 	 * Konstruktor
 	 * @param user
@@ -135,7 +137,7 @@ public class DB_Funktionen {
 	 */
 	public Benutzer sucheBenutzerIdMitBenutzerId(int benutzerId) {
 		try {
-			rs = stmtSQL.executeQuery("SELECT BENUTZERID, BENUTZERNAME FROM BENUTZER WHERE BENUTZERID = " + benutzerId + ";");
+			rs = stmtSQL.executeQuery("SELECT * FROM BENUTZER WHERE BENUTZERID = " + benutzerId + ";");
 			Benutzer benutzer = ResultSetToBenutzer(rs);
 			return benutzer;
 		} catch(SQLException err) {
@@ -718,6 +720,9 @@ public class DB_Funktionen {
 	    try {
 	        rs = stmtSQL.executeQuery("SELECT BENUTZERID, BENUTZERNAME, PASSWORT, NAME, VORNAME, ISADMIN FROM BENUTZER WHERE BENUTZERNAME = '" + benutzerName + "' AND PASSWORT = '" + passwort + "';");
 	        Benutzer benutzer = ResultSetToBenutzer(rs);
+	        if(benutzer.getBenutzerId() == 0 && benutzer.getBenutzerName() == null && benutzer.getPasswort() == null && benutzer.getName() == null && benutzer.getVorname() == null && benutzer.getIsAdmin() == 0) {
+	        	benutzer = failedBenutzer;
+	        }
 	        return benutzer;
 	    } catch(SQLException err) {
 	        System.err.println(err);

@@ -16,6 +16,12 @@ import jakarta.ws.rs.core.Response;
 @Path("/benutzer")
 public class Server_Benutzer 
 {
+	/**
+	 * Erstellen eines Benutzers über /benutzer und den JSON-Benutzerdaten
+	 * @param benutzerdaten
+	 * @return	Response ok, wenn erfolgreich
+	 * 			Response status, wenn Fehler
+	 */
 	@POST
     @Path("")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -38,6 +44,12 @@ public class Server_Benutzer
 		}	
     }
 	
+	/**
+	 * Aendern eines Benutzers über /benutzer und den JSON-Benutzerdaten (Aenderung anhand der BenutzerId)
+	 * @param benutzer
+	 * @return Response ok, wenn erfolgreich
+	 * 		   Response status, wenn Fehler
+	 */
 	@PUT
 	@Path("")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -60,6 +72,10 @@ public class Server_Benutzer
         } 
 	}  
 	
+	/**
+	 * Ausgeben aller Benutzer, die in der DB drin stehen ueber /benutzer
+	 * @return ArrayList<Benutzer> --> Liste aller Benutzer
+	 */
 	@GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
@@ -80,18 +96,23 @@ public class Server_Benutzer
         } 
 	}
 	
+	/**
+	 * Ausgeben eines Benutzers, anhand der uebergebenen BenutzerId ueber /benutzer/benutzerId
+	 * @param benutzerId
+	 * @return Benutzer-Objekt mit allen Attributen
+	 */
 	@GET
     @Path("/{benutzerId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<Benutzer> abfragenEinesBenutzers() 
+    public Benutzer abfragenEinesBenutzers(@PathParam("benutzerId") int benutzerId) 
 	{
 		try 
         {
         	DB_Funktionen db = new DB_Funktionen("SA", "");
             db.oeffneDB();
-            ArrayList<Benutzer> benutzerList = db.gibAlleBenutzer();
+            Benutzer benutzer = db.sucheBenutzerIdMitBenutzerId(benutzerId);
             db.schliesseDB();
-            return benutzerList;
+            return benutzer;
         } 
         catch (Exception e) 
         {
@@ -100,6 +121,12 @@ public class Server_Benutzer
         } 
 	}
 	
+	/**
+	 * Loeschen eines Benutzers, anhand der uebergebenen BenutzerId ueber /benutzer/benutzerId
+	 * @param benutzerId
+	 * @return Response ok, wenn erfolgreich
+	 * 		   Response status, wenn Fehler
+	 */
 	@DELETE
     @Path("/{benutzerId}")
     @Consumes(MediaType.APPLICATION_JSON)

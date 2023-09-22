@@ -10,6 +10,14 @@ import jakarta.ws.rs.core.Response;
 @Path("/login")
 public class Server_Login 
 {
+	
+	private final Benutzer failedBenutzer = new Benutzer(-1, "-1", "-1", "-1","-1", -1);
+	
+	/**
+	 * Anmeldung des Benutzers über /login mit JSON-Übergabe der Benutzerdaten
+	 * @param benutzerdaten
+	 * @return
+	 */
 	@POST
     @Path("")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -18,7 +26,13 @@ public class Server_Login
 	{	
         return Response.ok(checkAuthentication(benutzerdaten), MediaType.APPLICATION_JSON).build();
     }
-
+	
+	/**
+	 * Authentifizierung des Benutzers
+	 * @param benutzerdaten
+	 * @return alle Benutzerdaten, wenn erfolgreich
+	 * 		   failedBneutzer, der oben deklariert ist, wenn nicht erfolgreich
+	 */
     private Benutzer checkAuthentication(Benutzer benutzerdaten) 
     {
 		Benutzer benutzerdatenTemp = null;
@@ -28,11 +42,7 @@ public class Server_Login
 
 	    benutzerdatenTemp = db.benutzerAuthentifkationAlleAttribute(benutzerdaten.getBenutzerName(), benutzerdaten.getPasswort());
 	    
-		if (benutzerdatenTemp == null)
-		{
-			benutzerdatenTemp = new Benutzer(-1, "-1", "-1", "-1","-1", -1);
-		}
-		else
+		if (benutzerdatenTemp != null  || benutzerdatenTemp != failedBenutzer)
 		{
 			//Wenn Einloggen erfolgreich, wird Online Eintrag erstellt
 			db.erstelleOnlineEintrag(benutzerdatenTemp.getBenutzerId());

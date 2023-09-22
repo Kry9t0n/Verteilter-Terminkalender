@@ -1,6 +1,6 @@
 package test;
 /**
- * @Autor Niklas Baldauf, Maik Gierlinger
+ * @Autor Niklas Baldauf, Maik Girlinger
  * @version 1.0
  * @see DB_Funktionen
  */

@@ -15,6 +15,14 @@ import jakarta.ws.rs.core.Response;
 @Path("/eingeladen")
 public class Server_Eingeladen 
 {
+	
+	/**
+	 * Einfuegen eines Benutzer-, Terminpaares in die Eingeladen-Tabelle ueber /eingeladen/terminId/benutzerId
+	 * @param terminId
+	 * @param benutzerId
+	 * @return Response ok, wenn erfolgreich
+	 * 		   Response status, wenn Fehler
+	 */
 	@POST
     @Path("/{terminId}/{benutzerId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -38,6 +46,13 @@ public class Server_Eingeladen
 		}	
 	}
 	
+	/**
+	 * Loeschen eines Benutzer-, Terminpaares in die Eingeladen-Tabelle ueber /eingeladen/terminId/benutzerId
+	 * @param terminId
+	 * @param benutzerId
+	 * @return Response ok, wenn erfolgreich
+	 * 		   Response status, wenn Fehler
+	 */
 	@DELETE
     @Path("/{terminId}/{benutzerId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -61,6 +76,12 @@ public class Server_Eingeladen
         } 
 	}
 	
+	/**
+	 * Ausgabe aller Termine, zu dem ein Benutzer eingeladen ist ueber /eingeladen/benutzer/benutzerId
+	 * @param benutzerId
+	 * @return ArrayList<Termin> aller Termine, wenn erfolgreich
+	 * 		   null, wenn Fehler
+	 */
 	@GET
     @Path("/benutzer/{benutzerId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -81,6 +102,12 @@ public class Server_Eingeladen
         } 
 	}
 	
+	/**
+	 * Ausgabe aller Benutzer, die zu einem Termin eingeladen sind ueber /eingeladen/benutzer/benutzerId
+	 * @param benutzerId
+	 * @return ArrayList<Benutzer> aller Benutzer, wenn erfolgreich
+	 * 		   null, wenn Fehler
+	 */
 	@GET
     @Path("/termin/{terminId}")
     @Produces(MediaType.APPLICATION_JSON)

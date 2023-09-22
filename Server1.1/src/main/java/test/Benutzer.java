@@ -1,13 +1,14 @@
 package test;
 
 /**
- * @Autor Niklas Baldauf, Maik Gierlinger
+ * @Autor Niklas Baldauf, Maik Girlinger
  * @version 1.0
  * @see DB_Funktionen
  */
 public class Benutzer {
+	
 	/**
-	 * Atribute
+	 * Attribute
 	 */
 	private int benutzerId;
 	private String benutzerName;
@@ -15,7 +16,6 @@ public class Benutzer {
 	private String name;
 	private String vorname;
 	private int isAdmin;
-	
 	
 	/**
 	 * Standard-Konstruktor alle Attribute werden auf Null gesetzt
@@ -57,7 +57,6 @@ public class Benutzer {
 	/**
 	 * Get Methoden
 	 */
-	
 	public int getBenutzerId() {
 		return benutzerId;
 	}
@@ -86,7 +85,6 @@ public class Benutzer {
 	/**
 	 * Set Methoden
 	 */
-	
 	public void setBenutzerId(int eingabe) {
 		benutzerId = eingabe;
 	}
@@ -110,7 +108,11 @@ public class Benutzer {
 	public void setIsAdmin(int eingabe) {
 		isAdmin = eingabe;
 	}
-	
-	
 
+	@Override
+	public String toString() {
+		return "Benutzer [benutzerId=" + benutzerId + ", benutzerName=" + benutzerName + ", passwort=" + passwort
+				+ ", name=" + name + ", vorname=" + vorname + ", isAdmin=" + isAdmin + "]";
+	}
+	
 }
