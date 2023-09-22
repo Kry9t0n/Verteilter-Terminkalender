@@ -12,6 +12,7 @@ import jakarta.ws.rs.client.ClientBuilder;
 public class ClientDialog {
 	private Scanner input;
 	private Client client;
+	private BenutzerClient benutzerClient;
 	
 	private static final int ENDE = 0;
 	private static final int TERMIN_ERSTELLEN = 1;
@@ -19,8 +20,9 @@ public class ClientDialog {
 	private static final int EINLADUNGEN_AUSGEBEN = 3;
 	private static final int Termin_Bearbeiten = 4;
 	
-	public ClientDialog(Client client) {
-		this.client = client;
+	public ClientDialog(BenutzerClient benutzerClient) {
+		this.benutzerClient = benutzerClient;
+		this.client = benutzerClient.getClient();
 		input = new Scanner(System.in);
 		
 	}
