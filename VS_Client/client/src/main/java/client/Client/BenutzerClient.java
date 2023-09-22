@@ -70,12 +70,12 @@ public class BenutzerClient {
 	 * @param tag als LocalDate Objekt
 	 * @return ArrayListe mit allen Terminen des angegebenen Datums
 	 */
-	private ArrayList<Termin> fetchAlleTermineEinesTages(LocalDate tag) {
+	public ArrayList<Termin> fetchAlleTermineEinesTages(LocalDate tag) {
 		ArrayList<Termin> tagesListe = null;
 		final String FETCH_URL = TERMIN_BASE_URL + benutzer.getBenutzerId() + "/" +tag.getDayOfMonth() + "," +  tag.getMonthValue() + "," + tag.getYear();
 		
 		//TEST
-		System.out.println("Ich fetche Tag: " + tag + "unter der URL: " + FETCH_URL); //TODO: vor Abgabe entfernen
+		//System.out.println("Ich fetche Tag: " + tag + "unter der URL: " + FETCH_URL); //TODO: vor Abgabe entfernen
 		
 		// GET-Request an Server senden
 		Response serverRes = client
