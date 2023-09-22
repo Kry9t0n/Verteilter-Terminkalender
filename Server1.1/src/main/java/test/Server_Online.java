@@ -15,6 +15,10 @@ import jakarta.ws.rs.core.Response;
 @Path("/online")
 public class Server_Online {
 
+	/**
+	 * Gibt alle Benutzer zurück die Online sind
+	 * @return ArrayList aus Benutzern
+	 */
 	@GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
@@ -35,6 +39,11 @@ public class Server_Online {
         } 
 	}
 	
+	/**
+	 * Aktualisiert den Zeitpunkt in der Online Tabelle des Benutzers mit der übergebenen ID 
+	 * @param benutzerId
+	 * @return Response ob Aktualisierung erfolgreich
+	 */
 	@PUT
     @Path("/{benutzerId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -46,7 +55,8 @@ public class Server_Online {
             db.oeffneDB();
             db.erstelleOnlineEintrag(benutzerId); 
             db.schliesseDB();
-            return Response.ok(MediaType.TEXT_PLAIN).build();
+            String nachricht = "Online Status aktualisiert";
+            return Response.ok(nachricht, MediaType.TEXT_PLAIN).build();
             
         } 
         catch (Exception e) 
@@ -57,6 +67,11 @@ public class Server_Online {
         } 
 	}
 	
+	/**
+	 * Löscht Eintrag aus der Online Tabelle des Benutzers mit der übergebenen ID 
+	 * @param benutzerId
+	 * @return Response ob Ausloggen erfolgreich
+	 */
 	@DELETE
     @Path("/{benutzerId}")
     @Consumes(MediaType.APPLICATION_JSON)

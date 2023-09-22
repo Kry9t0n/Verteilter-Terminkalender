@@ -1,10 +1,11 @@
 package test;
 /**
- * @Autor Niklas Baldauf, Maik Girlinger
+ * @Autor Niklas Baldauf, Maik Gierlinger
  * @version 1.0
  * @see DB_Funktionen
  */
 public class Termin {
+	
 	private int terminId;
 	private String titel;
 	private String datum; //Format wird von Client Team festgelegt
@@ -45,6 +46,8 @@ public class Termin {
 			this.idErsteller = idErsteller;
 			this.benutzerEingeladen = benutzerEingeladen;
 		}
+		
+		public Termin() {}
 	
 	/**	
 	 * Get Methoden
@@ -101,4 +104,11 @@ public class Termin {
 	public void setBenutzerEingeladen(String eingabe) {
 		benutzerEingeladen = eingabe;
 	}
+	
+	@Override
+	public String toString() {
+		return "Termin [terminId=" + terminId + ", titel=" + titel + ", datum=" + datum + ", dauer=" + dauer
+				+ ", idErsteller=" + idErsteller + ", benutzerEingeladen=" + benutzerEingeladen + "]";
+	}
+
 }

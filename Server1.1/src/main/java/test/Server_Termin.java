@@ -15,6 +15,11 @@ import jakarta.ws.rs.core.Response;
 @Path("/termin")
 public class Server_Termin
 {
+	/**
+	 * Erhält Termindaten und legt Eintrag in der Termin & Eingeladen Tabelle an
+	 * @param termindaten
+	 * @return Response ob Eintrag erfolgreich
+	 */
 	@POST
     @Path("")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -34,9 +39,13 @@ public class Server_Termin
 			e.printStackTrace();
             String nachricht = "Fehler beim Erstellen des Eintrags";
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(nachricht).build();
-		}	
+		}
 	}
 	
+	/**
+	 * Gibt alle Einträge der Termin Tabelle zurück
+	 * @return Termine als ArrayList
+	 */
 	@GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
@@ -56,7 +65,11 @@ public class Server_Termin
             return null;
         } 
 	}
-	
+	/**
+	 * Entfernt einen Eintrag aus der Termintabelle anhand der terminId
+	 * @param terminId des zu löschenden Termin
+	 * @return Response ob Löschen erfolgreich
+	 */
 	@DELETE
     @Path("/{terminId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -79,7 +92,11 @@ public class Server_Termin
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(nachricht).build();
         } 
 	}
-	
+	/**
+	 * Gibt den Eintrag mit der übergebenen terminId aus der Termin Tabelle
+	 * @param terminId des zurückzugebenden Termins
+	 * @return Termine als ArrayList
+	 */
 	@GET
     @Path("{terminId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -99,7 +116,12 @@ public class Server_Termin
             return null;
         } 
 	}
-	
+	/**
+	 * Gibt die Termine eines Benutzers an dem angefragten Datum zurück
+	 * @param benutzerId
+	 * @param datum
+	 * @return ArrayList mit Terminen
+	 */
 	@GET
     @Path("/{benutzerId}/{datum}")
     @Produces(MediaType.APPLICATION_JSON)
