@@ -110,7 +110,7 @@ public class Server_Benutzer
         {
         	DB_Funktionen db = new DB_Funktionen("SA", "");
             db.oeffneDB();
-            Benutzer benutzer = db.sucheBenutzerIdMitBenutzerId(benutzerId);
+            Benutzer benutzer = db.sucheBenutzerMitBenutzerId(benutzerId);
             db.schliesseDB();
             return benutzer;
         } 

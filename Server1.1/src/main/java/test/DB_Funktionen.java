@@ -135,9 +135,26 @@ public class DB_Funktionen {
 	 * @param benutzername
 	 * @return ein Result Set
 	 */
-	public Benutzer sucheBenutzerIdMitBenutzerId(int benutzerId) {
+	public int sucheBenutzerIdMitBenutzernameRueckgabeInt(String benutzername) {
+		int id = -1;
 		try {
-			rs = stmtSQL.executeQuery("SELECT * FROM BENUTZER WHERE BENUTZERID = " + benutzerId + ";");
+			rs = stmtSQL.executeQuery("SELECT BENUTZERID FROM BENUTZER WHERE BENUTZERNAME = '" + benutzername + "';");
+			id = rs.getInt(1);
+			return id;
+		} catch(SQLException err) {
+			System.err.println(err);
+			return id;
+		}
+	}
+	
+	/**
+	 * Sucht einen Benutzer anhand des Benutzernamen in der Tabelle BENUTZER
+	 * @param benutzername
+	 * @return ein Result Set
+	 */
+	public Benutzer sucheBenutzerMitBenutzerId(int benutzerId) {
+		try {
+			rs = stmtSQL.executeQuery("SELECT * FROM BENUTZER WHERE BENUTZERID = '" + benutzerId + "';");
 			Benutzer benutzer = ResultSetToBenutzer(rs);
 			return benutzer;
 		} catch(SQLException err) {
@@ -223,6 +240,9 @@ public class DB_Funktionen {
 		} catch(SQLException err) {
 			System.err.println(err);
 		}
+		loescheEintragEingeladenAnhandBenutzerId(benutzerId);
+		loescheEintragEingeladenAnhandIdErsteller(benutzerId);
+		loescheTerminAnhandIdErsteller(benutzerId);
 	}
 	
 	/**
@@ -323,8 +343,8 @@ public class DB_Funktionen {
 	public void erstelleTerminUndEintragEingeladenAnhandBenutzerName(Termin termin) {
 			
 			String sql = "INSERT INTO TERMIN (TITEL, DATUM, DAUER, IDERSTELLER) "+ 
-					"VALUES('"+ termin.getTitel() + "','" + termin.getDatum() + "','"+ 
-					termin.getDauer() +"','"+ termin.getIdErsteller() + "');";
+					"VALUES('"+ termin.getTitel() + "','" + termin.getDatum() + "',"+ 
+					termin.getDauer() +","+ termin.getIdErsteller() + ");";
 			try {
 				stmtSQL.executeUpdate(sql);
 			} catch(SQLException err) {
@@ -348,31 +368,10 @@ public class DB_Funktionen {
 			
 			//Splitet die eingeladenen Benutzer beim , und schreibt sie in ein String-Array
 			String arrayBenutzername[] = termin.getBenutzerEingeladen().split(",");
-			int anz = arrayBenutzername.length;
-			int[] arrayID = new int[anz];
 			
-			int i = 0;
 			for(String s : arrayBenutzername) {
-				try {
-					rs = sucheBenutzerIdMitBenutzername(s);
-					arrayID[i] = rs.getInt(1);
-					i++;
-				} catch(SQLException err) {
-					System.err.println(err);
-				}
-			}
-			
-			if(terminid != -1) {	
-				String sql3 = "";
-				for(int benutzerid : arrayID) {
-					sql3 = "INSERT INTO Eingeladen (BENUTZERID, TERMINID) "+ 
-						"VALUES("+ benutzerid + "," + terminid + ");";
-					try {
-						stmtSQL.executeUpdate(sql3);
-					} catch(SQLException err) {
-						System.err.println(err);
-					} 
-				}
+				int benutzerid = sucheBenutzerIdMitBenutzernameRueckgabeInt(s);
+				erstelleEintragEingeladen(benutzerid, terminid, termin.getTitel());
 			}
 	}
 	
@@ -496,6 +495,17 @@ public class DB_Funktionen {
 		} catch(SQLException err) {
 			System.err.println(err);
 		}
+		loescheEintragEingeladenAnhandTerminId(terminId);
+		
+	}
+	
+	public void loescheTerminAnhandIdErsteller(int IdErsteller) {
+		try {
+			stmtSQL.executeUpdate("DELETE FROM TERMIN WHERE IDERSTELLER = '" + IdErsteller + "';");
+		} catch(SQLException err) {
+			System.err.println(err);
+		}
+		loescheEintragEingeladenAnhandTerminId(IdErsteller);
 	}
 
 	/**
@@ -638,6 +648,34 @@ public class DB_Funktionen {
 	}
 	
 	/**
+	 * Löscht einen Eintrag aus der Tabelle EINGELADEN
+	 * @param benutzerId
+	 */
+	public void loescheEintragEingeladenAnhandBenutzerId(int benutzerId) {
+		
+		String sql = "DELETE FROM Eingeladen WHERE BENUTZERID = " + benutzerId + ";";
+		try {
+			stmtSQL.executeUpdate(sql);
+		} catch(SQLException err) {
+			System.err.println(err);
+		}
+	}
+	
+	/**
+	 * Löscht einen Eintrag aus der Tabelle EINGELADEN
+	 * @param terminId
+	 */
+	public void loescheEintragEingeladenAnhandTerminId(int terminId) {
+		
+		String sql = "DELETE FROM Eingeladen WHERE TERMINID = " + terminId + ";";
+		try {
+			stmtSQL.executeUpdate(sql);
+		} catch(SQLException err) {
+			System.err.println(err);
+		}
+	}
+	
+	/**
 	 * Gibt die Termin IDs der Einträge der Tabelle EINGELADEN anhand der BenutzerId aus
 	 * @param benutzerId
 	 * @return ein Result Set
@@ -651,6 +689,22 @@ public class DB_Funktionen {
 		} catch(SQLException err) {
 			System.err.println(err);
 			return null;
+		}
+	}
+	
+	/**
+	 * Löscht einen Eintrag aus der Tabelle EINGELADEN
+	 * @param terminId
+	 */
+	public void loescheEintragEingeladenAnhandIdErsteller(int idErsteller) {
+		String sql = "SELECT TERMINID FROM TERMIN WHERE IDERSTELLER = " + idErsteller + ";";
+		try {
+			rs = stmtSQL.executeQuery(sql);
+			while(rs.next()) {
+				loescheEintragEingeladenAnhandTerminId(rs.getInt(1));
+			}
+		} catch(SQLException err) {
+			System.err.println(err);
 		}
 	}
 	
