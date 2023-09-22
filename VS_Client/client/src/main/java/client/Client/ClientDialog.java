@@ -91,7 +91,7 @@ public class ClientDialog {
 		
 		//termin wird mittels id geholt
 		//termin toString
-		Termin updateTermin;
+		Termin updateTermin = TerminRessoucen.getEinzelTerminByID(client, terminid); //TODO: prüfen ob das so passt
 		System.out.println("Welcher Parameter soll veraendert werden?");
 		System.out.println("------------------------------------------\n");
 		
@@ -143,8 +143,8 @@ public class ClientDialog {
 				System.out.println("Eingabe falsch!");
 		}
 	} while(eingabe != 0);
-		TerminRessoucen terminressource;
-		//TerminRessoucen.updateTermin(client,updateTermin);
+		//TerminRessoucen terminressource;
+		TerminRessoucen.updateTermin(client, updateTermin);
 		System.out.println("Termin wuerde bearbeitet!");
 	
 	}
