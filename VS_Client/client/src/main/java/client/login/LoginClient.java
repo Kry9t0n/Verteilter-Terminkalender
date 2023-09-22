@@ -122,7 +122,7 @@ public class LoginClient {
 			this.loginBenutzer.setVorname(benutzerObjectFromServerResponse.getVorname());
 			this.loginBenutzer.setIsAdmin(benutzerObjectFromServerResponse.getIsAdmin());
 			//onlineMelden();
-			//Statuskontrolle(); //Start des Intervalls, welches den OnlineStatus alle 10 min überprüft
+			Statuskontrolle(); //Start des Intervalls, welches den OnlineStatus alle 10 min überprüft
 		}
 	}
 

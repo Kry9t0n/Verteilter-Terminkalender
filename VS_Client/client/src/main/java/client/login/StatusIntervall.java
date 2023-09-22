@@ -2,7 +2,12 @@ package client.login;
 
 
 import java.util.TimerTask;
-import client.Benutzer;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -21,12 +26,22 @@ public class StatusIntervall extends TimerTask {
     @Override
     public void run() {
         Response online = onlineRequest();
-        onlineAuswerten(online);
+        try{
+            onlineAuswerten(online);
+
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
     }
 
     /**
-     * onlineRequest() wird alle 10 Minuten ausgeführt und überschreib den Eintrag in der Datenbank des Servers und liefert die Antwort zurück, welche 
+     * onlineRequest() wird alle 10 Minuten ausgeführt und überschreib den Eintrag in der Datenbank 
+     * des Servers und liefert die Antwort zurück, welche 
      * bei Erfolg 0 ist und bei Misserfolg in ein Timeout läuft
      * @return 
      */
@@ -38,11 +53,25 @@ public class StatusIntervall extends TimerTask {
     }
 
     /**
-     * onlineAuswerten() erhält das Ergebnis von onlineRequest() und wertet dieses aus. Dann wird dementsprechend reagiert
+     * onlineAuswerten() erhält das Ergebnis von onlineRequest() und wertet dieses aus. 
+     * Dann wird dementsprechend reagiert
      *      
      */
-    private void onlineAuswerten(Response online){
+    private void onlineAuswerten(Response online) throws JsonMappingException, JsonProcessingException, Exception {
         //response in Object umwandeln,d amit if-Anweisungen funktionieren
+        JsonNode node = new ObjectMapper().readTree(online.readEntity(String.class));
+
+        if(node.get(SERVER_ANTWORT).asInt() == 0){
+            throw new Exception (
+                "Server ist immernoch erreichbar! und sie sind Online"
+            );
+        }else if(node.get(SERVER_ANTWORT).asInt() != 0){
+            //Timeout und neustart der Funktion
+        }else{
+            throw new Exception(
+                "Error! Unbekannter Zustand"
+            );
+        }
     }
 
 
