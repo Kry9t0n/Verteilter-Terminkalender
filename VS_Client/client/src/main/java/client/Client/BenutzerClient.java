@@ -45,7 +45,7 @@ public class BenutzerClient {
 		fetchTermineInDarstellungszeitraum();
 	}
 	
-	private void fetchTermineInDarstellungszeitraum() {
+	public void fetchTermineInDarstellungszeitraum() {
 		LocalDate tag = null;
 		for (int i = 0; i < ANZAHL_TERMIN_DARSTELLUNG; i++) {
 			if (i == 0) {
@@ -105,6 +105,11 @@ public class BenutzerClient {
 	public Client getClient() {
 		return client;
 	}
+
+	public Benutzer getBenutzer() {
+		return benutzer;
+	}
+	
 	
 	
 }
