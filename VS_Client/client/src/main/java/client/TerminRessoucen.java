@@ -54,6 +54,7 @@ public class TerminRessoucen {
 
 	/**
 	 * Anfragen Zum Bekommen alle Terminedaten GET Http Request send to the server through a URL
+         *
 	 * @param client
 	 * @return eine Liste von allen Terminen
 	 */
@@ -81,6 +82,7 @@ public class TerminRessoucen {
 
 	/**
 	 * Hinzufügen eines Termins: 
+         *
 	 * @param client
 	 * @param terminToAdd
 	 * @return eine response Instanz
