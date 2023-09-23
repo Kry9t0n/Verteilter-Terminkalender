@@ -1,13 +1,14 @@
 package client;
 
 import java.util.List;
-
+import java.time.LocalDateTime;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.client.ClientBuilder; 
 
 /**
  * Die Klasse TerminRessourcen kümmert sich um das Abfragen,das Ändern und das
@@ -26,7 +27,6 @@ public class TerminRessoucen {
 	/**
 	 * Anfrage Zum Erhalten eines bestimmten Termins mittels TerminId GET Http
 	 * Request send to the server through a URL
-	 * 
 	 * @param client
 	 * @param terminId
 	 * @return einen Termin Objekt
@@ -53,9 +53,7 @@ public class TerminRessoucen {
 	}
 
 	/**
-	 * Anfragen Zum Bekommen alle Terminedaten GET Http Request send to the server
-	 * through a URL
-	 * 
+	 * Anfragen Zum Bekommen alle Terminedaten GET Http Request send to the server through a URL
 	 * @param client
 	 * @return eine Liste von allen Terminen
 	 */
@@ -82,8 +80,7 @@ public class TerminRessoucen {
 	}
 
 	/**
-	 * Hinzufügen eines Termins:
-	 * 
+	 * Hinzufügen eines Termins: 
 	 * @param client
 	 * @param terminToAdd
 	 * @return eine response Instanz
@@ -94,7 +91,7 @@ public class TerminRessoucen {
 					.post(Entity.entity(terminToAdd, MediaType.APPLICATION_JSON));
 
 			if (response.getStatus() == STATUS_CREATED) {
-				Termin createdTermin = response.readEntity(Termin.class);
+				//Termin createdTermin = response.readEntity(Termin.class);
 				System.out.println("That was successful!");
 				return response;
 			} else {
