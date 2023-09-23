@@ -147,14 +147,10 @@ public class ClientDialog {
 		System.out.println("Neuer Tag:");
 		tag = leseGanzzahlEingabe();
 		
-		System.out.println("Neue Stunde:");
-		stunde = leseGanzzahlEingabe();
 		
-		System.out.println("Neue Minuten:");
-		minute = leseGanzzahlEingabe();
+		LocalDate date = LocalDate.of(jahr,monat,tag);
+		String datum = date.getDayOfMonth() + "," + date.getMonthValue() + "," + date.getYear();
 		
-		LocalDateTime date = LocalDateTime.of(jahr,monat,tag,stunde,minute); 
-		String datum = date.toString();
 		updateTermin.setDatum(datum);
 		
 		System.out.println("Neue Dauer:");
@@ -257,13 +253,9 @@ public class ClientDialog {
 		int monat = leseGanzzahlEingabe();
 		System.out.println("Tag:");
 		int tag = leseGanzzahlEingabe();
-		System.out.println("Stunde:");
-		int stunde = leseGanzzahlEingabe();
-		System.out.println("Minuten:");
-		int minuten = leseGanzzahlEingabe();
 		
-		LocalDateTime date = LocalDateTime.of(jahr,monat,tag,stunde,minuten); 
-		String datum = date.toString();
+		LocalDate date = LocalDate.of(jahr,monat,tag); 
+		String datum = date.getDayOfMonth() + "," + date.getMonthValue() + "," + date.getYear();
 		
 		System.out.println("Dauer des Termins:");
 		int dauer = leseGanzzahlEingabe();
