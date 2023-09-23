@@ -54,8 +54,8 @@ public class BenutzerClient {
 				tag = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(),
 						LocalDate.now().getDayOfMonth() + i);
 			}
-			ArrayList<Termin> tagesListe = fetchAlleTermineEinesTages(tag);
-			
+			//ArrayList<Termin> tagesListe = fetchAlleTermineEinesTages(tag);
+			ArrayList<Termin> tagesListe = (ArrayList<Termin>) TerminRessoucen.getAlleTermineAnEinemTag(client, tag, benutzer);
 			//überprüfen und ggf. einfügen
 			if(tagesListe != null) {
 				terminSpeicher.add(i, tagesListe);
@@ -65,11 +65,13 @@ public class BenutzerClient {
 		}
 	}
 	
+	
 	/**
 	 * Alle Termine eines Benutzers an einem Tag vom Server fetchen. 
 	 * @param tag als LocalDate Objekt
 	 * @return ArrayListe mit allen Terminen des angegebenen Datums
 	 */
+	/* --- Legacy
 	public ArrayList<Termin> fetchAlleTermineEinesTages(LocalDate tag) {
 		ArrayList<Termin> tagesListe = null;
 		final String FETCH_URL = TERMIN_BASE_URL + benutzer.getBenutzerId() + "/" +tag.getDayOfMonth() + "," +  tag.getMonthValue() + "," + tag.getYear();
@@ -96,7 +98,7 @@ public class BenutzerClient {
 		
 		return tagesListe;
 
-	}
+	}*/
 
 	public ArrayList<ArrayList<Termin>> getTerminSpeicher() {
 		return terminSpeicher;

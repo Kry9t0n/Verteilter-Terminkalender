@@ -10,7 +10,7 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response; 
+import jakarta.ws.rs.core.Response;
 
 /**
  * Die Klasse TerminRessourcen kümmert sich um das Abfragen,das Ändern und das
@@ -29,6 +29,7 @@ public class TerminRessoucen {
 	/**
 	 * Anfrage Zum Erhalten eines bestimmten Termins mittels TerminId GET Http
 	 * Request send to the server through a URL
+	 * 
 	 * @param client
 	 * @param terminId
 	 * @return einen Termin Objekt
@@ -55,8 +56,9 @@ public class TerminRessoucen {
 	}
 
 	/**
-	 * Anfragen Zum Bekommen alle Terminedaten GET Http Request send to the server through a URL
-         *
+	 * Anfragen Zum Bekommen alle Terminedaten GET Http Request send to the server
+	 * through a URL
+	 *
 	 * @param client
 	 * @return eine Liste von allen Terminen
 	 */
@@ -83,10 +85,28 @@ public class TerminRessoucen {
 	}
 
 	/**
-         * AnFragen zum Empfangen aller Termine an einem Tag.
+	 * AnFragen zum Empfangen aller Termine an einem Tag.
 	 * 
-         * @param client
+	 * @param client
 	 * @param tag
+<<<<<<< HEAD
+	 * @return alle Termine an diesem Tag
+	 */
+	public static List<Termin> getAlleTermineAnEinemTag(Client client, LocalDate tag, Benutzer benutzer) {
+		try {
+			List<Termin> terminTabelle = null;
+			Response response = client.target(BASE_URL).path(benutzer.getBenutzerId() + "/" + tag.getDayOfMonth() + ","
+					+ tag.getMonthValue() + "," + tag.getYear()).request(MediaType.APPLICATION_JSON).get();
+			if (response.getStatus() == STATUS_OK) {
+				terminTabelle = new ObjectMapper().readValue(response.readEntity(String.class), List.class);
+				return terminTabelle;
+			} else {
+				System.out.println(
+						"Fehler beim Abrufen der Termine an diesem Tag: " + response.getStatusInfo().getReasonPhrase());
+				return null;
+			}
+
+=======
          * @return alle Termine an diesem Tag
          */
         public static List<Termin> getAlleTermineAnEinemTag(Client client, LocalDate tag, Benutzer benutzer) {
@@ -106,15 +126,16 @@ public class TerminRessoucen {
 			        return null;
 		        }
 			
+>>>>>>> c0437295860f33be0d32e76623b1402fcd0451a2
 		} catch (Exception e) {
-		        e.printStackTrace();
-		        return null;
+			e.printStackTrace();
+			return null;
 		}
 	}
-	
+
 	/**
-	 * Hinzufügen eines Termins: 
-         *
+	 * Hinzufügen eines Termins:
+	 *
 	 * @param client
 	 * @param terminToAdd
 	 * @return eine response Instanz
@@ -125,7 +146,7 @@ public class TerminRessoucen {
 					.post(Entity.entity(terminToAdd, MediaType.APPLICATION_JSON));
 
 			if (response.getStatus() == STATUS_CREATED) {
-				//Termin createdTermin = response.readEntity(Termin.class);
+				// Termin createdTermin = response.readEntity(Termin.class);
 				System.out.println("That was successful!");
 				return response;
 			} else {
@@ -149,9 +170,10 @@ public class TerminRessoucen {
 	 */
 	public static Response updateTermin(Client client, Termin terminToUpdate) {
 		try {
-			
+
 			Response response = client.target(BASE_URL).path("/" + String.valueOf(terminToUpdate.getTerminId()))
-					.request(MediaType.APPLICATION_JSON).post(Entity.entity(terminToUpdate, MediaType.APPLICATION_JSON));
+					.request(MediaType.APPLICATION_JSON)
+					.post(Entity.entity(terminToUpdate, MediaType.APPLICATION_JSON));
 
 			if (response.getStatus() == STATUS_NO_CONTENT) {
 				System.out.println("That was successful!");
