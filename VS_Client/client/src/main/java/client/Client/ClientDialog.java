@@ -102,7 +102,9 @@ public class ClientDialog {
 		
 		LocalDate date = LocalDate.of(jahr,monat,tag); 
 		
-		ArrayList<Termin> tagesListe = benutzerClient.fetchAlleTermineEinesTages(date);
+		//ArrayList<Termin> tagesListe = benutzerClient.fetchAlleTermineEinesTages(date);
+		
+		ArrayList<Termin> tagesListe = (ArrayList<Termin>) TerminRessoucen.getAlleTermineAnEinemTag(client, date, benutzerClient.getBenutzer());
 		
 		String ausgabe = "Termine am:"+ jahr + monat + tag + "\n";
 		for (Termin termin: tagesListe) {
