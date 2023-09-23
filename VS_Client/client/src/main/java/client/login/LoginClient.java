@@ -87,9 +87,7 @@ public class LoginClient {
 	private boolean loginErfolgreich(Benutzer user) { // alle Attribute gleich -1 => login fehlgeschlagen
 		boolean loginErfolgreich = false;
 		
-		// alte Bedingung: user.getBenutzerId() == -1 && user.getBenutzerName().equals("-1") && user.getPasswort().equals("-1")
-		// && user.getName().equals("-1") && user.getVorname().equals("-1") && user.getIsAdmin() == -1
-		if (user.getBenutzerId() == 0 && user.getIsAdmin() == 0) {
+		if (user.getBenutzerId() == -1 && user.getBenutzerName().equals("-1") && user.getPasswort().equals("-1") && user.getName().equals("-1") && user.getVorname().equals("-1") && user.getIsAdmin() == -1) {
 			return loginErfolgreich; // login fehlgeschlagen => loginErfolgreich = false
 		} else {
 			loginErfolgreich = true;
