@@ -1,5 +1,6 @@
 package client;
 
+import client.Benutzer;
 import java.util.List;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -88,11 +89,11 @@ public class TerminRessoucen {
 	 * @param tag
          * @return alle Termine an diesem Tag
          */
-        public static List<Termin> getAlleTermineAnEinemTag(Client client, LocalDate tag) {
+        public static List<Termin> getAlleTermineAnEinemTag(Client client, LocalDate tag, Benutzer benutzer) {
                 try {
                         List<Termin> terminTabelle = null; 
 		        Response response = client.target(BASE_URL)
-		                .path(client.getBenutzerId() + "/" + tag.getDayOfMonth() + 
+		                .path(benutzer.getBenutzerId() + "/" + tag.getDayOfMonth() + 
 				      "," + tag.getMonthValue() + "," + tag.getYear())
 		                .request(MediaType.APPLICATION_JSON)
 		                .get();
