@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class Termin {
 	private int terminId;
 	private String titel;
-	private LocalDateTime datum; //(int year, int month, int date, int hrs, int min)
+	private String datum; //(int year, int month, int date, int hrs, int min)
 	private int dauer;
 	private int idErsteller;
 	private String benutzerEingeladen;
@@ -14,7 +14,7 @@ public class Termin {
 		public Termin() {}
 	
 	//Konstruktor mit allen Parametern
-	public Termin(int terminId, String titel, LocalDateTime datum, int dauer, int idErsteller, String benutzerEingeladen) {
+	public Termin(int terminId, String titel, String datum, int dauer, int idErsteller, String benutzerEingeladen) {
 		this.terminId = terminId;
 		this.titel = titel;
 		this.datum = datum;
@@ -24,7 +24,7 @@ public class Termin {
 	}
 	
 	//Konstruktor ohne terminId für neu erstellte Termine
-		public Termin(String titel, LocalDateTime datum, int dauer, int idErsteller, String benutzerEingeladen) {
+		public Termin(String titel, String datum, int dauer, int idErsteller, String benutzerEingeladen) {
 			this.titel = titel;
 			this.datum = datum;
 			this.dauer = dauer;
@@ -46,7 +46,7 @@ public class Termin {
 		return titel;
 	}
 	
-	public LocalDateTime getDatum() {
+	public String getDatum() {
 		return datum;
 	}
 	
@@ -71,7 +71,7 @@ public class Termin {
 		this.titel = titel;
 	}
 
-	public void setDatum(LocalDateTime datum) {
+	public void setDatum(String datum) {
 		this.datum = datum;
 	}
 
