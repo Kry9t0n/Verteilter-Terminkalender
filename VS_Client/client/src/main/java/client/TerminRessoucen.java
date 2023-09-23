@@ -1,14 +1,15 @@
 package client;
 
 import java.util.List;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.client.ClientBuilder; 
+import jakarta.ws.rs.core.Response; 
 
 /**
  * Die Klasse TerminRessourcen kümmert sich um das Abfragen,das Ändern und das
@@ -80,6 +81,36 @@ public class TerminRessoucen {
 		}
 	}
 
+	/**
+         * AnFragen zum Empfangen aller Termine an einem Tag.
+	 * 
+         * @param client
+	 * @param tag
+         * @return alle Termine an diesem Tag
+         */
+        public static List<Termin> getAlleTermineAnEinemTag(Client client, LocalDate tag) {
+                try {
+                        List<Termin> terminTabelle = null; 
+		        Response response = client.target(BASE_URL)
+		                .path(client.getBenutzerId() + "/" + tag.getDayOfMonth() + 
+				      "," + tag.getMonthValue() + "," + tag.getYear())
+		                .request(MediaType.APPLICATION_JSON)
+		                .get();
+		        if (response.getStatus() == STATUS_OK) {		            
+			        termineTabelle = new ObjectMapper().readValue(response.readEntity(String.class), List.class);
+				return termineTabelle;
+		        } else {
+			        System.out.println(
+					        "Fehler beim Abrufen der Termine an diesem Tag: " + response.getStatusInfo().getReasonPhrase());
+			        return null;
+		        }
+			
+		} catch (Exception e) {
+		        e.printStackTrace();
+		        return null;
+		}
+	}
+	
 	/**
 	 * Hinzufügen eines Termins: 
          *
