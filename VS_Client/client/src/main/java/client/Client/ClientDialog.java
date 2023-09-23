@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import client.Benutzer;
 import client.Termin;
 import client.TerminRessoucen;
 import jakarta.ws.rs.client.Client;
@@ -154,7 +155,7 @@ public class ClientDialog {
 		
 		LocalDateTime date = LocalDateTime.of(jahr,monat,tag,stunde,minute); 
 		String datum = date.toString();
-		updateTermin.setDatum(date);
+		updateTermin.setDatum(datum);
 		
 		System.out.println("Neue Dauer:");
 		dauer = leseGanzzahlEingabe();
@@ -289,7 +290,7 @@ public class ClientDialog {
 		Benutzer benutzer;
 		benutzer = benutzerClient.getBenutzer();
 		
-		Termin termin = new Termin(titel,date,dauer,benutzer.getBenutzerId(),einladungBenutzer);
+		Termin termin = new Termin(titel,datum,dauer,benutzer.getBenutzerId(),einladungBenutzer);
 		TerminRessoucen.addTermin(client, termin);
 		
 		System.out.println("Termin wuerde erstellt !!!");
