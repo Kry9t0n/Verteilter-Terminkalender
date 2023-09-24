@@ -1,9 +1,12 @@
 package client.mastercontroller;
 
 import client.Benutzer;
+import client.OnlineStatus;
 import client.Client.BenutzerClient;
 import client.Client.ClientDialog;
 import client.login.LoginDialog;
+import java.util.Timer;
+
 
 /**
  * @author Alejandro Freyermuth
@@ -25,6 +28,7 @@ public class MasterController {
 	
 	private void run() {
 		fuehreLoginClientAus();
+		startOnlineCheck();
 		selectAndRunClient();
 	}
 	
@@ -49,6 +53,12 @@ public class MasterController {
 	
 	private void fuehreAdminClientAus() {
 		
+	}
+
+	private void startOnlineCheck(){
+		Timer timer = new Timer();
+		
+		timer.schedule(new OnlineStatus(masterUser), 0, 600000);
 	}
 	
 	public static void programmBeenden() {
