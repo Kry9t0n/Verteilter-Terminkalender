@@ -2,8 +2,9 @@ package client.login;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+//import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+//import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import client.Benutzer;
 import jakarta.ws.rs.client.Client;
@@ -11,6 +12,14 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
+import java.util.Timer;
+
+/**
+ * Message an Alejandro:
+ * Da das Online melden unserer Seits nicht mehr gebraucht wird, werde ich den Code erstmal auskommentieren, wenn
+ * du wieder daran arbeitest kannst du den Code löschen. Ich bringe dann nur dieses 10min Intervall zum laufen
+ */
 
 /**
  * 
@@ -20,10 +29,12 @@ import jakarta.ws.rs.core.Response;
 
 public class LoginClient {
 	private final String TARGET_URL = "http://localhost:8080/VS_Server/webapi/login/benutzer"; 
+	//private final String ONLINE_URL = " "; //TODO: echte URL für OnlineStatus
 
 	private Benutzer loginBenutzer;
+	//private ObjectNode auth;
 	private Client client;
-
+	//private boolean online = true;
 
 	public LoginClient(String username, String passwd, Benutzer masterUser) {
 		this.loginBenutzer = masterUser;
@@ -34,8 +45,12 @@ public class LoginClient {
 		client = ClientBuilder.newClient();
 	}
 
-	public LoginClient(){};
+	/**
+	 * Standardkonstruktor??? Wir evtl benötigt für Intervall, da ausgelagert
+	 */
+	public LoginClient(){
 
+	}
 
 	/**
 	 * Nimmt das Benutzerobjekt, auf das die Referenzvariable loginBenutzer verweißt und sendet als serialisierte JSON-Daten
@@ -48,6 +63,18 @@ public class LoginClient {
 		return client.target(TARGET_URL).request(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(loginBenutzer, MediaType.APPLICATION_JSON));
 	}
+
+	/**---Legacy---
+ 	* Beim Login soll der Client sich beim Server als Online melden (aufruf der Methode bei Login), dadurch
+ 	* wird der Client automatisch in die Table geschrieben mit allen online Clients
+ 	* -> zum Einloggen ein Post-Request an das Verzeichnis
+ 	*/
+	/*private Response postOnlineStatus(){
+		return client.target(ONLINE_URL).request(MediaType.APPLICATION_JSON)
+				.post(Entity.entity(loginBenutzer, MediaType.APPLICATION_JSON));
+	}*/
+
+
 
 
 	/**
@@ -83,6 +110,8 @@ public class LoginClient {
 		
 		Benutzer benutzerObjectFromServerResponse = new ObjectMapper()
 				.readValue(serverResponse.readEntity(String.class), Benutzer.class);
+		// JsonNode node = new
+		// ObjectMapper().readTree(serverResponse.readEntity(String.class));
 		if (!loginErfolgreich(benutzerObjectFromServerResponse)) {
 			throw new Exception(
 					"Login war nicht erfolgreich! Kombination aus Username und Passwort stimmt nicht überein!");
@@ -91,6 +120,8 @@ public class LoginClient {
 			this.loginBenutzer.setName(benutzerObjectFromServerResponse.getName());
 			this.loginBenutzer.setVorname(benutzerObjectFromServerResponse.getVorname());
 			this.loginBenutzer.setIsAdmin(benutzerObjectFromServerResponse.getIsAdmin());
+			//onlineMelden();
+			Statuskontrolle(); //Start des Intervalls, welches den OnlineStatus alle 10 min überprüft
 		}
 	}
 
@@ -102,5 +133,70 @@ public class LoginClient {
 		return client;
 	}
 	
+
+	/**---Legacy---
+	 * OnlineStatus wird überprüft und die entsprechenden Exceptions geworfen
+	 * @throws JsonMappingException
+	 * @throws JsonProcessingException
+	 * @throws Exception
+	 */
+	/*public void onlineMelden() throws JsonMappingException, JsonProcessingException, Exception {
+		Response onlineStatus = postOnlineStatus(); //integer Value (>0 oder -1)
+		JsonNode node = new ObjectMapper().readTree(onlineStatus.readEntity(String.class));
+		if(node.get(ONLINE_STAT).asInt() < 0){ //ONLINE_STAT ist antwort von Server 
+			throw new Exception(
+				"Sie sind offline!"
+			);
+			this.online = false;
+		}else if(node.get(ONLINE_STAT).asInt() == 1){
+			System.out.println("Sie sind online!");
+			this.online = true;
+			Statuskontrolle(); //beginn des 10min Intervalls für kontrolle des Status
+		}else{
+			throw new Exception(
+				"Error!"
+			);
+		}
+		
+	}*/
+
+	/**
+	 * Funktion ruft alle 10 Minuten eine seperate Klasse StatusINtervall auf, welche den OnlineStatus überprüft
+	 */
+	/*private void Statuskontrolle(){ // wird beim ersten mal angestoßen in Online() damit der Timer startet und immer wieder abläuft (zumindest in der Theorie)
+		Timer timer = new Timer();
+		timer.schedule(new StatusIntervall(), 0, 600); //600Sekunden = 10Minuten
+	}
+
+	/**---Legacy---
+	 * get() für Online Status
+	 * @return
+	 */
+	/*public boolean getOnline(){
+        return online;
+    }*/
+
+	
+	//Nur zum Testen!!!!
+	/*
+	public static void main(String[] args) {
+
+		Benutzer masterUser = new Benutzer();
+		
+		System.out.println("MasterUser zuerst: " + masterUser);
+		
+		LoginClient l = new LoginClient("Alejandro", "k12d64fai45lf", masterUser);
+		try {
+			l.login();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		System.out.println("MasterUser danach: " + masterUser);
+	}*/
 
 }

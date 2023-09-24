@@ -1,0 +1,86 @@
+/**
+ * Intervall, welches alle 10 Minuten ausgeführt wird, um den OnlineStatus zu überprüfen. Erfolgreich ist die Abfrage
+ * , wenn der Server erreichbar ist und mit der Message: "Online Status aktualisiert" antwortet. 
+ * Falls eine andere Antwort kommt, wird nach 10 Minuten ein neuer Versuch gestartet, ist der Server gar nicht erst erreichbar
+ * wird die entsprechende Exception geworfen.
+ * 
+ *  @author Yannik Geber
+ */
+
+package client;
+
+import java.util.TimerTask;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+
+
+public class OnlineStatus extends TimerTask {
+
+    //Attribute
+    private final String putURL = "https://localhost:8080/VS_Server/webapi/online"; //zu URL muss noch eine BenutzerID hinzugefügt werden
+    private Client oclient;
+    //private int benutzerId;
+    Benutzer loginbenutzer;
+
+
+    @Override
+    public void run() {
+        Response online = onlineRequest();
+        try{
+            onlineAuswerten(online);
+
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
+    /**
+     * onlineRequest() wird alle 10 Minuten ausgeführt und überschreib den Eintrag in der Datenbank 
+     * des Servers und liefert die Antwort zurück, welche 
+     * bei Erfolg 0 ist und bei Misserfolg in ein Timeout läuft
+     * @return 
+     */
+    private Response onlineRequest(){
+        oclient = ClientBuilder.newClient();
+
+        return oclient.target(putURL).request(MediaType.APPLICATION_JSON)
+                .put(Entity.entity(loginbenutzer, MediaType.APPLICATION_JSON));
+    }
+
+    /**
+     * onlineAuswerten() erhält das Ergebnis von onlineRequest() und wertet dieses aus. 
+     * Dann wird dementsprechend reagiert
+     *      
+     */
+    private void onlineAuswerten(Response online) throws JsonMappingException, JsonProcessingException, Exception {
+        //response in Object umwandeln,d amit if-Anweisungen funktionieren
+        JsonNode node = new ObjectMapper().readTree(online.readEntity(String.class));
+
+        if(node.get("nachricht").toString().equals("Online Status aktualisiert")){
+            throw new Exception (
+                "Server ist immernoch erreichbar! und sie sind Online"
+            );
+        }else{
+            throw new Exception(
+                "Error! Unbekannter Zustand"
+            );
+        }
+    }
+
+
+    
+}
