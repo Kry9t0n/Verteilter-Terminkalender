@@ -4,8 +4,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
 
 import client.Benutzer;
 import client.Termin;
@@ -32,13 +35,16 @@ public class BenutzerClient {
 	private Benutzer benutzer;
 	private ArrayList<ArrayList<Termin>> terminSpeicher; // ArrayList die die ArrayListen der einzelnen Tage speichert
 	private Client client;
-	
+	private ArrayList<Termin> eingeladen;
+	private PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder()
+			.allowIfSubType("java.util").build();
 	/**
 	 * Konstruktor erstellt einen neuen Benutzerclient, dabei werden automatisch
 	 * alle Termine im Darstellungszeitraum gefetcht. 
 	 * @param masterUser Clientseitiges Benutzerobjekt, das vom Mastercontroller erstellt und verwaltet wird
 	 */
 	public BenutzerClient(Benutzer masterUser) {
+		eingeladen = new ArrayList<>();
 		terminSpeicher = new ArrayList<>();
 		client = ClientBuilder.newClient();
 		this.benutzer = masterUser;
@@ -55,15 +61,29 @@ public class BenutzerClient {
 						LocalDate.now().getDayOfMonth() + i);
 			}
 			//ArrayList<Termin> tagesListe = fetchAlleTermineEinesTages(tag);
-			ArrayList<Termin> tagesListe = (ArrayList<Termin>) TerminRessoucen.getAlleTermineAnEinemTag(client, tag, benutzer);
+			ArrayList<Termin> tagesListe = TerminRessoucen.getAlleTermineAnEinemTag(client, tag, benutzer);
 			//überprüfen und ggf. einfügen
 			if(tagesListe != null) {
 				terminSpeicher.add(i, tagesListe);
+				
 			}else {
 				System.err.println("Fehler!!! Tagesliste ist null!"); //TODO: nur zum testen!!!
 			}
 		}
 	}
+	
+	
+	public void getEinladungen() {
+		Response response = client.target("http://localhost:8080/VS_Server/webapi/eingeladen/benutzer/"+benutzer.getBenutzerId())
+									.request(MediaType.APPLICATION_JSON)
+									.get();
+		try {
+			eingeladen = new ObjectMapper().setPolymorphicTypeValidator(ptv).readValue(response.readEntity(String.class), new TypeReference<ArrayList<Termin>>() {});
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 	
 	/**
@@ -110,6 +130,14 @@ public class BenutzerClient {
 
 	public Benutzer getBenutzer() {
 		return benutzer;
+	}
+
+	public int getANZAHL_TERMIN_DARSTELLUNG() {
+		return ANZAHL_TERMIN_DARSTELLUNG;
+	}
+
+	public ArrayList<Termin> getEingeladen() {
+		return eingeladen;
 	}
 	
 	

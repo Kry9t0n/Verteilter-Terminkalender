@@ -41,7 +41,7 @@ public class LoginDialog {
 				loginSuccess = false;
 			}
 		} while (!loginSuccess);
-
+		System.out.println("Login erfolgreich...");
 	}
 
 	private void dialogAusgeben() {

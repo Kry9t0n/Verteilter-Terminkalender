@@ -53,7 +53,7 @@ public class MasterController {
 	
 	public static void programmBeenden() {
 		System.out.println("Programm wird beendet...");
-		return;
+		System.exit(1);
 	}
 	
 	public static void main(String[] args) {

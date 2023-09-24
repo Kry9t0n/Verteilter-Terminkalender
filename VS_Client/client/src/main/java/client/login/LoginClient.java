@@ -28,7 +28,7 @@ import java.util.Timer;
  */
 
 public class LoginClient {
-	private final String TARGET_URL = "http://localhost:8080/VS_Server/webapi/login/benutzer"; 
+	private final String TARGET_URL = "http://localhost:8080/VS_Server/webapi/login/"; 
 	//private final String ONLINE_URL = " "; //TODO: echte URL für OnlineStatus
 
 	private Benutzer loginBenutzer;
@@ -121,7 +121,7 @@ public class LoginClient {
 			this.loginBenutzer.setVorname(benutzerObjectFromServerResponse.getVorname());
 			this.loginBenutzer.setIsAdmin(benutzerObjectFromServerResponse.getIsAdmin());
 			//onlineMelden();
-			Statuskontrolle(); //Start des Intervalls, welches den OnlineStatus alle 10 min überprüft
+			//Statuskontrolle(); //Start des Intervalls, welches den OnlineStatus alle 10 min überprüft
 		}
 	}
 
