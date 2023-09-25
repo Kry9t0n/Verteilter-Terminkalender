@@ -2,6 +2,7 @@ package client.mastercontroller;
 
 import client.Benutzer;
 import client.OnlineStatus;
+import client.Admin.AdminDialog;
 import client.Client.BenutzerClient;
 import client.Client.ClientDialog;
 import client.login.LoginDialog;
@@ -19,6 +20,9 @@ import java.util.Timer;
  *
  */
 public class MasterController {
+	private final int IS_ADMIN = 1;
+	private final int NOT_ADMIN = 0;
+	
 	private Benutzer masterUser;
 	
 	public MasterController() {
@@ -28,7 +32,7 @@ public class MasterController {
 	
 	private void run() {
 		fuehreLoginClientAus();
-		startOnlineCheck();
+		//startOnlineCheck();
 		selectAndRunClient();
 	}
 	
@@ -37,13 +41,13 @@ public class MasterController {
 	}
 	
 	private void selectAndRunClient() {
-		if(masterUser.getIsAdmin() == 1) { // führe Admin Client aus
+		if(masterUser.getIsAdmin() == IS_ADMIN) { // führe Admin Client aus
 			fuehreAdminClientAus();
-		}else if(masterUser.getIsAdmin() == -1) { // führe normalen Benutzerclient aus
+		}else if(masterUser.getIsAdmin() == NOT_ADMIN) { // führe normalen Benutzerclient aus
 			fuehreNormalenClientAus();
 		}else {
 			System.err.println("Fehler!");
-			programmBeenden();
+			programmBeenden(1);
 		}
 	}
 	
@@ -52,18 +56,18 @@ public class MasterController {
 	}
 	
 	private void fuehreAdminClientAus() {
-		
+		new AdminDialog().StartAdminDialog();
 	}
 
 	private void startOnlineCheck(){
 		Timer timer = new Timer();
 		
-		timer.schedule(new OnlineStatus(masterUser), 0, 600000);
+		timer.schedule(new OnlineStatus(masterUser), 0, 30000); //600000
 	}
 	
-	public static void programmBeenden() {
+	public static void programmBeenden(int status) {
 		System.out.println("Programm wird beendet...");
-		System.exit(1);
+		System.exit(status);
 	}
 	
 	public static void main(String[] args) {
