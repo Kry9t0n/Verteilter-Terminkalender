@@ -4,8 +4,8 @@ import java.util.TimerTask;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.fasterxml.jackson.databind.JsonNode;
+//import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -71,7 +71,22 @@ public class OnlineStatus extends TimerTask {
      *      
      */
     private void onlineAuswerten(Response online) throws JsonMappingException, JsonProcessingException, Exception {
+        
+        
+        //Überprüfung auf den Response Code 200 = OK, anstatt auf Nachricht
+        if(online.getStatus() == Response.Status.OK.getStatusCode()){
+            throw new Exception (
+                "Server ist immernoch erreichbar! und sie sind Online"
+            );
+        }else{
+            throw new Exception(
+                "Error! Erneuter Versuch in 10 Minuten"
+            );
+        }
+        
+        
         //response in Object umwandeln,d amit if-Anweisungen funktionieren
+        /* 
         JsonNode node = new ObjectMapper().readTree(online.readEntity(String.class));
 
         if(node.get("nachricht").toString().equals("Online Status aktualisiert")){
@@ -83,7 +98,9 @@ public class OnlineStatus extends TimerTask {
                 "Error! Unbekannter Zustand"
             );
         }
+        */
     }
+
 
 
     private String editURL(String pURL){
