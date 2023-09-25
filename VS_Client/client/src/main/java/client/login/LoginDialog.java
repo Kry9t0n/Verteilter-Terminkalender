@@ -92,7 +92,7 @@ public class LoginDialog {
 	}
 
 	private void cancel() {
-		MasterController.programmBeenden();
+		MasterController.programmBeenden(0);
 	}
 	
 	//Nur zum Testen!!!
