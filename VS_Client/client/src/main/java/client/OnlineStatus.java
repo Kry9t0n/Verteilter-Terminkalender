@@ -1,5 +1,6 @@
 package client;
 
+import java.util.Timer;
 import java.util.TimerTask;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -7,6 +8,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 //import com.fasterxml.jackson.databind.JsonNode;
 //import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -28,8 +30,7 @@ public class OnlineStatus extends TimerTask {
     //Attribute
     private Client oclient;
     private Benutzer masteruser;
-    private final String putURL = "https://localhost:8080/VS_Server/webapi/online"; //zu URL muss noch eine BenutzerID hinzugefügt werden
-
+    private final String putURL = "http://localhost:8080/VS_Server/webapi/online"; //zu URL muss noch eine BenutzerID hinzugefügt werden
     
     public OnlineStatus(Benutzer master){
         this.masteruser = master;
@@ -37,15 +38,17 @@ public class OnlineStatus extends TimerTask {
 
     @Override
     public void run() {
-        Response online = onlineRequest();
         try{
+        	Response online = onlineRequest();
             onlineAuswerten(online);
 
         } catch (JsonMappingException e) {
             e.printStackTrace();
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-        } catch (Exception e) {
+        } catch(ProcessingException e) {
+        	System.out.println("Server nicht erreichbar! Versuche in 10 min wieder.");
+        }catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
@@ -57,7 +60,7 @@ public class OnlineStatus extends TimerTask {
      * bei Erfolg 0 ist und bei Misserfolg in ein Timeout läuft
      * @return 
      */
-    private Response onlineRequest(){
+    private Response onlineRequest() throws ProcessingException{
         oclient = ClientBuilder.newClient();
         String modURL = editURL(putURL);
 
@@ -75,9 +78,7 @@ public class OnlineStatus extends TimerTask {
         
         //Überprüfung auf den Response Code 200 = OK, anstatt auf Nachricht
         if(online.getStatus() == Response.Status.OK.getStatusCode()){
-            throw new Exception (
-                "Server ist immernoch erreichbar! und sie sind Online"
-            );
+            System.out.println("Server ist immernoch erreichbar! und sie sind Online");
         }else{
             throw new Exception(
                 "Error! Erneuter Versuch in 10 Minuten"
