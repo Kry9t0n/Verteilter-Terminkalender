@@ -5,8 +5,12 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import client.Benutzer;
 import client.Benuzer_Rest;
+import client.Monitoring_Data;
 import client.Termin;
 import client.TerminRessoucen;
 import client.mastercontroller.MasterController;
@@ -48,14 +52,14 @@ public class AdminDialog {
 				System.out.println(e);
 				input.nextLine();
 			} catch(Exception e) {
-				System.out.println(e);
+				System.out.println(e); //hier vlt e.getMessage() ????
 				e.printStackTrace(System.out);
 			}
 		} while(eingabe != ENDE);
 		
 	}
 
-	private void eingabeAusfuehren(int eingabe) {
+	private void eingabeAusfuehren(int eingabe) throws JsonMappingException, JsonProcessingException {
 		switch(eingabe){
 		case 1: 
 			benutzerErstellen();
@@ -144,9 +148,15 @@ public class AdminDialog {
 		
 	}
 	
-	private void server_daten_ausgeben() {
-		// TODO Auto-generated method stub
-		
+	private void server_daten_ausgeben() throws JsonMappingException, JsonProcessingException {
+		Monitoring_Data statData = adminClient.fetcheServerStatistiken();
+		System.out.println("### Serverstatistiken ###");
+		System.out.println("Anzahl der Requests        : " + statData.getRequestCount());
+		System.out.println("Anzahl der Errors          : " + statData.getErrorCount());
+		System.out.println("Anzahl der erhaltenen Bytes: " + statData.getBytesReceived());
+		System.out.println("Anzahl der gesendeten Bytes: " + statData.getBytesSent());
+		System.out.println("Laufzeit                   : " + statData.getProcessingTime());
+		System.out.println("------------------------------------------\n");
 	}
 
 	private int eingebeLesen() {
