@@ -62,7 +62,8 @@ public class OnlineasThread extends Thread{
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             } catch(ProcessingException e) {
-        	    System.out.println("Server nicht erreichbar! Versuche in 10 min wieder.");
+        	    System.out.println("Server nicht erreichbar! Erneute Meldung wenn wieder verfügbar!");
+                System.out.println("Erneutes Login nötig!");
             }catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -70,7 +71,7 @@ public class OnlineasThread extends Thread{
 
             //Warteintervall
             try{
-                Thread.sleep(600000); //10 Minuten
+                Thread.sleep(595000); //circa 10 Minuten 600000
             }catch(InterruptedException e){
                 System.out.println("Online Abfrage im Hintergrund beendet!");
                 break;
@@ -109,6 +110,9 @@ public class OnlineasThread extends Thread{
         }
     }
 
+    /**
+     * Die URL wird um die BenutzerID ergänzt
+     */
     private String editURL(String pURL){
 
         return pURL + "/" + masteruser.getBenutzerId();
