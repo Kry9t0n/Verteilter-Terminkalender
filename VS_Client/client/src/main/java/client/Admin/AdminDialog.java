@@ -26,9 +26,11 @@ public class AdminDialog {
 	private static final int BENUTZER_ERSTELLEN = 1;
 	private static final int BENUTZER_AUSGEBEN = 2;
 	private static final int BENUTZER_LOESCHEN = 3;
-	private static final int TERMINE_AUSGEBEN = 4;
-	private static final int TERMIN_LOESCHEN = 5;
-	private static final int SERVER_DATEN_AUSGEBEN = 6;
+	private static final int BENUTZER_SUCHEN = 4;
+	private static final int TERMINE_AUSGEBEN = 5;
+	private static final int TERMIN_LOESCHEN = 6;
+	private static final int SERVER_DATEN_AUSGEBEN = 7;
+	
 	
 	public AdminDialog(AdminClient adminClient) {
 		this.adminClient = adminClient;
@@ -71,12 +73,16 @@ public class AdminDialog {
 			benutzerLoeschen();
 			break;
 		case 4:
-			termineAusgeben();
+			benutzerSuchen();
 			break;
 		case 5:
-			termineLoeschen();
+			termineAusgeben();
+			
 			break;
 		case 6:
+			termineLoeschen();
+			break;
+		case 7:
 			server_daten_ausgeben();
 			break;
 		case 0:
@@ -127,6 +133,13 @@ public class AdminDialog {
 		System.out.println("Benutzer wuerde geloescht!\n");
 	}
 	
+	private void benutzerSuchen() {
+		System.out.println("Welcher Benutzer(Benutzername) soll gesucht werden?");
+		String benutzerName = input.next();
+		System.out.println("Suche Benutzer...");
+		//TODO: aufruf von AdminFunktion
+	}
+	
 	private void termineAusgeben() {
 		
 		ArrayList<Termin> terminListe = TerminRessoucen.getAllTermine(client);
@@ -172,6 +185,7 @@ public class AdminDialog {
 		System.out.print(BENUTZER_ERSTELLEN + ":Benutzer erstellen\n"
 				+ BENUTZER_AUSGEBEN + ":Benutzer ausgeben\n"
 				+ BENUTZER_LOESCHEN + ":Benutzer loeschen\n"
+				+ BENUTZER_SUCHEN + "Benutzer suchen\n"
 				+ TERMINE_AUSGEBEN + ":Termin ausgeben\n"
 				+ TERMIN_LOESCHEN + ":Termin loeschen\n"
 				+ SERVER_DATEN_AUSGEBEN + ":Server daten ausgeben\n"
