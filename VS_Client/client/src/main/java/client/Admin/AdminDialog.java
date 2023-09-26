@@ -1,9 +1,13 @@
 package client.Admin;
 
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import client.Benutzer;
+import client.Benuzer_Rest;
+import client.Termin;
 import client.TerminRessoucen;
 import client.mastercontroller.MasterController;
 import jakarta.ws.rs.client.Client;
@@ -12,6 +16,7 @@ public class AdminDialog {
 
 	private Scanner input;
 	private Client client;
+	private AdminClient adminClient;
 	
 	private static final int ENDE = 0;
 	private static final int BENUTZER_ERSTELLEN = 1;
@@ -21,8 +26,9 @@ public class AdminDialog {
 	private static final int TERMIN_LOESCHEN = 5;
 	private static final int SERVER_DATEN_AUSGEBEN = 6;
 	
-	public AdminDialog() {
-		this.client = client;
+	public AdminDialog(AdminClient adminClient) {
+		this.adminClient = adminClient;
+		this.client = adminClient.getClient();
 		input = new Scanner(System.in);
 	}
 
@@ -91,29 +97,40 @@ public class AdminDialog {
 		name = input.next();
 		System.out.println("Password des Benutzers:\n");
 		password = input.next();
-		//Benutzer benutzer = new Benutzer(password,Vorname,name,0);
-		//BenutzerRessoucen.addBenutzer(client,benutzer);
+		Benutzer benutzer = new Benutzer(password,Vorname,name,0);
+		Benuzer_Rest.addBenutzer(client,benutzer);
 		
 		System.out.println("Benutzers erstellt!\n");
 	}
 
 	
 	private void benutzerAusgeben() {
-		// TODO Auto-generated method stub
+		
+		ArrayList<Benutzer> benutzerListe = Benuzer_Rest.getAllBenutzer(client);
+		
+		for(Benutzer b : benutzerListe) {
+			System.out.println(b);
+		}
+		System.out.println("------------------------------------------\n");
 		
 	}
 	
 	private void benutzerLoeschen() {
 		System.out.println("Welchen Benutzer(Benutzer Id) soll geloescht werden?\n");
 		int benutzerId = leseGanzzahlEingabe();
-		
-		//BenutzerRessoucen.removeBenutzer(client,benutzerId);
-		
+		Benuzer_Rest.removeBenutzer(client,benutzerId);
+	
 		System.out.println("Benutzer wuerde geloescht!\n");
 	}
 	
 	private void termineAusgeben() {
-		// TODO Auto-generated method stub
+		
+		ArrayList<Termin> terminListe = TerminRessoucen.getAllTermine(client);
+		
+		for(Termin t : terminListe) {
+			System.out.println(t);
+		}
+		System.out.println("------------------------------------------\n");
 		
 	}
 	
@@ -121,8 +138,7 @@ public class AdminDialog {
 		System.out.println("Welchen Termin(Termin Id) soll geloescht werden?\n");
 		int terminId = leseGanzzahlEingabe();
 		
-		TerminRessoucen terminressource;
-		//TerminRessoucen.removeTermin(client,terminId);
+		TerminRessoucen.removeTermin(client,terminId);
 		
 		System.out.println("Termin wuerde geloescht!\n");
 		
@@ -172,4 +188,5 @@ public class AdminDialog {
 	
 
 }
+
 

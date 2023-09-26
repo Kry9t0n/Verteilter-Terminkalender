@@ -5,13 +5,22 @@ import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 
 public class AdminClient {
+
 	private Benutzer benutzer;
 	private Client client;
 	
-	public AdminClient(Benutzer benutzer) {
-		this.benutzer = benutzer;
-		this.client = ClientBuilder.newClient();
+	public AdminClient(Benutzer masterUser) {
+		client = ClientBuilder.newClient();
+		this.benutzer = masterUser;
 	}
-	
-	//TODO: Admin Client Funktionen
+
+	public Client getClient() {
+		return client;
+	}
+
+	public Benutzer getBenutzer() {
+		return benutzer;
+	}
+
+
 }
