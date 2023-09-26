@@ -2,12 +2,14 @@ package client.mastercontroller;
 
 import client.Benutzer;
 import client.OnlineStatus;
+import client.OnlineasThread;
 import client.Admin.AdminClient;
 import client.Admin.AdminDialog;
 import client.Client.BenutzerClient;
 import client.Client.ClientDialog;
 import client.login.LoginDialog;
-import java.util.Timer;
+//import java.util.Timer;
+import java.lang.Thread;
 
 
 /**
@@ -26,6 +28,8 @@ public class MasterController {
 	
 	private Benutzer masterUser;
 	
+	
+	
 	public MasterController() {
 		masterUser = new Benutzer();
 		run();
@@ -33,6 +37,8 @@ public class MasterController {
 	
 	private void run() {
 		fuehreLoginClientAus();
+		//oThread.start(); //Start des HintergrundThreads zur Abfrage des OnlineStatus
+		OnlineasThread.startOnlineasThread(masterUser);
 		//startOnlineCheck();
 		selectAndRunClient();
 	}
@@ -60,14 +66,17 @@ public class MasterController {
 		new AdminDialog(new AdminClient(masterUser)).StartAdminDialog();
 	}
 
+	/* 
 	private void startOnlineCheck(){
 		Timer timer = new Timer();
-		
 		timer.schedule(new OnlineStatus(masterUser), 0, 30000); //600000
-	}
+		//timer.cancel();
+	
+	}*/
 	
 	public static void programmBeenden(int status) {
 		System.out.println("Programm wird beendet...");
+		OnlineasThread.interruptOnlineasThread(); //Beenden des HintergrundThreads
 		System.exit(status);
 	}
 	
