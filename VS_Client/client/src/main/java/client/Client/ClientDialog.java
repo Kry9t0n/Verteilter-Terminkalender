@@ -7,6 +7,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import client.Benutzer;
+import client.Einladung_Rest;
 import client.Termin;
 import client.TerminRessoucen;
 import jakarta.ws.rs.client.Client;
@@ -235,7 +236,7 @@ public class ClientDialog {
 		System.out.println("Ausgabe der Einladungen!");
 		System.out.println("------------------------------------------\n");
 		benutzerClient.getEinladungen();
-		ArrayList<Termin> einladungsSpeicher = benutzerClient.getEingeladen();
+		ArrayList<Termin> einladungsSpeicher = Einladung_Rest.getEinladungen(client, benutzerClient.getBenutzer().getBenutzerId());
 		for(Termin t : einladungsSpeicher) {
 			System.out.println(t);
 		}

@@ -2,6 +2,7 @@ package client.mastercontroller;
 
 import client.Benutzer;
 import client.OnlineStatus;
+import client.Admin.AdminClient;
 import client.Admin.AdminDialog;
 import client.Client.BenutzerClient;
 import client.Client.ClientDialog;
@@ -56,7 +57,7 @@ public class MasterController {
 	}
 	
 	private void fuehreAdminClientAus() {
-		new AdminDialog().StartAdminDialog();
+		new AdminDialog(new AdminClient(masterUser)).StartAdminDialog();
 	}
 
 	private void startOnlineCheck(){
