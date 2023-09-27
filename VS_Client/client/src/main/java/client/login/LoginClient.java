@@ -12,6 +12,8 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+
+
 /**
  * 
  * @author Alejandro Freyermuth, Yannik Geber
@@ -19,11 +21,10 @@ import jakarta.ws.rs.core.Response;
  */
 
 public class LoginClient {
-	private final String TARGET_URL = "http://localhost:8080/VS_Server/webapi/login/benutzer"; 
+	private final String TARGET_URL = "http://localhost:8080/VS_Server/webapi/login/"; 
 
 	private Benutzer loginBenutzer;
 	private Client client;
-
 
 	public LoginClient(String username, String passwd, Benutzer masterUser) {
 		this.loginBenutzer = masterUser;
@@ -33,8 +34,6 @@ public class LoginClient {
 		
 		client = ClientBuilder.newClient();
 	}
-
-	public LoginClient(){};
 
 
 	/**
@@ -49,7 +48,6 @@ public class LoginClient {
 				.post(Entity.entity(loginBenutzer, MediaType.APPLICATION_JSON));
 	}
 
-
 	/**
 	 * Überprüft, ob der Loginvorgang erfolgreich war. Falls der Login fehlerhaft war, wird vom Server ein Benutzerobjekt 
 	 * zurückgegeben, das alle Attribute auf -1 (bei int) oder "-1" (bei String) gesetzt hat.
@@ -60,7 +58,8 @@ public class LoginClient {
 	private boolean loginErfolgreich(Benutzer user) { // alle Attribute gleich -1 => login fehlgeschlagen
 		boolean loginErfolgreich = false;
 		
-		if (user.getBenutzerId() == -1 && user.getBenutzerName().equals("-1") && user.getPasswort().equals("-1") && user.getName().equals("-1") && user.getVorname().equals("-1") && user.getIsAdmin() == -1) {
+		//alt: user.getBenutzerId() == -1 && user.getBenutzerName().equals("-1") && user.getPasswort().equals("-1") && user.getName().equals("-1") && user.getVorname().equals("-1") && user.getIsAdmin() == -1
+		if (user.getBenutzerId() == 0 && user.getIsAdmin() == 0) {
 			return loginErfolgreich; // login fehlgeschlagen => loginErfolgreich = false
 		} else {
 			loginErfolgreich = true;
@@ -83,6 +82,7 @@ public class LoginClient {
 		
 		Benutzer benutzerObjectFromServerResponse = new ObjectMapper()
 				.readValue(serverResponse.readEntity(String.class), Benutzer.class);
+
 		if (!loginErfolgreich(benutzerObjectFromServerResponse)) {
 			throw new Exception(
 					"Login war nicht erfolgreich! Kombination aus Username und Passwort stimmt nicht überein!");
@@ -102,5 +102,5 @@ public class LoginClient {
 		return client;
 	}
 	
-
 }
+	

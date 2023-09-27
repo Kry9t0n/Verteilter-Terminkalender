@@ -1,8 +1,11 @@
-package test;
+package vs.terminkalender.database;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import vs.terminkalender.datatypes.Benutzer;
+import vs.terminkalender.datatypes.Termin;
 
 /**
  * @Autor Niklas Baldauf, Maik Gierlinger
@@ -25,7 +28,8 @@ public class DB_Funktionen {
 	Statement stmtSQL = null;
 	ResultSet rs = null;
 	
-	private final Benutzer failedBenutzer = new Benutzer(-1, "-1", "-1", "-1","-1", -1);
+	private final Benutzer failedBenutzer = new Benutzer(-1,"-1","-1","-1","-1",-1);
+	private final Termin failedTermin = new Termin(-1,"-1","-1",-1,-1,"-1");
 	
 	/**
 	 * Konstruktor
@@ -33,7 +37,7 @@ public class DB_Funktionen {
 	 * @param password
 	 */
 	public DB_Funktionen(String user, String password) {
-		String url = "jdbc:sqlite:"+ System.getProperty("user.home") +  "/eclipse-workspace/Server1.1/Datenbank.db";
+		String url = "jdbc:sqlite:"+ System.getProperty("user.home") +  "/eclipse-workspace/VS_Server/Datenbank.db";
 		this.url = url;
 		this.user = user;
 		this.password = password;
@@ -131,30 +135,13 @@ public class DB_Funktionen {
 	}
 	
 	/**
-	 * Sucht einen Benutzer anhand des Benutzernamen in der Tabelle BENUTZER
-	 * @param benutzername
-	 * @return ein Result Set
-	 */
-	public int sucheBenutzerIdMitBenutzernameRueckgabeInt(String benutzername) {
-		int id = -1;
-		try {
-			rs = stmtSQL.executeQuery("SELECT BENUTZERID FROM BENUTZER WHERE BENUTZERNAME = '" + benutzername + "';");
-			id = rs.getInt(1);
-			return id;
-		} catch(SQLException err) {
-			System.err.println(err);
-			return id;
-		}
-	}
-	
-	/**
-	 * Sucht einen Benutzer anhand des Benutzernamen in der Tabelle BENUTZER
+	 * Sucht einen Benutzer anhand der BenutzerID in der Tabelle BENUTZER
 	 * @param benutzername
 	 * @return ein Result Set
 	 */
 	public Benutzer sucheBenutzerMitBenutzerId(int benutzerId) {
 		try {
-			rs = stmtSQL.executeQuery("SELECT * FROM BENUTZER WHERE BENUTZERID = '" + benutzerId + "';");
+			rs = stmtSQL.executeQuery("SELECT BENUTZERID, BENUTZERNAME FROM BENUTZER WHERE BENUTZERID = " + benutzerId + ";");
 			Benutzer benutzer = ResultSetToBenutzer(rs);
 			return benutzer;
 		} catch(SQLException err) {
@@ -240,9 +227,6 @@ public class DB_Funktionen {
 		} catch(SQLException err) {
 			System.err.println(err);
 		}
-		loescheEintragEingeladenAnhandBenutzerId(benutzerId);
-		loescheEintragEingeladenAnhandIdErsteller(benutzerId);
-		loescheTerminAnhandIdErsteller(benutzerId);
 	}
 	
 	/**
@@ -262,7 +246,8 @@ public class DB_Funktionen {
 	 * @return ein Benutzer Objekt
 	 */
 	public Benutzer ResultSetToBenutzer(ResultSet a) {
-		Benutzer benutzer = new Benutzer(-1,"-1","-1","-1","-1",-1); 
+		//System.out.println("Hier2"); //ENTFERNEN??
+		Benutzer benutzer = failedBenutzer; 
 		try {
 			benutzer.setBenutzerId(a.getInt("BENUTZERID"));
 		} catch (SQLException e) {}
@@ -343,8 +328,8 @@ public class DB_Funktionen {
 	public void erstelleTerminUndEintragEingeladenAnhandBenutzerName(Termin termin) {
 			
 			String sql = "INSERT INTO TERMIN (TITEL, DATUM, DAUER, IDERSTELLER) "+ 
-					"VALUES('"+ termin.getTitel() + "','" + termin.getDatum() + "',"+ 
-					termin.getDauer() +","+ termin.getIdErsteller() + ");";
+					"VALUES('"+ termin.getTitel() + "','" + termin.getDatum() + "','"+ 
+					termin.getDauer() +"','"+ termin.getIdErsteller() + "');";
 			try {
 				stmtSQL.executeUpdate(sql);
 			} catch(SQLException err) {
@@ -368,10 +353,31 @@ public class DB_Funktionen {
 			
 			//Splitet die eingeladenen Benutzer beim , und schreibt sie in ein String-Array
 			String arrayBenutzername[] = termin.getBenutzerEingeladen().split(",");
+			int anz = arrayBenutzername.length;
+			int[] arrayID = new int[anz];
 			
+			int i = 0;
 			for(String s : arrayBenutzername) {
-				int benutzerid = sucheBenutzerIdMitBenutzernameRueckgabeInt(s);
-				erstelleEintragEingeladen(benutzerid, terminid, termin.getTitel());
+				try {
+					rs = sucheBenutzerIdMitBenutzername(s);
+					arrayID[i] = rs.getInt(1);
+					i++;
+				} catch(SQLException err) {
+					System.err.println(err);
+				}
+			}
+			
+			if(terminid != -1) {	
+				String sql3 = "";
+				for(int benutzerid : arrayID) {
+					sql3 = "INSERT INTO Eingeladen (BENUTZERID, TERMINID) "+ 
+						"VALUES("+ benutzerid + "," + terminid + ");";
+					try {
+						stmtSQL.executeUpdate(sql3);
+					} catch(SQLException err) {
+						System.err.println(err);
+					} 
+				}
 			}
 	}
 	
@@ -413,7 +419,7 @@ public class DB_Funktionen {
 	 * @return ein Termin Objekt
 	 */
 	public Termin ResultSetToTermin(ResultSet a) {
-		Termin termin = new Termin(-1,"-1","-1",-1,-1,"-1"); 
+		Termin termin = failedTermin; 
 		try {
 			termin.setTerminId(a.getInt("TERMINID"));
 		} catch (SQLException e) {}
@@ -444,7 +450,7 @@ public class DB_Funktionen {
 		ArrayList<Termin> list = new ArrayList<Termin>();
 		try {
 			while(a.next()) {
-				Termin termin = new Termin(-1,"-1","-1",-1,-1,"-1");
+				Termin termin = failedTermin;
 				list.add(termin);
 				try {
 					termin.setTerminId(a.getInt("TERMINID"));
@@ -495,17 +501,6 @@ public class DB_Funktionen {
 		} catch(SQLException err) {
 			System.err.println(err);
 		}
-		loescheEintragEingeladenAnhandTerminId(terminId);
-		
-	}
-	
-	public void loescheTerminAnhandIdErsteller(int IdErsteller) {
-		try {
-			stmtSQL.executeUpdate("DELETE FROM TERMIN WHERE IDERSTELLER = '" + IdErsteller + "';");
-		} catch(SQLException err) {
-			System.err.println(err);
-		}
-		loescheEintragEingeladenAnhandTerminId(IdErsteller);
 	}
 
 	/**
@@ -542,18 +537,33 @@ public class DB_Funktionen {
 	}
 	
 	/**
-     * Gibt alle Einträge aus der Tabelle ONLINE zurück
+     * Gibt alle Einträge aus der Tabelle ONLINE zurück, entfernt vorher alle Einträge aus Online die älter als 30 min. sind
      * @return eine ArrayList mit Benutzernamen
      */
     public ArrayList<String> abfrageOnlineBenutzerName() {
         try {
+        	int zeit = aktuelleZeit();     	
+    		ResultSet a = prueffeOnlineEintraege();
+    		if(zeit > 031 & zeit < 2359) {
+    			ArrayList<Integer> list = new ArrayList<Integer>();
+    			while(a.next()) {
+    				list.add(a.getInt(1));
+    				list.add(a.getInt(2));
+    			}
+    			for(int i=1; i<list.size(); i=i+2) {
+    				if(Math.abs(zeit - list.get(i)) > 30) {
+    					loescheOnlineEintrag(list.get((i-1)));
+    				}
+    			}
+    		}
             rs = stmtSQL.executeQuery("SELECT BENUTZERNAME FROM ONLINE NATURAL JOIN BENUTZER;");
             ArrayList<String> benutzernamelist = new ArrayList<String>();
             while(rs.next()) {
                 benutzernamelist.add(rs.getString(1));
             }
             return benutzernamelist;
-        } catch(SQLException err) {
+        }
+        catch(SQLException err) {
             System.err.println(err);
             return null;
         }
@@ -648,34 +658,6 @@ public class DB_Funktionen {
 	}
 	
 	/**
-	 * Löscht einen Eintrag aus der Tabelle EINGELADEN
-	 * @param benutzerId
-	 */
-	public void loescheEintragEingeladenAnhandBenutzerId(int benutzerId) {
-		
-		String sql = "DELETE FROM Eingeladen WHERE BENUTZERID = " + benutzerId + ";";
-		try {
-			stmtSQL.executeUpdate(sql);
-		} catch(SQLException err) {
-			System.err.println(err);
-		}
-	}
-	
-	/**
-	 * Löscht einen Eintrag aus der Tabelle EINGELADEN
-	 * @param terminId
-	 */
-	public void loescheEintragEingeladenAnhandTerminId(int terminId) {
-		
-		String sql = "DELETE FROM Eingeladen WHERE TERMINID = " + terminId + ";";
-		try {
-			stmtSQL.executeUpdate(sql);
-		} catch(SQLException err) {
-			System.err.println(err);
-		}
-	}
-	
-	/**
 	 * Gibt die Termin IDs der Einträge der Tabelle EINGELADEN anhand der BenutzerId aus
 	 * @param benutzerId
 	 * @return ein Result Set
@@ -689,22 +671,6 @@ public class DB_Funktionen {
 		} catch(SQLException err) {
 			System.err.println(err);
 			return null;
-		}
-	}
-	
-	/**
-	 * Löscht einen Eintrag aus der Tabelle EINGELADEN
-	 * @param terminId
-	 */
-	public void loescheEintragEingeladenAnhandIdErsteller(int idErsteller) {
-		String sql = "SELECT TERMINID FROM TERMIN WHERE IDERSTELLER = " + idErsteller + ";";
-		try {
-			rs = stmtSQL.executeQuery(sql);
-			while(rs.next()) {
-				loescheEintragEingeladenAnhandTerminId(rs.getInt(1));
-			}
-		} catch(SQLException err) {
-			System.err.println(err);
 		}
 	}
 	
@@ -772,11 +738,11 @@ public class DB_Funktionen {
 	*/
 	public Benutzer benutzerAuthentifkationAlleAttribute(String benutzerName, String passwort) {
 	    try {
-	        rs = stmtSQL.executeQuery("SELECT BENUTZERID, BENUTZERNAME, PASSWORT, NAME, VORNAME, ISADMIN FROM BENUTZER WHERE BENUTZERNAME = '" + benutzerName + "' AND PASSWORT = '" + passwort + "';");
-	        Benutzer benutzer = ResultSetToBenutzer(rs);
-	        if(benutzer.getBenutzerId() == 0 && benutzer.getBenutzerName() == null && benutzer.getPasswort() == null && benutzer.getName() == null && benutzer.getVorname() == null && benutzer.getIsAdmin() == 0) {
-	        	benutzer = failedBenutzer;
-	        }
+	    	Benutzer benutzer = failedBenutzer;
+	    	rs = stmtSQL.executeQuery("SELECT BENUTZERNAME, PASSWORT FROM BENUTZER WHERE BENUTZERNAME = '" + benutzerName + "' AND PASSWORT = '" + passwort + "';");
+	    	System.out.println("Ich bin hier");
+		    rs = stmtSQL.executeQuery("SELECT BENUTZERID, BENUTZERNAME, PASSWORT, NAME, VORNAME, ISADMIN FROM BENUTZER WHERE BENUTZERNAME = '" + benutzerName + "' AND PASSWORT = '" + passwort + "';");
+		    benutzer = ResultSetToBenutzer(rs);
 	        return benutzer;
 	    } catch(SQLException err) {
 	        System.err.println(err);

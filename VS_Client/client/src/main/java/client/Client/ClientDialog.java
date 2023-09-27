@@ -7,6 +7,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import client.Benutzer;
+import client.Einladung_Rest;
 import client.Termin;
 import client.TerminRessoucen;
 import jakarta.ws.rs.client.Client;
@@ -102,11 +103,18 @@ public class ClientDialog {
 		
 		LocalDate date = LocalDate.of(jahr,monat,tag); 
 		
+		String day = "";
+		day = (date.getDayOfMonth() < 10) ? "0"+date.getDayOfMonth() : ""+date.getDayOfMonth();
+		
+		String month = "";
+		month = (date.getMonthValue() < 10) ? "0"+date.getMonthValue() : ""+date.getMonthValue();
+		
+		
 		//ArrayList<Termin> tagesListe = benutzerClient.fetchAlleTermineEinesTages(date);
 		
 		ArrayList<Termin> tagesListe = (ArrayList<Termin>) TerminRessoucen.getAlleTermineAnEinemTag(client, date, benutzerClient.getBenutzer());
 		
-		String ausgabe = "Termine am:"+ jahr + monat + tag + "\n";
+		String ausgabe = "Termine am:"+ day + "," + month + "," + jahr + "\n";
 		for (Termin termin: tagesListe) {
 			ausgabe = ausgabe + termin.toString() + "\n";
 		}
@@ -151,7 +159,14 @@ public class ClientDialog {
 		
 		
 		LocalDate date = LocalDate.of(jahr,monat,tag);
-		String datum = date.getDayOfMonth() + "," + date.getMonthValue() + "," + date.getYear();
+		
+		String day = "";
+		day = (date.getDayOfMonth() < 10) ? "0"+date.getDayOfMonth() : ""+date.getDayOfMonth();
+
+		String month = "";
+		month = (date.getMonthValue() < 10) ? "0"+date.getMonthValue() : ""+date.getMonthValue();
+		
+		String datum = day + "," + month + "," + date.getYear();
 		
 		updateTermin.setDatum(datum);
 		
@@ -220,6 +235,12 @@ public class ClientDialog {
 		System.out.println("------------------------------------------\n");
 		System.out.println("Ausgabe der Einladungen!");
 		System.out.println("------------------------------------------\n");
+		benutzerClient.getEinladungen();
+		ArrayList<Termin> einladungsSpeicher = Einladung_Rest.getEinladungen(client, benutzerClient.getBenutzer().getBenutzerId());
+		for(Termin t : einladungsSpeicher) {
+			System.out.println(t);
+		}
+		System.out.println("------------------------------------------\n");
 	}
 
 	private void termineAusgeben() {
@@ -231,12 +252,26 @@ public class ClientDialog {
 		System.out.println("Ausgabe der Termine!");
 		System.out.println("------------------------------------------\n");
 		
+		for(int index = 0; index < benutzerClient.getANZAHL_TERMIN_DARSTELLUNG(); index++) {
+			System.out.println("Tag " + (index+1));
+			ArrayList<Termin> tagesListe = alleTermine.get(index);
+			if(tagesListe.isEmpty()) {
+				System.out.println("Keine Termine");
+			}else {
+				for(Termin termin : tagesListe) {
+					System.out.println(termin);
+				}
+			}
+			System.out.println("------------------------------------------\n");
+		}
+		
+		/*
 		for (ArrayList<Termin> terminListe : alleTermine) {
 		    for (Termin termin : terminListe) {
 		        System.out.println(termin.toString());
 		    }
 			System.out.println("------------------------------------------\n");
-		}
+		}*/
 	
 	}
 		
@@ -251,13 +286,20 @@ public class ClientDialog {
 		
 		System.out.println("Jahr:");
 		int jahr = leseGanzzahlEingabe();
-		System.out.println("Monat(In zahl z.b 10):");
+		System.out.println("Monat(In zahl (01 - 12)):");
 		int monat = leseGanzzahlEingabe();
 		System.out.println("Tag:");
 		int tag = leseGanzzahlEingabe();
 		
 		LocalDate date = LocalDate.of(jahr,monat,tag); 
-		String datum = date.getDayOfMonth() + "," + date.getMonthValue() + "," + date.getYear();
+		
+		String day = "";
+		day = (date.getDayOfMonth() < 10) ? "0"+date.getDayOfMonth() : ""+date.getDayOfMonth();
+
+		String month = "";
+		month = (date.getMonthValue() < 10) ? "0"+date.getMonthValue() : ""+date.getMonthValue();
+		
+		String datum = day + "," + month + "," + date.getYear();
 		
 		System.out.println("Dauer des Termins:");
 		int dauer = leseGanzzahlEingabe();

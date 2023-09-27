@@ -1,4 +1,4 @@
-package test;
+package client;
 
 public class Monitoring_Data 
 {

@@ -1,20 +1,51 @@
-package test;
+package vs.terminkalender.rest;
 import java.util.ArrayList;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import vs.terminkalender.database.DB_Funktionen;
+import vs.terminkalender.datatypes.Termin;
 
 
 @Path("/termin")
 public class Server_Termin
 {
+	
+	/**
+     * Erhält Termindaten und legt Eintrag in der Termin & Eingeladen Tabelle an
+     * @param termindaten
+     * @return Response ob Eintrag erfolgreich
+     */
+    @PUT
+    @Path("")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response aendern(Termin termindaten) 
+    {
+        try
+        {
+            DB_Funktionen db = new DB_Funktionen("SA","");
+            db.oeffneDB();
+            db.aendereTermin(termindaten);
+            db.schliesseDB();
+            String nachricht = "Eintrag in Termin und Eingeladen wurde geeandert";
+            return Response.ok(nachricht, MediaType.TEXT_PLAIN).build();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            String nachricht = "Fehler beim Aendern des Eintrags";
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(nachricht).build();
+        }
+    }
+	
 	/**
 	 * Erhält Termindaten und legt Eintrag in der Termin & Eingeladen Tabelle an
 	 * @param termindaten

@@ -1,10 +1,16 @@
 package client;
 
 import client.Benutzer;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
 
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Client;
@@ -25,7 +31,10 @@ public class TerminRessoucen {
 	private static final int STATUS_NO_CONTENT = 204;
 
 	private static final String BASE_URL = "http://localhost:8080/VS_Server/webapi/termin"; // angepasste Url Server
-
+	
+	private static PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder()
+			.allowIfSubType("java.util").build();
+	
 	/**
 	 * Anfrage Zum Erhalten eines bestimmten Termins mittels TerminId GET Http
 	 * Request send to the server through a URL
@@ -62,7 +71,7 @@ public class TerminRessoucen {
 	 * @param client
 	 * @return eine Liste von allen Terminen
 	 */
-	public static List<Termin> getAllTermine(Client client) {
+	public static ArrayList<Termin> getAllTermine(Client client) {
 		try {
 			Response response = client.target(BASE_URL + "").request(MediaType.APPLICATION_JSON).get();
 
@@ -70,7 +79,7 @@ public class TerminRessoucen {
 				// Die Antwortdaten in eine Liste von Termin-Objekten deserialisieren
 				// List<Termin> termineListe = response.readEntity(new
 				// GenericType<List<Termin>>() {});
-				List<Termin> termineListe = new ObjectMapper().readValue(response.readEntity(String.class), List.class);
+				ArrayList<Termin> termineListe = new ObjectMapper().setPolymorphicTypeValidator(ptv).readValue(response.readEntity(String.class), new TypeReference<ArrayList<Termin>>() {}); //TODO
 				return termineListe;
 			} else {
 				// Fehlermeldung ausgeben, wenn die Anfrage nicht erfolgreich war
@@ -91,13 +100,21 @@ public class TerminRessoucen {
 	 * @param tag
 	 * @return alle Termine an diesem Tag
 	 */
-	public static List<Termin> getAlleTermineAnEinemTag(Client client, LocalDate tag, Benutzer benutzer) {
+	public static ArrayList<Termin> getAlleTermineAnEinemTag(Client client, LocalDate tag, Benutzer benutzer) {
 		try {
-			List<Termin> terminTabelle = null;
-			Response response = client.target(BASE_URL).path(benutzer.getBenutzerId() + "/" + tag.getDayOfMonth() + ","
-					+ tag.getMonthValue() + "," + tag.getYear()).request(MediaType.APPLICATION_JSON).get();
+			ArrayList<Termin> terminTabelle = null;
+			
+			String day = "";
+			day = (tag.getDayOfMonth() < 10) ? "0"+tag.getDayOfMonth() : ""+tag.getDayOfMonth();
+			
+			String month = "";
+			month = (tag.getMonthValue() < 10) ? "0"+tag.getMonthValue() : ""+tag.getMonthValue();
+			
+			//System.out.println(tag.getDayOfMonth() + "," + day + "," + tag.getYear());
+			Response response = client.target(BASE_URL).path("/" + benutzer.getBenutzerId() + "/" + day + ","
+					+ month + "," + tag.getYear()).request(MediaType.APPLICATION_JSON).get();
 			if (response.getStatus() == STATUS_OK) {
-				terminTabelle = new ObjectMapper().readValue(response.readEntity(String.class), List.class);
+				terminTabelle = new ObjectMapper().setPolymorphicTypeValidator(ptv).readValue(response.readEntity(String.class), new TypeReference<ArrayList<Termin>>() {}); //TODO
 				return terminTabelle;
 			} else {
 				System.out.println(
@@ -149,11 +166,11 @@ public class TerminRessoucen {
 	public static Response updateTermin(Client client, Termin terminToUpdate) {
 		try {
 
-			Response response = client.target(BASE_URL).path("/" + String.valueOf(terminToUpdate.getTerminId()))
+			Response response = client.target(BASE_URL)//.path("/" + String.valueOf(terminToUpdate.getTerminId()))
 					.request(MediaType.APPLICATION_JSON)
-					.post(Entity.entity(terminToUpdate, MediaType.APPLICATION_JSON));
+					.put(Entity.entity(terminToUpdate, MediaType.APPLICATION_JSON));
 
-			if (response.getStatus() == STATUS_NO_CONTENT) {
+			if (response.getStatus() == STATUS_OK) {
 				System.out.println("That was successful!");
 				return response;
 			} else {

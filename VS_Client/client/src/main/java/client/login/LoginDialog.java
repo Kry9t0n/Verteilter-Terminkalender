@@ -41,7 +41,7 @@ public class LoginDialog {
 				loginSuccess = false;
 			}
 		} while (!loginSuccess);
-
+		System.out.println("Login erfolgreich...");
 	}
 
 	private void dialogAusgeben() {
@@ -92,7 +92,7 @@ public class LoginDialog {
 	}
 
 	private void cancel() {
-		MasterController.programmBeenden();
+		MasterController.programmBeenden(0);
 	}
 	
 	//Nur zum Testen!!!

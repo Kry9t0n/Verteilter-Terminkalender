@@ -1,9 +1,11 @@
-package test;
+package vs.terminkalender.test;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import vs.terminkalender.database.DB_Funktionen;
 /**
  * @Autor Niklas Baldauf, Maik Gierlinger
  * @version 1.0

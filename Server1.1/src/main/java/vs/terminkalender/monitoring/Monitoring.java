@@ -1,9 +1,11 @@
-package test;
+package vs.terminkalender.monitoring;
 
 import java.lang.management.ManagementFactory;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import java.lang.management.MemoryUsage;
+//import java.lang.management.MemoryUsage;
+
+import vs.terminkalender.datatypes.Monitoring_Data;
 
 
 public class Monitoring {
