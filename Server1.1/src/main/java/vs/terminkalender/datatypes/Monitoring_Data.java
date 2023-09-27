@@ -1,4 +1,4 @@
-package test;
+package vs.terminkalender.datatypes;
 
 public class Monitoring_Data 
 {

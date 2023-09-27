@@ -1,4 +1,6 @@
-package test;
+package vs.terminkalender.datatypes;
+
+import vs.terminkalender.database.DB_Funktionen;
 
 /**
  * @Autor Niklas Baldauf, Maik Girlinger

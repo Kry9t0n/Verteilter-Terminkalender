@@ -1,8 +1,11 @@
-package test;
+package vs.terminkalender.database;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import vs.terminkalender.datatypes.Benutzer;
+import vs.terminkalender.datatypes.Termin;
 
 /**
  * @Autor Niklas Baldauf, Maik Gierlinger
@@ -24,6 +27,9 @@ public class DB_Funktionen {
 	Connection conn = null;
 	Statement stmtSQL = null;
 	ResultSet rs = null;
+	
+	private final Benutzer failedBenutzer = new Benutzer(-1,"-1","-1","-1","-1",-1);
+	private final Termin failedTermin = new Termin(-1,"-1","-1",-1,-1,"-1");
 	
 	/**
 	 * Konstruktor
@@ -129,11 +135,11 @@ public class DB_Funktionen {
 	}
 	
 	/**
-	 * Sucht einen Benutzer anhand des Benutzernamen in der Tabelle BENUTZER
+	 * Sucht einen Benutzer anhand der BenutzerID in der Tabelle BENUTZER
 	 * @param benutzername
 	 * @return ein Result Set
 	 */
-	public Benutzer sucheBenutzerIdMitBenutzerId(int benutzerId) {
+	public Benutzer sucheBenutzerMitBenutzerId(int benutzerId) {
 		try {
 			rs = stmtSQL.executeQuery("SELECT BENUTZERID, BENUTZERNAME FROM BENUTZER WHERE BENUTZERID = " + benutzerId + ";");
 			Benutzer benutzer = ResultSetToBenutzer(rs);
@@ -240,8 +246,8 @@ public class DB_Funktionen {
 	 * @return ein Benutzer Objekt
 	 */
 	public Benutzer ResultSetToBenutzer(ResultSet a) {
-		System.out.println("Hier2");
-		Benutzer benutzer = new Benutzer(-1,"-1","-1","-1","-1",-1); 
+		//System.out.println("Hier2"); //ENTFERNEN??
+		Benutzer benutzer = failedBenutzer; 
 		try {
 			benutzer.setBenutzerId(a.getInt("BENUTZERID"));
 		} catch (SQLException e) {}
@@ -413,7 +419,7 @@ public class DB_Funktionen {
 	 * @return ein Termin Objekt
 	 */
 	public Termin ResultSetToTermin(ResultSet a) {
-		Termin termin = new Termin(-1,"-1","-1",-1,-1,"-1"); 
+		Termin termin = failedTermin; 
 		try {
 			termin.setTerminId(a.getInt("TERMINID"));
 		} catch (SQLException e) {}
@@ -444,7 +450,7 @@ public class DB_Funktionen {
 		ArrayList<Termin> list = new ArrayList<Termin>();
 		try {
 			while(a.next()) {
-				Termin termin = new Termin(-1,"-1","-1",-1,-1,"-1");
+				Termin termin = failedTermin;
 				list.add(termin);
 				try {
 					termin.setTerminId(a.getInt("TERMINID"));
@@ -732,7 +738,7 @@ public class DB_Funktionen {
 	*/
 	public Benutzer benutzerAuthentifkationAlleAttribute(String benutzerName, String passwort) {
 	    try {
-	    	Benutzer benutzer = new Benutzer(-1,"-1","-1","-1","-1",-1);
+	    	Benutzer benutzer = failedBenutzer;
 	    	rs = stmtSQL.executeQuery("SELECT BENUTZERNAME, PASSWORT FROM BENUTZER WHERE BENUTZERNAME = '" + benutzerName + "' AND PASSWORT = '" + passwort + "';");
 	    	System.out.println("Ich bin hier");
 		    rs = stmtSQL.executeQuery("SELECT BENUTZERID, BENUTZERNAME, PASSWORT, NAME, VORNAME, ISADMIN FROM BENUTZER WHERE BENUTZERNAME = '" + benutzerName + "' AND PASSWORT = '" + passwort + "';");

@@ -1,4 +1,4 @@
-package test;
+package vs.terminkalender.test;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;

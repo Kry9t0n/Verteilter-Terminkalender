@@ -1,4 +1,4 @@
-package test;
+package vs.terminkalender.rest;
 import java.util.ArrayList;
 
 import jakarta.ws.rs.Consumes;
@@ -11,6 +11,8 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import vs.terminkalender.database.DB_Funktionen;
+import vs.terminkalender.datatypes.Termin;
 
 
 @Path("/termin")
