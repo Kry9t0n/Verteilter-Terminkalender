@@ -62,8 +62,12 @@ public class OnlineasThread extends Thread{
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             } catch(ProcessingException e) {
+<<<<<<< Updated upstream
         	    System.out.println("Server nicht erreichbar! Erneute Meldung wenn wieder verfügbar!");
                 System.out.println("Erneutes Login nötig!");
+=======
+        	    System.out.println("Server nicht erreichbar! Login erforderlich, sobald server wieder erreichbar!");
+>>>>>>> Stashed changes
             }catch (Exception e) {
                 System.out.println(e.getMessage());
             }
