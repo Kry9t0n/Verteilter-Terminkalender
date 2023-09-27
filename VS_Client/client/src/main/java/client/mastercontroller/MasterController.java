@@ -1,14 +1,15 @@
 package client.mastercontroller;
 
+import java.util.Timer;
+
 import client.Benutzer;
 import client.OnlineasThread;
+import client.TestServerAvailable;
 import client.Admin.AdminClient;
 import client.Admin.AdminDialog;
 import client.Client.BenutzerClient;
 import client.Client.ClientDialog;
 import client.login.LoginDialog;
-import client.TestServerAvailable;
-import java.lang.Thread;
 
 
 /**
@@ -26,20 +27,32 @@ public class MasterController {
 	private final int NOT_ADMIN = 0;
 	
 	private Benutzer masterUser;
-	
-	
+	private boolean serverErreichbar;
+	private Timer timer;
 	
 	public MasterController() throws InterruptedException {
+		timer = new Timer();
+		serverErreichbar = false;
 		masterUser = new Benutzer();
-		run();
+		TestServerAvailable.abfrageStatus(this);
+		//run();
 	}
 	
-	private void run() throws InterruptedException {
-		TestServerAvailable.abfrageStatus();
-		fuehreLoginClientAus();
-		//Start des HintergrundThreads zur Abfrage des OnlineStatus (ausgelagert)
-		OnlineasThread.startOnlineasThread(masterUser);
-		selectAndRunClient();
+	public boolean isServerErreichbar() {
+		return serverErreichbar;
+	}
+
+	public void setServerErreichbar(boolean serverErreichbar) {
+		this.serverErreichbar = serverErreichbar;
+	}
+
+	public void run() throws InterruptedException {
+		if(serverErreichbar) {
+			fuehreLoginClientAus();
+			//Start des HintergrundThreads zur Abfrage des OnlineStatus (ausgelagert)
+			OnlineasThread.startOnlineasThread(masterUser);
+			selectAndRunClient();
+		}
 	}
 	
 	private void fuehreLoginClientAus() {
@@ -82,4 +95,5 @@ public class MasterController {
 	public static void main(String[] args) throws InterruptedException {
 		new MasterController();
 	}
+	
 }

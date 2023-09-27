@@ -67,7 +67,8 @@ public class OnlineasThread extends Thread{
         	    System.out.println("Server nicht erreichbar! Login erneut erforderlich");
                 System.out.println("Zurueckgekehren zum Login, sobald Server wieder aktiv!");
                 try {
-                    TestServerAvailable.abfrageStatus();
+                	TestServerAvailable.abfrageStatus(mController);
+                	oThread.interrupt();
                 } catch (InterruptedException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
@@ -79,7 +80,7 @@ public class OnlineasThread extends Thread{
 
             //Warteintervall
             try{
-                Thread.sleep(600000); //10 Minuten
+                Thread.sleep(30000); //10 Minuten
             }catch(InterruptedException e){
                 System.out.println("Online Abfrage im Hintergrund beendet!");
                 break;
