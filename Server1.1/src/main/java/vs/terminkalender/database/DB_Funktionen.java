@@ -360,8 +360,10 @@ public class DB_Funktionen {
 			for(String s : arrayBenutzername) {
 				try {
 					rs = sucheBenutzerIdMitBenutzername(s);
-					arrayID[i] = rs.getInt(1);
-					i++;
+					if(rs.getInt(i) != 0) {
+						arrayID[i] = rs.getInt(1);
+						i++;
+					}
 				} catch(SQLException err) {
 					System.err.println(err);
 				}
@@ -485,9 +487,9 @@ public class DB_Funktionen {
 	 */
 	public void aendereTermin(Termin termin) {
 			
-			String sql = "INSERT INTO TERMIN (TERMINID, TITEL, DATUM, DAUER, IDERSTELLER, BENUTZEREINGELADEN) "+ 
+			String sql = "INSERT INTO TERMIN (TERMINID, TITEL, DATUM, DAUER, IDERSTELLER) "+ 
 					"VALUES("+ termin.getTerminId() +",'"+ termin.getTitel() + "','" + termin.getDatum() + "','"+ 
-					termin.getDauer() +"','"+ termin.getIdErsteller() +"',"+ termin.getBenutzerEingeladen()+ ");";
+					termin.getDauer() +"','"+ termin.getIdErsteller() + ");";
 			try {
 				stmtSQL.executeUpdate(sql);
 			} catch(SQLException err) {
