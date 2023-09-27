@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
 
 import client.Benutzer;
+import client.Online_Rest;
 import client.ServerResourceBaseURL;
 import client.Termin;
 import client.TerminRessoucen;
@@ -84,7 +85,9 @@ public class BenutzerClient {
 		}
 	}
 	
-	
+	public ArrayList<Benutzer> fetchBenutzerOnlineListe() throws JsonMappingException, JsonProcessingException {
+		return Online_Rest.getAlleBenutzerDieOnlineSind(client);
+	}
 	
 	/**
 	 * Alle Termine eines Benutzers an einem Tag vom Server fetchen. 
