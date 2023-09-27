@@ -3,6 +3,7 @@ package client;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import client.mastercontroller.MasterController;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -16,6 +17,7 @@ public class OnlineasThread extends Thread{
     private static OnlineasThread oThread;
     private Client oclient;
     private Benutzer masteruser;
+    private MasterController mController;
     private final String putURL = "http://localhost:8080/VS_Server/webapi/online"; //zu URL muss noch eine BenutzerID hinzugefügt werden
     
 
@@ -62,7 +64,14 @@ public class OnlineasThread extends Thread{
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             } catch(ProcessingException e) {
-        	    System.out.println("Server nicht erreichbar! Versuche in 10 min wieder.");
+        	    System.out.println("Server nicht erreichbar! Login erneut erforderlich");
+                System.out.println("Zurueckgekehren zum Login, sobald Server wieder aktiv!");
+                try {
+                    TestServerAvailable.abfrageStatus();
+                } catch (InterruptedException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
             }catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -101,10 +110,10 @@ public class OnlineasThread extends Thread{
     private void onlineAuswerten(Response online) throws JsonMappingException, JsonProcessingException, Exception {
         //Überprüfung auf den Response Code 200 = OK, anstatt auf Nachricht
         if(online.getStatus() == Response.Status.OK.getStatusCode()){
-            System.out.println("Server ist immernoch erreichbar! und sie sind Online");
+            System.out.println("Server ist  erreichbar! und sie sind Online");
         }else{
             throw new Exception(
-                "Error! Erneuter Versuch in 10 Minuten"
+                "Error!"
             );
         }
     }

@@ -12,6 +12,8 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class AdminClient {
 
@@ -41,5 +43,20 @@ public class AdminClient {
 		return statData;
 	}
 
-
+        public ArrayList<Benutzer> abfrageBenutzerAnhandName(Client client, String Name) {
+		ArrayList<Benutzer> listAllUser = getAllBenutzer(client);
+		try {
+			if(listAllUser == null){
+				System.out.println("Fehler beim Abrufen aller Benutzer");
+				return new ArrayList<>();
+			}
+			return listAllUser.stream()
+				          .filter(benutzer -> benutzer.getName().equals(name))
+				          .collect(Collectors.toCollection(ArrayList:: new)); 
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }
