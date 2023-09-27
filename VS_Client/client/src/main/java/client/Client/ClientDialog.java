@@ -12,6 +12,7 @@ import client.Termin;
 import client.TerminRessoucen;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 /*
  * @author Alexei Brandt
@@ -29,7 +30,8 @@ public class ClientDialog {
 	private static final int TERMIN_MIT_BESTIMMTEN_DATUM = 5;
 	private static final int EINLADUNGEN_ANNEHMEN = 6;
 	private static final int EINLADUNGEN_ABLEHNEN = 7;
-	
+	private static final int ONLINE_BENUTZER_AUSGEBEN = 8;
+
 	public ClientDialog(BenutzerClient benutzerClient) {
 		this.benutzerClient = benutzerClient;
 		this.client = benutzerClient.getClient();
@@ -85,6 +87,9 @@ public class ClientDialog {
 		case 7:
 			einladungenAblehnen();
 			break;
+		case 8:
+			listeOnlineBenutzerAuf();
+			break;
 		case 0:
 			System.out.println("ClientDialog wurde beendet!");
 			break;
@@ -94,6 +99,24 @@ public class ClientDialog {
 		
 	}
 
+	private void listeOnlineBenutzerAuf() {
+		ArrayList<Benutzer> onlineListe = null;
+		try {
+			onlineListe = benutzerClient.fetchBenutzerOnlineListe();
+		} catch (JsonProcessingException e) {
+			System.out.println("Fehler beim fetchen der Onlineliste!");
+		}
+		
+		if(onlineListe != null) {
+			System.out.println("### Onlineliste ###");
+			for(Benutzer b : onlineListe) {
+				System.out.println(b.getBenutzerName() +" " + b.getBenutzerId());
+			}
+			System.out.println("------------------------------------------\n");
+		}
+		
+	}
+	
 	private void einladungenAblehnen() {
 		System.out.println("Welchen Einladung wollen sie ablehnen(Terminid:)");
 		int terminid = leseGanzzahlEingabe();
@@ -386,6 +409,7 @@ public class ClientDialog {
 				+ TERMIN_MIT_BESTIMMTEN_DATUM + ":Termin mit bestimmten Datum ausgeben\n"
 				+ EINLADUNGEN_ANNEHMEN + ":Einladungen annehmen\n"
 				+ EINLADUNGEN_ABLEHNEN + ":Einladungen ablehnen\n"
+				+ ONLINE_BENUTZER_AUSGEBEN + ": Gibt eine Liste aller Benutzer die online sind aus\n"
 				+ ENDE + ":Ende\n");
 	}
 	
