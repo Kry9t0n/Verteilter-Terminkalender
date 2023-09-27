@@ -1,6 +1,5 @@
 package vs.terminkalender.rest;
 import java.util.ArrayList;
-
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -12,7 +11,10 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import vs.terminkalender.database.DB_Funktionen;
 
-
+/**
+ * @Autor Niklas Baldauf, Maik Girlinger, Niklas Balke, Justin Witsch
+ * @version 1.1
+ */
 @Path("/online")
 public class Server_Online {
 

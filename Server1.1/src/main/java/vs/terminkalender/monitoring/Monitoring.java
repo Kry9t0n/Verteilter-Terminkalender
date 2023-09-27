@@ -1,9 +1,13 @@
 package vs.terminkalender.monitoring;
 
+/**
+ * @Autor Niklas Baldauf, Maik Girlinger, Niklas Balke, Justin Witsch
+ * @version 1.1
+ * @see Monitoring_Data
+ */
 import java.lang.management.ManagementFactory;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-//import java.lang.management.MemoryUsage;
 
 import vs.terminkalender.datatypes.Monitoring_Data;
 

@@ -1,13 +1,31 @@
 package vs.terminkalender.datatypes;
 
+import vs.terminkalender.database.DB_Funktionen;
+
+/**
+ * @Autor Niklas Baldauf, Maik Girlinger, Niklas Balke, Justin Witsch
+ * @version 1.0
+ * @see DB_Funktionen
+ */
 public class Monitoring_Data 
 {
+	/**
+	 * Atribute
+	 */
     private int requestCount;
     private int errorCount;
     private long bytesReceived;
     private long bytesSent;
     private long processingTime;
 
+    /**
+     * Konstruktor mit allen Atributen
+     * @param requestCount
+     * @param errorCount
+     * @param bytesReceived
+     * @param bytesSent
+     * @param processingTime
+     */
     public Monitoring_Data(int requestCount, int errorCount, long bytesReceived, long bytesSent, long processingTime) {
         this.requestCount = requestCount;
         this.errorCount = errorCount;
@@ -16,6 +34,9 @@ public class Monitoring_Data
         this.processingTime = processingTime;
     }
     
+    /**
+     * Standart Konstruktor 
+     */
     public Monitoring_Data() {}
 
     public int getRequestCount() {

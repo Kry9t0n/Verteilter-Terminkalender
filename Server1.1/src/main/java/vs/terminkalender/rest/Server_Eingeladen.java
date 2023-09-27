@@ -1,5 +1,4 @@
 package vs.terminkalender.rest;
-
 import java.util.ArrayList;
 
 import jakarta.ws.rs.Consumes;
@@ -15,6 +14,10 @@ import vs.terminkalender.database.DB_Funktionen;
 import vs.terminkalender.datatypes.Benutzer;
 import vs.terminkalender.datatypes.Termin;
 
+/**
+ * @Autor Niklas Baldauf, Maik Girlinger, Niklas Balke, Justin Witsch
+ * @version 1.1
+ */
 @Path("/eingeladen")
 public class Server_Eingeladen 
 {
