@@ -58,8 +58,7 @@ public class BenutzerClient {
 			if (i == 0) {
 				tag = LocalDate.now();
 			} else {
-				tag = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(),
-						LocalDate.now().getDayOfMonth() + i);
+				tag = tag.plusDays(1);
 			}
 			//ArrayList<Termin> tagesListe = fetchAlleTermineEinesTages(tag);
 			ArrayList<Termin> tagesListe = TerminRessoucen.getAlleTermineAnEinemTag(client, tag, benutzer);
