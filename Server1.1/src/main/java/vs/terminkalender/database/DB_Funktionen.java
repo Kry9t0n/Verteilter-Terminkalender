@@ -8,9 +8,9 @@ import vs.terminkalender.datatypes.Benutzer;
 import vs.terminkalender.datatypes.Termin;
 
 /**
- * @Autor Niklas Baldauf, Maik Gierlinger
- * @version 1.0
- * @see Termin, Benutzer, OnlineCheck
+ * @Autor Niklas Baldauf, Maik Girlinger, Niklas Balke, Justin Witsch
+ * @version 1.1
+ * @see OnlineCheck, Server_Benutzer, Server_Eingeladen, Server_Login, Server_Monitoring, Server_Online, Server_Termin
  */
 public class DB_Funktionen {
 	
@@ -43,12 +43,6 @@ public class DB_Funktionen {
 		this.password = password;
 	}
 	
-	/*TO DO
-	 * 
-	 * -Fehlerbehandlung!!!!!
-	 *
-	 */
-
 	/**
 	 * Öffnet die Datenbank Verbindung
 	 */
@@ -246,7 +240,6 @@ public class DB_Funktionen {
 	 * @return ein Benutzer Objekt
 	 */
 	public Benutzer ResultSetToBenutzer(ResultSet a) {
-		//System.out.println("Hier2"); //ENTFERNEN??
 		Benutzer benutzer = failedBenutzer; 
 		try {
 			benutzer.setBenutzerId(a.getInt("BENUTZERID"));
@@ -487,7 +480,7 @@ public class DB_Funktionen {
 	}
 	
 	/**
-	 * Ändert ein Termin Objekt in der Tabelle TERMIN ab indem er ein neues termin Objekt mit derselben TerminId erstellt, die Datenbank ersetzt dann das alte Objekt
+	 * Ändert ein Termin Objekt in der Tabelle TERMIN ab indem er ein neues Termin Objekt mit derselben TerminId erstellt, die Datenbank ersetzt dann das alte Objekt
 	 * @param termin
 	 */
 	public void aendereTermin(Termin termin) {

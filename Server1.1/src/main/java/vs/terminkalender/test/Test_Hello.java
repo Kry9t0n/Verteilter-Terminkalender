@@ -4,6 +4,10 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
+/**
+ * Einfache Testfunktion um den Status des Servers zu testen
+ */
+
 @Path("/hallo")
 public class Test_Hello {
 	
