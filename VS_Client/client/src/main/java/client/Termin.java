@@ -79,6 +79,10 @@ public class Termin {
 		this.dauer = dauer;
 	}
 	
+	public void setIdErsteller(int id) {
+		this.idErsteller = id;
+	}
+	
 	@Override
 	public String toString() {
 		return "Termin [terminId=" + terminId + ", titel=" + titel + ", datum=" + datum + ", dauer=" + dauer
