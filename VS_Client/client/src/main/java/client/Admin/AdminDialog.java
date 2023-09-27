@@ -137,7 +137,14 @@ public class AdminDialog {
 		System.out.println("Welcher Benutzer(Benutzername) soll gesucht werden?");
 		String benutzerName = input.next();
 		System.out.println("Suche Benutzer...");
-		//TODO: aufruf von AdminFunktion
+		Benutzer benutzerGefunden = adminClient.abfrageBenutzerAnhandName(benutzerName);
+		if(benutzerGefunden != null) {
+			System.out.println("### Treffer: ###");
+			System.out.println(benutzerGefunden);
+		}else {
+			System.out.println("Keine Treffer");
+		}
+		System.out.println("------------------------------------------\n");
 	}
 	
 	private void termineAusgeben() {
