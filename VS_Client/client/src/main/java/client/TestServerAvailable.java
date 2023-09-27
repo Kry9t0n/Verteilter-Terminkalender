@@ -11,7 +11,7 @@ import jakarta.ws.rs.core.Response;
 
 public class TestServerAvailable {
     
-    private final static String getURL = "http://localhost:8080/VS_Server/webapi/Monitoring/erreichbar";
+    private final static String GETURL = "http://localhost:8080/VS_Server/webapi/Monitoring/erreichbar";
     private static Client abfragClient;
     private static Timer timer = new Timer();
     private static MasterController mController;
@@ -36,7 +36,7 @@ public class TestServerAvailable {
     private static Response abfrageDurchfuehren() throws ProcessingException{
         abfragClient = ClientBuilder.newClient();
 
-        return abfragClient.target(getURL)
+        return abfragClient.target(GETURL)
                 .request(MediaType.APPLICATION_JSON)
                 .get();
     }
