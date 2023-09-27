@@ -7,6 +7,7 @@ import client.Admin.AdminDialog;
 import client.Client.BenutzerClient;
 import client.Client.ClientDialog;
 import client.login.LoginDialog;
+import client.TestServerAvailable;
 import java.lang.Thread;
 
 
@@ -28,12 +29,13 @@ public class MasterController {
 	
 	
 	
-	public MasterController() {
+	public MasterController() throws InterruptedException {
 		masterUser = new Benutzer();
 		run();
 	}
 	
-	private void run() {
+	private void run() throws InterruptedException {
+		TestServerAvailable.abfrageStatus();
 		fuehreLoginClientAus();
 		//Start des HintergrundThreads zur Abfrage des OnlineStatus (ausgelagert)
 		OnlineasThread.startOnlineasThread(masterUser);
@@ -77,7 +79,7 @@ public class MasterController {
 		System.exit(status);
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		new MasterController();
 	}
 }
