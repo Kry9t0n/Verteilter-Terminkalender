@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
 
 import client.Benutzer;
+import client.ServerResourceBaseURL;
 import client.Termin;
 import client.TerminRessoucen;
 import jakarta.ws.rs.client.Client;
@@ -74,7 +75,7 @@ public class BenutzerClient {
 	
 	
 	public void getEinladungen() {
-		Response response = client.target("http://localhost:8080/VS_Server/webapi/eingeladen/benutzer/"+benutzer.getBenutzerId())
+		Response response = client.target(ServerResourceBaseURL.EINGELADEN_BASE_URL.getURL() + "/benutzer/" + benutzer.getBenutzerId())
 									.request(MediaType.APPLICATION_JSON)
 									.get();
 		try {

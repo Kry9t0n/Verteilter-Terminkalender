@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 import client.Benutzer;
+import client.ServerResourceBaseURL;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -44,7 +45,7 @@ public class LoginClient {
 	 */
 	private Response postLoginCredentials() {
 		System.out.println(Entity.entity(loginBenutzer, MediaType.APPLICATION_JSON));
-		return client.target(TARGET_URL).request(MediaType.APPLICATION_JSON)
+		return client.target(ServerResourceBaseURL.LOGIN_BASE_URL.getURL()).request(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(loginBenutzer, MediaType.APPLICATION_JSON));
 	}
 

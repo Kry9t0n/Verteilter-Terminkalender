@@ -45,7 +45,7 @@ public class TerminRessoucen {
 	 */
 	public static Termin getEinzelTerminByID(Client client, int terminId) {
 		try {
-			Response response = client.target(BASE_URL).path("/" + String.valueOf(terminId))
+			Response response = client.target(ServerResourceBaseURL.TERMIN_BASE_URL.getURL()).path("/" + String.valueOf(terminId))
 					.request(MediaType.APPLICATION_JSON).get(/* Termin.class */);
 
 			if (response.getStatus() == STATUS_OK) {
@@ -73,7 +73,7 @@ public class TerminRessoucen {
 	 */
 	public static ArrayList<Termin> getAllTermine(Client client) {
 		try {
-			Response response = client.target(BASE_URL + "").request(MediaType.APPLICATION_JSON).get();
+			Response response = client.target(ServerResourceBaseURL.TERMIN_BASE_URL.getURL()).request(MediaType.APPLICATION_JSON).get();
 
 			if (response.getStatus() == STATUS_OK) {
 				// Die Antwortdaten in eine Liste von Termin-Objekten deserialisieren
@@ -111,7 +111,7 @@ public class TerminRessoucen {
 			month = (tag.getMonthValue() < 10) ? "0"+tag.getMonthValue() : ""+tag.getMonthValue();
 			
 			//System.out.println(tag.getDayOfMonth() + "," + day + "," + tag.getYear());
-			Response response = client.target(BASE_URL).path("/" + benutzer.getBenutzerId() + "/" + day + ","
+			Response response = client.target(ServerResourceBaseURL.TERMIN_BASE_URL.getURL()).path("/" + benutzer.getBenutzerId() + "/" + day + ","
 					+ month + "," + tag.getYear()).request(MediaType.APPLICATION_JSON).get();
 			if (response.getStatus() == STATUS_OK) {
 				terminTabelle = new ObjectMapper().setPolymorphicTypeValidator(ptv).readValue(response.readEntity(String.class), new TypeReference<ArrayList<Termin>>() {}); //TODO
@@ -137,7 +137,7 @@ public class TerminRessoucen {
 	 */
 	public static Response addTermin(Client client, Termin terminToAdd) {
 		try {
-			Response response = client.target(BASE_URL + "").request(MediaType.APPLICATION_JSON)
+			Response response = client.target(ServerResourceBaseURL.TERMIN_BASE_URL.getURL()).request(MediaType.APPLICATION_JSON)
 					.post(Entity.entity(terminToAdd, MediaType.APPLICATION_JSON));
 
 			if (response.getStatus() == STATUS_CREATED) {
@@ -166,7 +166,7 @@ public class TerminRessoucen {
 	public static Response updateTermin(Client client, Termin terminToUpdate) {
 		try {
 
-			Response response = client.target(BASE_URL)//.path("/" + String.valueOf(terminToUpdate.getTerminId()))
+			Response response = client.target(ServerResourceBaseURL.TERMIN_BASE_URL.getURL())//.path("/" + String.valueOf(terminToUpdate.getTerminId()))
 					.request(MediaType.APPLICATION_JSON)
 					.put(Entity.entity(terminToUpdate, MediaType.APPLICATION_JSON));
 
@@ -194,7 +194,7 @@ public class TerminRessoucen {
 	 */
 	public static Response removeTermin(Client client, int terminId) {
 		try {
-			Response response = client.target(BASE_URL).path("/" + String.valueOf(terminId)).request().delete();
+			Response response = client.target(ServerResourceBaseURL.TERMIN_BASE_URL.getURL()).path("/" + String.valueOf(terminId)).request().delete();
 
 			if (response.getStatus() == STATUS_NO_CONTENT) {
 				System.out.println("That was successful!");

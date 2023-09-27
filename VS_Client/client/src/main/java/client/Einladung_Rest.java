@@ -28,7 +28,7 @@ public class Einladung_Rest {
 	//GET Einladung eines Benutzers
 	public static ArrayList<Termin> getEinladungen(Client client, int benutzerId) {
 		try {
-			Response response = client.target(BASE_URL+"/benutzer/"+ String.valueOf(benutzerId))
+			Response response = client.target(ServerResourceBaseURL.EINGELADEN_BASE_URL.getURL() +"/benutzer/"+ String.valueOf(benutzerId))
 									.request(MediaType.APPLICATION_JSON)
 									.get();
 			
@@ -49,7 +49,7 @@ public class Einladung_Rest {
 	//DELETE
 	public static Response removeEinladung(Client client, int terminId, int benutzerId) {
 		try {
-			Response response = client.target(BASE_URL).path("/" + String.valueOf(terminId)+"/"+String.valueOf(benutzerId))
+			Response response = client.target(ServerResourceBaseURL.EINGELADEN_BASE_URL.getURL()).path("/" + String.valueOf(terminId)+"/"+String.valueOf(benutzerId))
 					.request()
 					.delete();
 
