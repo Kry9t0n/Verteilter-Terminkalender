@@ -27,6 +27,8 @@ public class ClientDialog {
 	private static final int EINLADUNGEN_AUSGEBEN = 3;
 	private static final int Termin_Bearbeiten = 4;
 	private static final int TERMIN_MIT_BESTIMMTEN_DATUM = 5;
+	private static final int EINLADUNGEN_ANNEHMEN = 6;
+	private static final int EINLADUNGEN_ABLEHNEN = 7;
 	
 	public ClientDialog(BenutzerClient benutzerClient) {
 		this.benutzerClient = benutzerClient;
@@ -77,6 +79,12 @@ public class ClientDialog {
 		case 5:
 			termin_mit_bestimmten_datum();
 			break;
+		case 6:
+			einladungenAnnehmen();
+			break;
+		case 7:
+			einladungenAblehnen();
+			break;
 		case 0:
 			System.out.println("ClientDialog wurde beendet!");
 			break;
@@ -84,6 +92,32 @@ public class ClientDialog {
 			System.out.println("Eingabe falsch!");
 		}
 		
+	}
+
+	private void einladungenAblehnen() {
+		System.out.println("Welchen Einladung wollen sie ablehnen(Terminid:)");
+		int terminid = leseGanzzahlEingabe();
+		
+		Benutzer benutzer;
+		benutzer = benutzerClient.getBenutzer();
+		
+		Einladung_Rest.removeEinladung(client,terminid,benutzer.getBenutzerId());
+		
+		System.out.println("Einladung wuerde abgelehnt!\n");
+	}
+
+	private void einladungenAnnehmen() {
+		System.out.println("Welchen Einladung wollen sie annhemen(Terminid:)");
+		int terminid = leseGanzzahlEingabe();
+		
+		Benutzer benutzer;
+		benutzer = benutzerClient.getBenutzer();
+		
+		Termin terminEinladung = TerminRessoucen.getEinzelTerminByID(client, terminid);
+		terminEinladung.setIdErsteller(benutzer.getBenutzerId());
+	
+		TerminRessoucen.addTermin(client, terminEinladung);
+		System.out.println("Einladung wuerde als termin hinzugefuegt!\n");
 	}
 
 	private void termin_mit_bestimmten_datum() {
@@ -235,7 +269,7 @@ public class ClientDialog {
 		System.out.println("------------------------------------------\n");
 		System.out.println("Ausgabe der Einladungen!");
 		System.out.println("------------------------------------------\n");
-		benutzerClient.getEinladungen();
+		//benutzerClient.getEinladungen();
 		ArrayList<Termin> einladungsSpeicher = Einladung_Rest.getEinladungen(client, benutzerClient.getBenutzer().getBenutzerId());
 		for(Termin t : einladungsSpeicher) {
 			System.out.println(t);
@@ -350,6 +384,8 @@ public class ClientDialog {
 				+ EINLADUNGEN_AUSGEBEN + ":Einladungen ausgeben\n"
 				+ Termin_Bearbeiten + ":Termin bearbeiten\n"
 				+ TERMIN_MIT_BESTIMMTEN_DATUM + ":Termin mit bestimmten Datum ausgeben\n"
+				+ EINLADUNGEN_ANNEHMEN + ":Einladungen annehmen\n"
+				+ EINLADUNGEN_ABLEHNEN + ":Einladungen ablehnen\n"
 				+ ENDE + ":Ende\n");
 	}
 	
