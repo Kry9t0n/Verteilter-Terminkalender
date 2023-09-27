@@ -60,9 +60,13 @@ public class Server_Termin
 		{
 			DB_Funktionen db = new DB_Funktionen("SA","");
 			db.oeffneDB();
-			db.erstelleTerminUndEintragEingeladenAnhandBenutzerName(termindaten);
+			String[] nichtErfolgreichEingeladeneBenutzer = db.erstelleTerminUndEintragEingeladenAnhandBenutzerName(termindaten);
 			db.schliesseDB();
-			String nachricht = "Eintrag in Termin und Eingeladen wurde erstellt";
+			String nachricht = "Eintrag in Termin wurde erstellt! \n"
+					+ "Folgende Benutzer wurden erfolgreich eingeladen: \n";
+			for(String s : nichtErfolgreichEingeladeneBenutzer) {
+				nachricht = nachricht + s + "\n";
+			}
             return Response.ok(nachricht, MediaType.TEXT_PLAIN).build();
 		}
 		catch(Exception e)

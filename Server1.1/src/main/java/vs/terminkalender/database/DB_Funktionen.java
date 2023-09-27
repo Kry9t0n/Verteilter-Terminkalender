@@ -37,7 +37,7 @@ public class DB_Funktionen {
 	 * @param password
 	 */
 	public DB_Funktionen(String user, String password) {
-		String url = "jdbc:sqlite:"+ System.getProperty("user.home") +  "/eclipse-workspace/VS_Server/Datenbank.db";
+		String url = "jdbc:sqlite:"+ System.getProperty("user.home") +  "/eclipse-workspace/Server1.1/Datenbank.db";
 		this.url = url;
 		this.user = user;
 		this.password = password;
@@ -325,7 +325,7 @@ public class DB_Funktionen {
 	 * Erstellt einen Termin in der Tabelle TERMIN und einen Eintrag in der Tabelle EINGELADEN anhand des Benutzernamen
 	 * @param termin
 	 */
-	public void erstelleTerminUndEintragEingeladenAnhandBenutzerName(Termin termin) {
+	public String[] erstelleTerminUndEintragEingeladenAnhandBenutzerName(Termin termin) {
 			
 			String sql = "INSERT INTO TERMIN (TITEL, DATUM, DAUER, IDERSTELLER) "+ 
 					"VALUES('"+ termin.getTitel() + "','" + termin.getDatum() + "','"+ 
@@ -355,8 +355,10 @@ public class DB_Funktionen {
 			String arrayBenutzername[] = termin.getBenutzerEingeladen().split(",");
 			int anz = arrayBenutzername.length;
 			int[] arrayID = new int[anz];
+			String[] benutzerEinladungFail = new String[anz];
 			
 			int i = 0;
+			int j = 0;
 			for(String s : arrayBenutzername) {
 				try {
 					rs = sucheBenutzerIdMitBenutzername(s);
@@ -364,6 +366,8 @@ public class DB_Funktionen {
 						arrayID[i] = rs.getInt(1);
 						i++;
 					}
+					benutzerEinladungFail[j] = s;
+					j++;
 				} catch(SQLException err) {
 					System.err.println(err);
 				}
@@ -381,6 +385,7 @@ public class DB_Funktionen {
 					} 
 				}
 			}
+			return benutzerEinladungFail;
 	}
 	
 	/**
