@@ -35,7 +35,7 @@ public class Server_Eingeladen
 		{
 			DB_Funktionen db = new DB_Funktionen("SA","");
 			db.oeffneDB();
-			db.erstelleEintragEingeladen(benutzerId, terminId, "??TEST??"); //Warum Info??
+			db.erstelleEintragEingeladen(benutzerId, terminId, null);
 			db.schliesseDB();
 			String nachricht = "Eintrag in Termin und Eingelanden wurde erstellt";
             return Response.ok(nachricht, MediaType.TEXT_PLAIN).build();

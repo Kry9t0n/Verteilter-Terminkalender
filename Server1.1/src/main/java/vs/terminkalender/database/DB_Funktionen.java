@@ -325,7 +325,7 @@ public class DB_Funktionen {
 	 * Erstellt einen Termin in der Tabelle TERMIN und einen Eintrag in der Tabelle EINGELADEN anhand des Benutzernamen
 	 * @param termin
 	 */
-	public String[] erstelleTerminUndEintragEingeladenAnhandBenutzerName(Termin termin) {
+	public ArrayList<String> erstelleTerminUndEintragEingeladenAnhandBenutzerName(Termin termin) {
 			
 			String sql = "INSERT INTO TERMIN (TITEL, DATUM, DAUER, IDERSTELLER) "+ 
 					"VALUES('"+ termin.getTitel() + "','" + termin.getDatum() + "','"+ 
@@ -353,21 +353,20 @@ public class DB_Funktionen {
 			
 			//Splitet die eingeladenen Benutzer beim , und schreibt sie in ein String-Array
 			String arrayBenutzername[] = termin.getBenutzerEingeladen().split(",");
-			int anz = arrayBenutzername.length;
-			int[] arrayID = new int[anz];
-			String[] benutzerEinladungFail = new String[anz];
+			ArrayList<Integer> arrayIDList = new ArrayList<Integer>();
 			
-			int i = 0;
-			int j = 0;
+			ArrayList<String> benutzerEinladungFailList = new ArrayList<String>();
+			
 			for(String s : arrayBenutzername) {
 				try {
 					rs = sucheBenutzerIdMitBenutzername(s);
-					if(rs.getInt(i) != 0) {
-						arrayID[i] = rs.getInt(1);
-						i++;
+					int help = rs.getInt(1);
+					System.out.print(help);
+					if(help != 0) {
+						arrayIDList.add(help);
+					} else {
+						benutzerEinladungFailList.add(s);
 					}
-					benutzerEinladungFail[j] = s;
-					j++;
 				} catch(SQLException err) {
 					System.err.println(err);
 				}
@@ -375,9 +374,9 @@ public class DB_Funktionen {
 			
 			if(terminid != -1) {	
 				String sql3 = "";
-				for(int benutzerid : arrayID) {
+				for(int benutzerId : arrayIDList) {
 					sql3 = "INSERT INTO Eingeladen (BENUTZERID, TERMINID) "+ 
-						"VALUES("+ benutzerid + "," + terminid + ");";
+						"VALUES("+ benutzerId + "," + terminid + ");";
 					try {
 						stmtSQL.executeUpdate(sql3);
 					} catch(SQLException err) {
@@ -385,7 +384,7 @@ public class DB_Funktionen {
 					} 
 				}
 			}
-			return benutzerEinladungFail;
+			return benutzerEinladungFailList;
 	}
 	
 	/**
@@ -620,12 +619,15 @@ public class DB_Funktionen {
 	 * @param info
 	 */
 	public void erstelleEintragEingeladen(int benutzerId, int terminId, String info) {
-		
-		String sql = "INSERT INTO Eingeladen (BENUTZERID, TERMINID, Info) "+ 
-				"VALUES( "+ benutzerId + " , " + terminId + " , '"+ 
-				info + "');";
+		Benutzer benutzer = sucheBenutzerMitBenutzerId(benutzerId);
+		Termin termin = sucheTerminMitTerminId(terminId);
 		try {
-			stmtSQL.executeUpdate(sql);
+			if(termin.getTerminId() != 0 && benutzer.getBenutzerId() != 0) {
+				String sql = "INSERT INTO Eingeladen (BENUTZERID, TERMINID, Info) "+ 
+						"VALUES( "+ benutzer.getBenutzerId() + " , " + termin.getTerminId() + " , '"+ 
+						info + "');";
+				stmtSQL.executeUpdate(sql);
+			}
 		} catch(SQLException err) {
 			System.err.println(err);
 		}
