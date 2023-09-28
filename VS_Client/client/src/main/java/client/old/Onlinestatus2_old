@@ -31,7 +31,7 @@ public class OnlineStatus extends TimerTask {
     //private int benutzerId;
     Benutzer loginbenutzer;
 
-
+	
     @Override
     public void run() {
         Response online = onlineRequest();
@@ -84,3 +84,4 @@ public class OnlineStatus extends TimerTask {
 
     
 }
+

@@ -1,6 +1,7 @@
 package client.mastercontroller;
 
 import java.util.Timer;
+import java.util.concurrent.TimeUnit;
 
 import client.Benutzer;
 import client.OnlineasThread;
@@ -28,14 +29,14 @@ public class MasterController {
 	
 	private Benutzer masterUser;
 	private boolean serverErreichbar;
-	private Timer timer;
+	private OnlineasThread oThread;
 	
 	public MasterController() throws InterruptedException {
-		timer = new Timer();
+		oThread = null;
 		serverErreichbar = false;
 		masterUser = new Benutzer();
-		TestServerAvailable.abfrageStatus(this);
-		//run();
+		//TestServerAvailable.abfrageStatus(this); TODO: ggf wieder rein
+		run();
 	}
 	
 	public boolean isServerErreichbar() {
@@ -47,10 +48,20 @@ public class MasterController {
 	}
 
 	public void run() throws InterruptedException {
+		//vor dem Login
+		do {
+				TestServerAvailable.abfrageStatus2(this);
+				if(!serverErreichbar) {
+					TimeUnit.SECONDS.sleep(30); //30 sekunden schlafen
+				}
+		
+		} while (!serverErreichbar);
+		
+		
 		if(serverErreichbar) {
 			fuehreLoginClientAus();
 			//Start des HintergrundThreads zur Abfrage des OnlineStatus (ausgelagert)
-			OnlineasThread.startOnlineasThread(masterUser);
+			this.oThread = new OnlineasThread(masterUser, this, "Hintergrundabfrage");
 			selectAndRunClient();
 		}
 	}
@@ -66,6 +77,7 @@ public class MasterController {
 			fuehreNormalenClientAus();
 		}else {
 			System.err.println("Fehler!");
+			oThread.getThread().interrupt(); //Hintergrundabfrage beenden
 			programmBeenden(1);
 		}
 	}
@@ -86,9 +98,17 @@ public class MasterController {
 	
 	}*/
 	
+	public void keineSerververbindungNachLogin() throws InterruptedException {
+		oThread.getThread().interrupt();
+		serverErreichbar = false;
+		programmBeenden(1);
+	}
+	
+	
 	public static void programmBeenden(int status) {
 		System.out.println("Programm wird beendet...");
-		OnlineasThread.interruptOnlineasThread(); //Beenden des HintergrundThreads (Ausgelagert)
+		//Beenden des HintergrundThreads (Ausgelagert)
+		BenutzerClient.threadBeenden();
 		System.exit(status);
 	}
 	

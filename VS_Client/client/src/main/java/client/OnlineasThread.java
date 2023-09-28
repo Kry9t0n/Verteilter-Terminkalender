@@ -12,9 +12,16 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.lang.Thread;
 
-public class OnlineasThread extends Thread{
+/**
+ * 
+ * @author Yannik Geber, Alejandro Freyermuth
+ *
+ */
+public class OnlineasThread implements Runnable{
 
-    private static OnlineasThread oThread;
+    //private static OnlineasThread oThread;
+    private Thread thread;
+    private String name;
     private Client oclient;
     private Benutzer masteruser;
     private MasterController mController;
@@ -24,60 +31,99 @@ public class OnlineasThread extends Thread{
     /**
      * Konstruktor
      * @param masteruser
+     * @param mController 
      */
-    public OnlineasThread(Benutzer masteruser){
+    public OnlineasThread(Benutzer masteruser, MasterController mController, String name){
+    	this.name = name;
+    	thread = new Thread(this, name);
         this.masteruser = masteruser;
+        this.mController = mController;
+        thread.start();
     }
+    
+    
+    @Override
+    public void run() {
+    	while(!thread.isInterrupted()) {
+    		try{
+        	    Response online = onlineRequest();
+        	    System.out.println("Server ist weiterhin erreichbar!");
+                onlineAuswerten(online);
+                
+            } catch(Exception e) {
+        	    System.err.println("Server nicht erreichbar! Login erneut erforderlich");
+                System.out.println("Sobald der Server wieder erreichbar ist, bitte Anwendung neustarten.");
+                try {
+					mController.keineSerververbindungNachLogin();
+				} catch (InterruptedException e1) {
+					System.err.println("Fehler bei Threadinterrupt!");
+				}
+            }
 
+            
+            //Warteintervall
+            try{
+                thread.sleep(600000); //10 Minuten
+            }catch(InterruptedException e){
+                System.out.println("Online Abfrage im Hintergrund beendet!");
+                break;
+            }
+    	}
+    }
+    
+    
+    public Thread getThread() {
+    	return thread;
+    }
+    
+    
+    
     /**
      * Starten der Methode run()
      * @param masteruser
      */
-    public static void startOnlineasThread(Benutzer masteruser){
-        oThread = new OnlineasThread(masteruser);
+    /*
+    public static void startOnlineasThread(Benutzer masteruser, MasterController mController){
+        oThread = new OnlineasThread(masteruser, mController);
         oThread.start();
-    }
+    }*/
 
 
     /**
      * Beenden des Threads
      */
+    /*
     public static void interruptOnlineasThread(){
         if (oThread != null){
             oThread.interrupt();
         }
-    }
+    }*/
 
     /**
      * Hauptschleife, welche alle 10 Minuten ausgeführt wird, solange das Programm nicht beendet wird
      */
+    /*
     @Override
     public void run(){
         while(!isInterrupted()){
             //Code welcher alle 10 min ausgeführt wird
             try{
         	    Response online = onlineRequest();
-                onlineAuswerten(online);
+        	    System.out.println("Server ist weiterhin erreichbar!");
+                //onlineAuswerten(online);
 
-            } catch (JsonMappingException e) {
-                e.printStackTrace();
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            } catch(ProcessingException e) {
-        	    System.out.println("Server nicht erreichbar! Login erneut erforderlich");
+            } catch(Exception e) {
+        	    System.err.println("Server nicht erreichbar! Login erneut erforderlich");
                 System.out.println("Zurueckgekehren zum Login, sobald Server wieder aktiv!");
                 try {
-                	TestServerAvailable.abfrageStatus(mController);
-                	oThread.interrupt();
+                	mController.neuStart();
                 } catch (InterruptedException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
-            }catch (Exception e) {
-                System.out.println(e.getMessage());
             }
 
-
+            
             //Warteintervall
             try{
                 Thread.sleep(30000); //10 Minuten
@@ -86,7 +132,7 @@ public class OnlineasThread extends Thread{
                 break;
             }
         }
-    }
+    }*/
 
 
     /**
@@ -108,13 +154,14 @@ public class OnlineasThread extends Thread{
      * Dann wird dementsprechend reagiert
      *      
      */
+   
     private void onlineAuswerten(Response online) throws JsonMappingException, JsonProcessingException, Exception {
         //Überprüfung auf den Response Code 200 = OK, anstatt auf Nachricht
         if(online.getStatus() == Response.Status.OK.getStatusCode()){
-            System.out.println("Server ist  erreichbar! und sie sind Online");
+            System.out.println("Onlinerückmeldung war erfolgreich.");
         }else{
             throw new Exception(
-                "Error!"
+                "Onlinerückmeldung nicht erfolgreich."
             );
         }
     }
