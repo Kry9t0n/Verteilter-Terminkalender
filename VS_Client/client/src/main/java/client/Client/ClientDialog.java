@@ -10,6 +10,7 @@ import client.Benutzer;
 import client.Einladung_Rest;
 import client.Termin;
 import client.TerminRessoucen;
+import client.mastercontroller.MasterController;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -92,6 +93,8 @@ public class ClientDialog {
 			break;
 		case 0:
 			System.out.println("ClientDialog wurde beendet!");
+			BenutzerClient.threadBeenden();
+			MasterController.programmBeenden(0);
 			break;
 		default:
 			System.out.println("Eingabe falsch!");
@@ -100,7 +103,7 @@ public class ClientDialog {
 	}
 
 	private void listeOnlineBenutzerAuf() {
-		ArrayList<Benutzer> onlineListe = null;
+		ArrayList<String> onlineListe = null;
 		try {
 			onlineListe = benutzerClient.fetchBenutzerOnlineListe();
 		} catch (JsonProcessingException e) {
@@ -109,8 +112,8 @@ public class ClientDialog {
 		
 		if(onlineListe != null) {
 			System.out.println("### Onlineliste ###");
-			for(Benutzer b : onlineListe) {
-				System.out.println(b.getBenutzerName() +" " + b.getBenutzerId());
+			for(String s : onlineListe) {
+				System.out.println("Benutzername: " + s);
 			}
 			System.out.println("------------------------------------------\n");
 		}
@@ -138,7 +141,9 @@ public class ClientDialog {
 		
 		Termin terminEinladung = TerminRessoucen.getEinzelTerminByID(client, terminid);
 		terminEinladung.setIdErsteller(benutzer.getBenutzerId());
-	
+		
+		Einladung_Rest.removeEinladung(client,terminid,benutzer.getBenutzerId());
+		
 		TerminRessoucen.addTermin(client, terminEinladung);
 		System.out.println("Einladung wuerde als termin hinzugefuegt!\n");
 	}
@@ -311,14 +316,21 @@ public class ClientDialog {
 		
 		for(int index = 0; index < benutzerClient.getANZAHL_TERMIN_DARSTELLUNG(); index++) {
 			System.out.println("Tag " + (index+1));
-			ArrayList<Termin> tagesListe = alleTermine.get(index);
-			if(tagesListe.isEmpty()) {
-				System.out.println("Keine Termine");
-			}else {
-				for(Termin termin : tagesListe) {
-					System.out.println(termin);
+			
+			if(index <= alleTermine.size()) {
+				ArrayList<Termin> tagesListe = alleTermine.get(index);
+				
+				if(tagesListe.isEmpty()) {
+					System.out.println("Keine Termine");
+				}else {
+					for(Termin termin : tagesListe) {
+						System.out.println(termin);
+					}
 				}
+				
 			}
+			
+			
 			System.out.println("------------------------------------------\n");
 		}
 		
