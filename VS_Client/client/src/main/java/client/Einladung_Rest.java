@@ -25,6 +25,39 @@ public class Einladung_Rest {
 	private static PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder()
 			.allowIfSubType("java.util").build();
 	
+	private static ArrayList<Termin> letzteEinladungen = new ArrayList<Termin>();
+	
+	
+	//Thread einladungThread = new Thread(() -> ueberpruefeEinladungen(client,benutzerId));
+    //einladungThread.start();
+
+	public static void ueberpruefeEinladungen(Client client, int benutzerId) {
+		ArrayList<Termin> einladungen = getEinladungen(client, benutzerId);
+		letzteEinladungen = einladungen;
+		
+		while (true) {
+            einladungen = getEinladungen(client, benutzerId);
+
+            if (einladungen != null) {
+                for (Termin einladung : einladungen) {
+                    if (!letzteEinladungen.contains(einladung)) {
+                    	System.out.println("------------------------------------------\n");
+                    	System.out.println("Neue Einladung erhalten!\n");
+                    	System.out.println("------------------------------------------\n");
+                    }
+                }
+                letzteEinladungen = einladungen;
+            }
+
+            try {
+                // Warte 5 Minuten, bevor die nächste Überprüfung durchgeführt wird
+                Thread.sleep(5 * 60 * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+	
 	//GET Einladung eines Benutzers
 	public static ArrayList<Termin> getEinladungen(Client client, int benutzerId) {
 		try {
