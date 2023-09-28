@@ -146,7 +146,7 @@ public class TerminRessoucen {
 				return response;
 			} else {
 				System.out.println(response.getStatusInfo().getReasonPhrase());
-				return null;
+				return response; 
 			}
 
 		} catch (Exception e) {

@@ -1,25 +1,22 @@
 package client.Client;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
 
 import client.Benutzer;
 import client.Einladung_Rest;
 import client.Termin;
 import client.TerminRessoucen;
 import client.mastercontroller.MasterController;
+import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.Response;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
-import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
 
 /*
  * @author Alexei Brandt
@@ -410,21 +407,13 @@ public class ClientDialog {
 		System.out.println("Termin wuerde erstellt !!!");
 		
 		//Rückgabe res muss überprüft werden, da dort die Benutzer enthalten sind, die nicht eingeladen werden konnten
-		ArrayList<String> konnteNichtEingeladenWerden = null;
 		try {
-			konnteNichtEingeladenWerden = new ObjectMapper().setPolymorphicTypeValidator(ptv).readValue(res.readEntity(String.class), new TypeReference<ArrayList<String>>() {});
-		} catch (JsonProcessingException e) {
+			String nachricht = res.readEntity(String.class);
+			System.out.println(nachricht);
+		} catch (ProcessingException e) {
 			System.err.println("Fehler beim Auswerten der Serverresponse");
 		}
 		
-		if(konnteNichtEingeladenWerden != null) {
-			if(!konnteNichtEingeladenWerden.isEmpty()) {
-				System.out.println("Folgende Benutzer konnten nicht eingeladen werden:");
-				for(String name : konnteNichtEingeladenWerden) {
-					System.out.println(name);
-				}
-			}
-		}
 		
 		
 		//System.out.println(termin);
