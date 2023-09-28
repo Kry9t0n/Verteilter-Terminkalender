@@ -30,7 +30,7 @@ public class AdminDialog {
 	private static final int TERMINE_AUSGEBEN = 5;
 	private static final int TERMIN_LOESCHEN = 6;
 	private static final int SERVER_DATEN_AUSGEBEN = 7;
-	
+	private static final int ONLINE_BENUTZER_AUSGEBEN = 8;
 	
 	public AdminDialog(AdminClient adminClient) {
 		this.adminClient = adminClient;
@@ -85,6 +85,9 @@ public class AdminDialog {
 		case 7:
 			server_daten_ausgeben();
 			break;
+		case 8:
+			listeOnlineBenutzerAuf();
+			break;
 		case 0:
 			System.out.println("AdminDialog wurde beendet!");
 			MasterController.programmBeenden(0);
@@ -95,7 +98,24 @@ public class AdminDialog {
 		
 	}
 
-
+	private void listeOnlineBenutzerAuf() {
+		ArrayList<String> onlineListe = null;
+		try {
+			onlineListe = adminClient.fetchBenutzerOnlineListe();
+		} catch (JsonProcessingException e) {
+			System.out.println("Fehler beim fetchen der Onlineliste!");
+		}
+		
+		if(onlineListe != null) {
+			System.out.println("### Onlineliste ###");
+			for(String s : onlineListe) {
+				System.out.println("Benutzername: " + s);
+			}
+			System.out.println("------------------------------------------\n");
+		}
+		
+	}
+	
 	private void benutzerErstellen() {
 		String Vorname;
 		String name;
@@ -192,10 +212,11 @@ public class AdminDialog {
 		System.out.print(BENUTZER_ERSTELLEN + ":Benutzer erstellen\n"
 				+ BENUTZER_AUSGEBEN + ":Benutzer ausgeben\n"
 				+ BENUTZER_LOESCHEN + ":Benutzer loeschen\n"
-				+ BENUTZER_SUCHEN + "Benutzer suchen\n"
+				+ BENUTZER_SUCHEN + ":Benutzer suchen\n"
 				+ TERMINE_AUSGEBEN + ":Termin ausgeben\n"
 				+ TERMIN_LOESCHEN + ":Termin loeschen\n"
 				+ SERVER_DATEN_AUSGEBEN + ":Server daten ausgeben\n"
+				+ ONLINE_BENUTZER_AUSGEBEN + ":Gibt eine Liste aller Benutzer die online sind aus\n"
 				+ ENDE + ":Ende\n");
 	}
 	

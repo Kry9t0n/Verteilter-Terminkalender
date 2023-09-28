@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import client.Benutzer;
 import client.Benuzer_Rest;
 import client.Monitoring_Data;
+import client.Online_Rest;
 import client.ServerResourceBaseURL;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -46,12 +47,16 @@ public class AdminClient {
 		Benutzer benutzerGefunden = null;
 		ArrayList<Benutzer> listAllUser = Benuzer_Rest.getAllBenutzer(client);
 		for (Benutzer b : listAllUser) {
-			if (b.getBenutzerName() == name) {
+			if (b.getBenutzerName().equals(name)) {
 				benutzerGefunden = b;
 				break;
 			}
 		}
 
 		return benutzerGefunden;
+	}
+	
+	public ArrayList<String> fetchBenutzerOnlineListe() throws JsonMappingException, JsonProcessingException {
+		return Online_Rest.getAlleBenutzerDieOnlineSind(client);
 	}
 }
