@@ -24,12 +24,12 @@ public class Online_Rest {
 	 * @throws JsonMappingException
 	 * @throws JsonProcessingException
 	 */
-	public static ArrayList<Benutzer> getAlleBenutzerDieOnlineSind(Client client) throws JsonMappingException, JsonProcessingException{
+	public static ArrayList<String> getAlleBenutzerDieOnlineSind(Client client) throws JsonMappingException, JsonProcessingException{
 		Response res = client
 						.target(ServerResourceBaseURL.ONLINE_BASE_URL.getURL())
 						.request(MediaType.APPLICATION_JSON)
 						.get();
-		return new ObjectMapper().setPolymorphicTypeValidator(ptv).readValue(res.readEntity(String.class), new TypeReference<ArrayList<Benutzer>>() {});
+		return new ObjectMapper().setPolymorphicTypeValidator(ptv).readValue(res.readEntity(String.class), new TypeReference<ArrayList<String>>() {});
 	}
 	
 }
