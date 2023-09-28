@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
 
 import client.Benutzer;
+import client.Einladung_Rest;
 import client.Online_Rest;
 import client.ServerResourceBaseURL;
 import client.Termin;
@@ -40,6 +41,9 @@ public class BenutzerClient {
 	private ArrayList<Termin> eingeladen;
 	private PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder()
 			.allowIfSubType("java.util").build();
+	private static Thread einladungsThread;
+	
+	
 	/**
 	 * Konstruktor erstellt einen neuen Benutzerclient, dabei werden automatisch
 	 * alle Termine im Darstellungszeitraum gefetcht. 
@@ -51,6 +55,8 @@ public class BenutzerClient {
 		client = ClientBuilder.newClient();
 		this.benutzer = masterUser;
 		fetchTermineInDarstellungszeitraum();
+		einladungsThread = new Thread(() -> Einladung_Rest.ueberpruefeEinladungen(client, benutzer.getBenutzerId()));
+		einladungsThread.start();
 	}
 	
 	public void fetchTermineInDarstellungszeitraum() {
@@ -85,9 +91,16 @@ public class BenutzerClient {
 		}
 	}
 	
-	public ArrayList<Benutzer> fetchBenutzerOnlineListe() throws JsonMappingException, JsonProcessingException {
+	public ArrayList<String> fetchBenutzerOnlineListe() throws JsonMappingException, JsonProcessingException {
 		return Online_Rest.getAlleBenutzerDieOnlineSind(client);
 	}
+	
+	
+	
+	public static void threadBeenden() {
+		einladungsThread.stop();
+	}
+	
 	
 	/**
 	 * Alle Termine eines Benutzers an einem Tag vom Server fetchen. 
@@ -142,6 +155,8 @@ public class BenutzerClient {
 	public ArrayList<Termin> getEingeladen() {
 		return eingeladen;
 	}
+
+
 	
 	
 	
