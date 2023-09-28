@@ -13,7 +13,13 @@ import client.TerminRessoucen;
 import client.mastercontroller.MasterController;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.Response;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
 
 /*
  * @author Alexei Brandt
@@ -33,6 +39,9 @@ public class ClientDialog {
 	private static final int EINLADUNGEN_ABLEHNEN = 7;
 	private static final int ONLINE_BENUTZER_AUSGEBEN = 8;
 
+	private static PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder()
+			.allowIfSubType("java.util").build();
+	
 	public ClientDialog(BenutzerClient benutzerClient) {
 		this.benutzerClient = benutzerClient;
 		this.client = benutzerClient.getClient();
@@ -396,9 +405,28 @@ public class ClientDialog {
 		benutzer = benutzerClient.getBenutzer();
 		
 		Termin termin = new Termin(titel,datum,dauer,benutzer.getBenutzerId(),einladungBenutzer);
-		TerminRessoucen.addTermin(client, termin);
+		Response res = TerminRessoucen.addTermin(client, termin);
 		
 		System.out.println("Termin wuerde erstellt !!!");
+		
+		//Rückgabe res muss überprüft werden, da dort die Benutzer enthalten sind, die nicht eingeladen werden konnten
+		ArrayList<String> konnteNichtEingeladenWerden = null;
+		try {
+			konnteNichtEingeladenWerden = new ObjectMapper().setPolymorphicTypeValidator(ptv).readValue(res.readEntity(String.class), new TypeReference<ArrayList<String>>() {});
+		} catch (JsonProcessingException e) {
+			System.err.println("Fehler beim Auswerten der Serverresponse");
+		}
+		
+		if(konnteNichtEingeladenWerden != null) {
+			if(!konnteNichtEingeladenWerden.isEmpty()) {
+				System.out.println("Folgende Benutzer konnten nicht eingeladen werden:");
+				for(String name : konnteNichtEingeladenWerden) {
+					System.out.println(name);
+				}
+			}
+		}
+		
+		
 		//System.out.println(termin);
 		
 	}
