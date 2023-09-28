@@ -32,29 +32,65 @@ public class Einladung_Rest {
     //einladungThread.start();
 
 	public static void ueberpruefeEinladungen(Client client, int benutzerId) {
+		
 		ArrayList<Termin> einladungen = getEinladungen(client, benutzerId);
-		letzteEinladungen = einladungen;
+		ArrayList<Termin> letzteEinladungen = getEinladungen(client, benutzerId);
+
+		//TEST
+		
+		
+		for(Termin t : einladungen) {
+			System.out.println(t);
+		}
+		
+		for(Termin t : letzteEinladungen) {
+			System.out.println(t);
+		}
+		
+		
+		
+		
+		//ENDE TEST
+		
 		
 		while (true) {
-            einladungen = getEinladungen(client, benutzerId);
+			//System.out.println("EINLADUNGSTHREAD");
+            //einladungen = getEinladungen(client, benutzerId);
 
             if (einladungen != null) {
+            	if(einladungen.size() != letzteEinladungen.size()) {
+            		System.out.println("------------------------------------------\n");
+                	System.out.println("Neue Einladung erhalten!\n");
+                	System.out.println("------------------------------------------\n");
+                	
+            		for(int i = letzteEinladungen.size() + 1; i < einladungen.size(); i++) {
+            			letzteEinladungen.add(i, einladungen.get(i));
+            		}
+            	}
+            	
+            	/*
                 for (Termin einladung : einladungen) {
                     if (!letzteEinladungen.contains(einladung)) {
                     	System.out.println("------------------------------------------\n");
                     	System.out.println("Neue Einladung erhalten!\n");
                     	System.out.println("------------------------------------------\n");
+                    	letzteEinladungen.addAll(einladungen);
                     }
-                }
-                letzteEinladungen = einladungen;
+                    
+                }*/
+                //letzteEinladungen = einladungen;
             }
-
+            
+            einladungen = getEinladungen(client, benutzerId);
+            
             try {
                 // Warte 5 Minuten, bevor die nächste Überprüfung durchgeführt wird
-                Thread.sleep(5 * 60 * 1000);
+                Thread.sleep(1 * 10 * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            
+            
         }
     }
 	
