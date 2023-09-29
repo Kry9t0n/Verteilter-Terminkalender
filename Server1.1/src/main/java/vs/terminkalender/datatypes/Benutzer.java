@@ -3,8 +3,8 @@ package vs.terminkalender.datatypes;
 import vs.terminkalender.database.DB_Funktionen;
 
 /**
- * @Autor Niklas Baldauf, Maik Girlinger, Niklas Balke, Justin Witsch
- * @version 1.1
+ * @Autor Niklas Baldauf, Maik Girlinger
+ * @version 1.0
  * @see DB_Funktionen
  */
 public class Benutzer {
@@ -111,9 +111,6 @@ public class Benutzer {
 		isAdmin = eingabe;
 	}
 
-	/**
-	 * die toString Methode gibt das Objekt als String zurück
-	 */
 	@Override
 	public String toString() {
 		return "Benutzer [benutzerId=" + benutzerId + ", benutzerName=" + benutzerName + ", passwort=" + passwort

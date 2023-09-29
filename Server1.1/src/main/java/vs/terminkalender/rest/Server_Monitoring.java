@@ -1,4 +1,5 @@
 package vs.terminkalender.rest;
+
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -7,10 +8,7 @@ import jakarta.ws.rs.core.Response;
 import vs.terminkalender.datatypes.Monitoring_Data;
 import vs.terminkalender.monitoring.Monitoring;
 
-/**
- * @Autor Niklas Baldauf, Maik Girlinger, Niklas Balke, Justin Witsch
- * @version 1.1
- */
+
 @Path("/monitoring")
 public class Server_Monitoring 
 {

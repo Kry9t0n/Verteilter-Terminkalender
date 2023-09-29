@@ -1,5 +1,6 @@
 package vs.terminkalender.rest;
 import java.util.ArrayList;
+
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -13,10 +14,7 @@ import jakarta.ws.rs.core.Response;
 import vs.terminkalender.database.DB_Funktionen;
 import vs.terminkalender.datatypes.Termin;
 
-/**
- * @Autor Niklas Baldauf, Maik Girlinger, Niklas Balke, Justin Witsch
- * @version 1.1
- */
+
 @Path("/termin")
 public class Server_Termin
 {
@@ -62,10 +60,10 @@ public class Server_Termin
 		{
 			DB_Funktionen db = new DB_Funktionen("SA","");
 			db.oeffneDB();
-			ArrayList<String> nichtErfolgreichEingeladeneBenutzer = db.erstelleTerminUndEintragEingeladenAnhandBenutzerName(termindaten);
+			String[] nichtErfolgreichEingeladeneBenutzer = db.erstelleTerminUndEintragEingeladenAnhandBenutzerName(termindaten);
 			db.schliesseDB();
 			String nachricht = "Eintrag in Termin wurde erstellt! \n"
-					+ "Folgende Benutzer konnten nicht eingeladen werden: \n";
+					+ "Folgende Benutzer wurden erfolgreich eingeladen: \n";
 			for(String s : nichtErfolgreichEingeladeneBenutzer) {
 				nachricht = nachricht + s + "\n";
 			}

@@ -3,15 +3,12 @@ package vs.terminkalender.datatypes;
 import vs.terminkalender.database.DB_Funktionen;
 
 /**
- * @Autor Niklas Baldauf, Maik Girlinger, Niklas Balke, Justin Witsch
+ * @Autor Niklas Baldauf, Maik Gierlinger
  * @version 1.0
  * @see DB_Funktionen
  */
 public class Termin {
 	
-	/**
-	 * Attribute
-	 */
 	private int terminId;
 	private String titel;
 	private String datum; //Format wird von Client Team festgelegt
@@ -111,9 +108,6 @@ public class Termin {
 		benutzerEingeladen = eingabe;
 	}
 	
-	/**
-	 * die toString Methode gibt das Objekt als String zurück
-	 */
 	@Override
 	public String toString() {
 		return "Termin [terminId=" + terminId + ", titel=" + titel + ", datum=" + datum + ", dauer=" + dauer

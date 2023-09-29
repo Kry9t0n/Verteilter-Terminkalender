@@ -1,4 +1,5 @@
 package vs.terminkalender.rest;
+
 import java.util.ArrayList;
 
 import jakarta.ws.rs.Consumes;
@@ -14,10 +15,6 @@ import vs.terminkalender.database.DB_Funktionen;
 import vs.terminkalender.datatypes.Benutzer;
 import vs.terminkalender.datatypes.Termin;
 
-/**
- * @Autor Niklas Baldauf, Maik Girlinger, Niklas Balke, Justin Witsch
- * @version 1.1
- */
 @Path("/eingeladen")
 public class Server_Eingeladen 
 {
@@ -38,7 +35,7 @@ public class Server_Eingeladen
 		{
 			DB_Funktionen db = new DB_Funktionen("SA","");
 			db.oeffneDB();
-			db.erstelleEintragEingeladen(benutzerId, terminId, null);
+			db.erstelleEintragEingeladen(benutzerId, terminId, "??TEST??"); //Warum Info??
 			db.schliesseDB();
 			String nachricht = "Eintrag in Termin und Eingelanden wurde erstellt";
             return Response.ok(nachricht, MediaType.TEXT_PLAIN).build();

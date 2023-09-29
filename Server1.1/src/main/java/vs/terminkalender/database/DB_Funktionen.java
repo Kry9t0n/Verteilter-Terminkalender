@@ -516,7 +516,7 @@ public class DB_Funktionen {
 			
 			String sql = "INSERT INTO TERMIN (TERMINID, TITEL, DATUM, DAUER, IDERSTELLER) "+ 
 					"VALUES("+ termin.getTerminId() +",'"+ termin.getTitel() + "','" + termin.getDatum() + "','"+ 
-					termin.getDauer() +"','"+ termin.getIdErsteller() + ");";
+					termin.getDauer() +"','"+ termin.getIdErsteller() + "');";
 			try {
 				stmtSQL.executeUpdate(sql);
 			} catch(SQLException err) {

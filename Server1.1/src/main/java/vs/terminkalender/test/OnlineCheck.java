@@ -7,10 +7,10 @@ import java.util.TimerTask;
 
 import vs.terminkalender.database.DB_Funktionen;
 /**
- * @Autor Niklas Baldauf, Maik Girlinger, Niklas Balke, Justin Witsch
- * @version 1.1
+ * @Autor Niklas Baldauf, Maik Gierlinger
+ * @version 1.0
+ * @see DB_Funktionen
  */
-
 public class OnlineCheck {
 	/**
 	 * @param ZEIT_INTERVALL in Milisekunden (600000 = 10 min)
@@ -22,12 +22,11 @@ public class OnlineCheck {
 	 * Main Methode
 	 * @param args
 	 */
-    /* Funktion auskommentiert, da nicht verwendet. Implementierungsprobleme mit javax Servlets unter Tomcat
-	
-	public static void main(String[] args) {
+    /*public static void main(String[] args) {
+    	System.out.println("Hallo ich bin die Online Funktion");
     	OnlineCheck check = new OnlineCheck();
         check.startTask();
-    }/*
+    }*/
 
     /**
      * Startet alle 10 Minuten die Klasse Pruefe
