@@ -8,9 +8,9 @@ import vs.terminkalender.datatypes.Benutzer;
 import vs.terminkalender.datatypes.Termin;
 
 /**
- * @Autor Niklas Baldauf, Maik Girlinger, Niklas Balke, Justin Witsch
- * @version 1.1
- * @see OnlineCheck, Server_Benutzer, Server_Eingeladen, Server_Login, Server_Monitoring, Server_Online, Server_Termin
+ * @Autor Niklas Baldauf, Maik Gierlinger
+ * @version 1.0
+ * @see Termin, Benutzer, OnlineCheck
  */
 public class DB_Funktionen {
 	
@@ -28,21 +28,18 @@ public class DB_Funktionen {
 	Statement stmtSQL = null;
 	ResultSet rs = null;
 	
-	private final Benutzer failedBenutzer = new Benutzer(-1,"-1","-1","-1","-1",-1);
-	private final Termin failedTermin = new Termin(-1,"-1","-1",-1,-1,"-1");
-	
 	/**
 	 * Konstruktor
 	 * @param user
 	 * @param password
 	 */
 	public DB_Funktionen(String user, String password) {
-		String url = "jdbc:sqlite:"+ System.getProperty("user.home") +  "/eclipse-workspace/Server1.1/Datenbank.db";
+		String url = "jdbc:sqlite:/Users/niklasbaldauf/eclipse-workspace/VS_Server/Datenbank.db";
 		this.url = url;
 		this.user = user;
 		this.password = password;
 	}
-	
+
 	/**
 	 * Öffnet die Datenbank Verbindung
 	 */
@@ -57,7 +54,6 @@ public class DB_Funktionen {
 		try {
 			conn = DriverManager.getConnection(url, user, password);
 			stmtSQL = conn.createStatement();
-			System.out.println("Connection etabliert!");
 		} catch (SQLException e){
 			System.out.print(e);
 		}
@@ -69,7 +65,6 @@ public class DB_Funktionen {
 	public void schliesseDB() {
 		try {stmtSQL.close();
 			conn.close();
-			System.out.println("Connection geschlossen!");
 		}
 		catch (SQLException e) {
 			System.err.println(e);
@@ -170,10 +165,7 @@ public class DB_Funktionen {
     public ArrayList<Benutzer> gibAlleBenutzer() {
         try {
             rs = stmtSQL.executeQuery("SELECT BENUTZERID, BENUTZERNAME, PASSWORT, NAME, VORNAME, ISADMIN FROM BENUTZER;");
-            ArrayList<Benutzer> list = new ArrayList<Benutzer>();
-            while(rs.next()) {
-                list.add(ResultSetToBenutzer(rs));
-            }
+            ArrayList<Benutzer> list = ResultSetToBenutzerList(rs);
             return list;
         } catch(SQLException err) {
             System.err.println(err);
@@ -240,7 +232,7 @@ public class DB_Funktionen {
 	 * @return ein Benutzer Objekt
 	 */
 	public Benutzer ResultSetToBenutzer(ResultSet a) {
-		Benutzer benutzer = failedBenutzer; 
+		Benutzer benutzer = new Benutzer(-1,"-1","-1","-1","-1",-1);
 		try {
 			benutzer.setBenutzerId(a.getInt("BENUTZERID"));
 		} catch (SQLException e) {}
@@ -261,7 +253,44 @@ public class DB_Funktionen {
 		} catch (SQLException e) {}
 			
 		return benutzer;
+	}
+	
+	/**
+	 * Erstellt eine Liste mit Benutzer Objekten aus einem ResultSet
+	 * @param a = das übergebene ResultSet
+	 * @return eine ArrayList
+	 */
+	public ArrayList<Benutzer> ResultSetToBenutzerList(ResultSet a) {
+		ArrayList<Benutzer> list = new ArrayList<Benutzer>();
+		try {
+			while(a.next()) {
+				Benutzer benutzer = new Benutzer(-1,"-1","-1","-1","-1",-1);
+				list.add(benutzer);
+				try {
+					benutzer.setBenutzerId(a.getInt("BENUTZERID"));
+				} catch (SQLException e) {}
+				try {
+					benutzer.setBenutzerName(a.getString("BENUTZERNAME"));
+				} catch (SQLException e) {}
+				try {
+					benutzer.setPasswort(a.getString("PASSWORT"));
+				} catch (SQLException e) {}
+				try {
+					benutzer.setName(a.getString("NAME"));
+				} catch (SQLException e) {}
+				try {
+					benutzer.setVorname(a.getString("VORNAME"));
+				} catch (SQLException e) {}
+				try {
+					benutzer.setIsAdmin(a.getInt("ISADMIN"));
+				} catch (SQLException e) {}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
 		}
+		return list;
+	}
 	
 	/**
 	 * Termin Funktionen
@@ -318,7 +347,7 @@ public class DB_Funktionen {
 	 * Erstellt einen Termin in der Tabelle TERMIN und einen Eintrag in der Tabelle EINGELADEN anhand des Benutzernamen
 	 * @param termin
 	 */
-	public ArrayList<String> erstelleTerminUndEintragEingeladenAnhandBenutzerName(Termin termin) {
+	public String[] erstelleTerminUndEintragEingeladenAnhandBenutzerName(Termin termin) {
 			
 			String sql = "INSERT INTO TERMIN (TITEL, DATUM, DAUER, IDERSTELLER) "+ 
 					"VALUES('"+ termin.getTitel() + "','" + termin.getDatum() + "','"+ 
@@ -346,20 +375,21 @@ public class DB_Funktionen {
 			
 			//Splitet die eingeladenen Benutzer beim , und schreibt sie in ein String-Array
 			String arrayBenutzername[] = termin.getBenutzerEingeladen().split(",");
-			ArrayList<Integer> arrayIDList = new ArrayList<Integer>();
+			int anz = arrayBenutzername.length;
+			int[] arrayID = new int[anz];
+			String[] benutzerEinladungFail = new String[anz];
 			
-			ArrayList<String> benutzerEinladungFailList = new ArrayList<String>();
-			
+			int i = 0;
+			int j = 0;
 			for(String s : arrayBenutzername) {
 				try {
 					rs = sucheBenutzerIdMitBenutzername(s);
-					int help = rs.getInt(1);
-					System.out.print(help);
-					if(help != 0) {
-						arrayIDList.add(help);
-					} else {
-						benutzerEinladungFailList.add(s);
+					if(rs.getInt(i) != 0) {
+						arrayID[i] = rs.getInt(1);
+						i++;
 					}
+					benutzerEinladungFail[j] = s;
+					j++;
 				} catch(SQLException err) {
 					System.err.println(err);
 				}
@@ -367,9 +397,9 @@ public class DB_Funktionen {
 			
 			if(terminid != -1) {	
 				String sql3 = "";
-				for(int benutzerId : arrayIDList) {
+				for(int benutzerid : arrayID) {
 					sql3 = "INSERT INTO Eingeladen (BENUTZERID, TERMINID) "+ 
-						"VALUES("+ benutzerId + "," + terminid + ");";
+						"VALUES("+ benutzerid + "," + terminid + ");";
 					try {
 						stmtSQL.executeUpdate(sql3);
 					} catch(SQLException err) {
@@ -377,7 +407,7 @@ public class DB_Funktionen {
 					} 
 				}
 			}
-			return benutzerEinladungFailList;
+			return benutzerEinladungFail;
 	}
 	
 	/**
@@ -418,7 +448,7 @@ public class DB_Funktionen {
 	 * @return ein Termin Objekt
 	 */
 	public Termin ResultSetToTermin(ResultSet a) {
-		Termin termin = failedTermin; 
+		Termin termin = new Termin(-1,"-1","-1",-1,-1,"-1"); 
 		try {
 			termin.setTerminId(a.getInt("TERMINID"));
 		} catch (SQLException e) {}
@@ -449,7 +479,7 @@ public class DB_Funktionen {
 		ArrayList<Termin> list = new ArrayList<Termin>();
 		try {
 			while(a.next()) {
-				Termin termin = failedTermin;
+				Termin termin = new Termin(-1,"-1","-1",-1,-1,"-1");
 				list.add(termin);
 				try {
 					termin.setTerminId(a.getInt("TERMINID"));
@@ -479,7 +509,7 @@ public class DB_Funktionen {
 	}
 	
 	/**
-	 * Ändert ein Termin Objekt in der Tabelle TERMIN ab indem er ein neues Termin Objekt mit derselben TerminId erstellt, die Datenbank ersetzt dann das alte Objekt
+	 * Ändert ein Termin Objekt in der Tabelle TERMIN ab indem er ein neues termin Objekt mit derselben TerminId erstellt, die Datenbank ersetzt dann das alte Objekt
 	 * @param termin
 	 */
 	public void aendereTermin(Termin termin) {
@@ -612,15 +642,12 @@ public class DB_Funktionen {
 	 * @param info
 	 */
 	public void erstelleEintragEingeladen(int benutzerId, int terminId, String info) {
-		Benutzer benutzer = sucheBenutzerMitBenutzerId(benutzerId);
-		Termin termin = sucheTerminMitTerminId(terminId);
+		
+		String sql = "INSERT INTO Eingeladen (BENUTZERID, TERMINID, Info) "+ 
+				"VALUES( "+ benutzerId + " , " + terminId + " , '"+ 
+				info + "');";
 		try {
-			if(termin.getTerminId() != 0 && benutzer.getBenutzerId() != 0) {
-				String sql = "INSERT INTO Eingeladen (BENUTZERID, TERMINID, Info) "+ 
-						"VALUES( "+ benutzer.getBenutzerId() + " , " + termin.getTerminId() + " , '"+ 
-						info + "');";
-				stmtSQL.executeUpdate(sql);
-			}
+			stmtSQL.executeUpdate(sql);
 		} catch(SQLException err) {
 			System.err.println(err);
 		}
@@ -740,9 +767,8 @@ public class DB_Funktionen {
 	*/
 	public Benutzer benutzerAuthentifkationAlleAttribute(String benutzerName, String passwort) {
 	    try {
-	    	Benutzer benutzer = failedBenutzer;
+	    	Benutzer benutzer = new Benutzer(-1,"-1","-1","-1","-1",-1);
 	    	rs = stmtSQL.executeQuery("SELECT BENUTZERNAME, PASSWORT FROM BENUTZER WHERE BENUTZERNAME = '" + benutzerName + "' AND PASSWORT = '" + passwort + "';");
-	    	System.out.println("Ich bin hier");
 		    rs = stmtSQL.executeQuery("SELECT BENUTZERID, BENUTZERNAME, PASSWORT, NAME, VORNAME, ISADMIN FROM BENUTZER WHERE BENUTZERNAME = '" + benutzerName + "' AND PASSWORT = '" + passwort + "';");
 		    benutzer = ResultSetToBenutzer(rs);
 	        return benutzer;
