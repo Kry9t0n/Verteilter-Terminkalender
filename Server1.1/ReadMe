@@ -11,7 +11,7 @@ Alle benötigten Treiber sind in der pom.xml eingetragen und bei Serverstart wir
 2. Als Datenbank wird eine eingebettete SQLite Datenbank benutzt,
    diese leigt direkt im Hauptordener des Projektes. 
    Da es zu Fehlern kommen kann wenn der Dateipfad zur Datenbank falsch angegeben ist,
-   ist es sinvoll den absoluten Dateipfad in der Klasse DB_Funktionen in der Zeile 40 einzutragen.
+   ist es sinvoll den absoluten Dateipfad in der Klasse DB_Funktionen in der Zeile 37 einzutragen.
  
 3. Server im Eclipse Projekt hinzufügen und Programm auf Server ausführen.
 
