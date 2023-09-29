@@ -15,5 +15,10 @@ Alle benötigten Treiber sind in der pom.xml eingetragen und bei Serverstart wir
  
 3. Server im Eclipse Projekt hinzufügen und Programm auf Server ausführen.
 
-Ihr Benutzername lautet:
-Ihr Passwort lautet:
+Normaler Benutzer:
+Ihr Benutzername lautet: christopherolb
+Ihr Passwort lautet: 5557
+
+Admin Benutzer
+Ihr Benutzername lautet: adminolb
+Ihr Passwort lautet: 1111
