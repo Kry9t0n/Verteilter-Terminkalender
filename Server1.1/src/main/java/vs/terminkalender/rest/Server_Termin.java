@@ -60,10 +60,10 @@ public class Server_Termin
 		{
 			DB_Funktionen db = new DB_Funktionen("SA","");
 			db.oeffneDB();
-			String[] nichtErfolgreichEingeladeneBenutzer = db.erstelleTerminUndEintragEingeladenAnhandBenutzerName(termindaten);
+			ArrayList<String> nichtErfolgreichEingeladeneBenutzer = db.erstelleTerminUndEintragEingeladenAnhandBenutzerName(termindaten);
 			db.schliesseDB();
 			String nachricht = "Eintrag in Termin wurde erstellt! \n"
-					+ "Folgende Benutzer wurden erfolgreich eingeladen: \n";
+					+ "Folgende Benutzer konnten nicht eingeladen werden: \n";
 			for(String s : nichtErfolgreichEingeladeneBenutzer) {
 				nachricht = nachricht + s + "\n";
 			}

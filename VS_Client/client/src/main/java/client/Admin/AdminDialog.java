@@ -213,7 +213,7 @@ public class AdminDialog {
 				+ BENUTZER_AUSGEBEN + ":Benutzer ausgeben\n"
 				+ BENUTZER_LOESCHEN + ":Benutzer loeschen\n"
 				+ BENUTZER_SUCHEN + ":Benutzer suchen\n"
-				+ TERMINE_AUSGEBEN + ":Termin ausgeben\n"
+				+ TERMINE_AUSGEBEN + ":Termine ausgeben\n"
 				+ TERMIN_LOESCHEN + ":Termin loeschen\n"
 				+ SERVER_DATEN_AUSGEBEN + ":Server daten ausgeben\n"
 				+ ONLINE_BENUTZER_AUSGEBEN + ":Gibt eine Liste aller Benutzer die online sind aus\n"
