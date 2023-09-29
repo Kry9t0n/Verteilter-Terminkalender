@@ -41,7 +41,6 @@ public class BenutzerClient {
 	private ArrayList<Termin> eingeladen;
 	private PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder()
 			.allowIfSubType("java.util").build();
-	private static Thread einladungsThread;
 	
 	
 	/**
@@ -55,8 +54,6 @@ public class BenutzerClient {
 		client = ClientBuilder.newClient();
 		this.benutzer = masterUser;
 		fetchTermineInDarstellungszeitraum();
-		einladungsThread = new Thread(() -> Einladung_Rest.ueberpruefeEinladungen(client, benutzer.getBenutzerId()));
-		einladungsThread.start();
 	}
 	
 	public void fetchTermineInDarstellungszeitraum() {
@@ -95,11 +92,6 @@ public class BenutzerClient {
 		return Online_Rest.getAlleBenutzerDieOnlineSind(client);
 	}
 	
-	
-	
-	public static void threadBeenden() {
-		einladungsThread.stop();
-	}
 	
 	
 	/**

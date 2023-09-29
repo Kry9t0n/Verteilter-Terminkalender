@@ -99,7 +99,6 @@ public class ClientDialog {
 			break;
 		case 0:
 			System.out.println("ClientDialog wurde beendet!");
-			BenutzerClient.threadBeenden();
 			MasterController.programmBeenden(0);
 			break;
 		default:
@@ -438,7 +437,7 @@ public class ClientDialog {
 				+ TERMIN_MIT_BESTIMMTEN_DATUM + ":Termin mit bestimmten Datum ausgeben\n"
 				+ EINLADUNGEN_ANNEHMEN + ":Einladungen annehmen\n"
 				+ EINLADUNGEN_ABLEHNEN + ":Einladungen ablehnen\n"
-				+ ONLINE_BENUTZER_AUSGEBEN + ": Gibt eine Liste aller Benutzer die online sind aus\n"
+				+ ONLINE_BENUTZER_AUSGEBEN + ":Gibt eine Liste aller Benutzer die online sind aus\n"
 				+ ENDE + ":Ende\n");
 	}
 	

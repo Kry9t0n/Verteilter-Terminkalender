@@ -108,7 +108,6 @@ public class MasterController {
 	public static void programmBeenden(int status) {
 		System.out.println("Programm wird beendet...");
 		//Beenden des HintergrundThreads (Ausgelagert)
-		BenutzerClient.threadBeenden();
 		System.exit(status);
 	}
 	
