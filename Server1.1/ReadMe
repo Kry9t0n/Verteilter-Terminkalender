@@ -1,1 +1,17 @@
+Anleitung zur Einrichtung des Servers der Kalenderanwendung
+
+Wir haben den Server immer über Eclipse gestartet und ausgeführt, dieses Vorgehen empfehlen wir!
+Das Projekt ist ein JAVA EE dynamisches Webprojekt als Maven konvertiert.
+Alle benötigten Treiber sind in der pom.xml eingetragen und bei Serverstart wird auch ein Begrüßungsfenster im Server angezeigt.
+
+1. Als Server wird Apache Tomcat in der version 10.1 benutzt.
+   Dieser kann unter folghendem Link heruntergeladen werden:
+   https://tomcat.apache.org/download-10.cgi
+
+2. Als Datenbank wird eine eingebettete SQLite Datenbank benutzt,
+   diese leigt direkt im Hauptordener des Projektes. 
+   Da es zu Fehlern kommen kann wenn der Dateipfad zur Datenbank falsch angegeben ist,
+   ist es sinvoll den absoluten Dateipfad in der Klasse DB_Funktionen in der Zeile 40 einzutragen.
+ 
+3. Server im Eclipse Projekt hinzufügen und Programm auf Server ausführen.
 
