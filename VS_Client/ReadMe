@@ -1,0 +1,20 @@
+### Anleitung um den Client zu starten:
+
+In dem Projekt gibt es eine Datei namens MasterController.java diese verwaltet das clientseitige Benutzerobjekt und steuert den gesamten clientseitigen 
+Programmablauf. D.h. falls der Server erreichbar ist, Login starten und danach entscheiden, ob der normale Benutzerclient oder der Adminclient gestartet
+werden soll. 
+
+Diese Datei muss ausgeführt werden. D.h. in der Eclipse IDE mit der rechten Maustaste auf die Datei klicken und "Run as Java Application"
+auswählen. Wenn nun der Server erreichbar ist, wird der Login gestartet. Wählen Sie zunächst die Option "0".
+Danach müssen Sie Benutzername und Passwort eingeben.
+Dazu haben wir Ihnen zwei Accounts im System angelegt.
+Normaler Benutzer:
+Ihr Benutzername lautet: christopherolb
+Ihr Passwort lautet: 5557
+
+Admin Benutzer
+Ihr Benutzername lautet: adminolb
+Ihr Passwort lautet: 1111
+
+Wenn Sie sich als "christopherolb" einloggen, wird der normale Userclient gestartet, da dieser Account nur über normale Userrechte verfügt.
+Wenn Sie den Adminclient testen wollen, müssen Sie sich als "adminolb" anmelden.
