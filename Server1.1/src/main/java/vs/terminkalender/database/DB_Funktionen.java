@@ -34,7 +34,7 @@ public class DB_Funktionen {
 	 * @param password
 	 */
 	public DB_Funktionen(String user, String password) {
-		String url = "jdbc:sqlite:/D:/HTW/SS_23/verteilte Systeme/Projekt - verteilter Terminkalender/Verteilter-Terminkalender/Verteilter-Terminkalender/Server1.1/Datenbank.db";
+		String url = "jdbc:sqlite:"; //TODO: Pfad zur Datenbank anhängen
 		this.url = url;
 		this.user = user;
 		this.password = password;
